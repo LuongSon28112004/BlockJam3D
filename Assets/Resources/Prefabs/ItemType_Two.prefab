@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 7794499563358165456}
   - component: {fileID: 263599937282949126}
   m_Layer: 0
-  m_Name: Cell
+  m_Name: CellTypeTwo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -226,6 +226,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1478224948009939459}
+  - component: {fileID: 3325333184868105266}
   m_Layer: 0
   m_Name: ItemType_Two
   m_TagString: Untagged
@@ -250,3 +251,21 @@ Transform:
   - {fileID: 2179985005697478638}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3325333184868105266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8486926098597350308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84b2d1e61677803408d8ebf2bcdb5d0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  typeItem: 1
+  NeighBor: []
+  hasClick: 0
+  pos: {fileID: 0}
+  anim: {fileID: 0}
+  box: {fileID: 0}

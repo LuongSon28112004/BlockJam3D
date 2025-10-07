@@ -72,7 +72,6 @@ public class LevelEditorWindow : EditorWindow
             GenerateLevelInScene();
     }
 
-    // 🔹 Tự động load prefab trong thư mục Assets/Prefabs
     private void LoadPrefabs()
     {
         string[] prefabGUIDs = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Resources/Prefabs" });
@@ -89,7 +88,7 @@ public class LevelEditorWindow : EditorWindow
         }
 
         tileEntries = entries.ToArray();
-        Debug.Log($"✅ Loaded {tileEntries.Length} prefabs from Assets/Prefabs/");
+        Debug.Log($"Loaded {tileEntries.Length} prefabs from Assets/Prefabs/");
     }
 
     private void ResizeGrid(int newWidth, int newHeight)
@@ -168,7 +167,7 @@ public class LevelEditorWindow : EditorWindow
             width = currentLevel.width;
             height = currentLevel.height;
             prefabNames = (string[])currentLevel.prefabNames.Clone();
-            Debug.Log($"📂 Loaded level: {path}");
+            Debug.Log($"Loaded level: {path}");
         }
     }
 
@@ -176,7 +175,7 @@ public class LevelEditorWindow : EditorWindow
     {
         if (tileEntries == null || tileEntries.Length == 0)
         {
-            Debug.LogWarning("⚠️ No tile prefabs assigned!");
+            Debug.LogWarning("No tile prefabs assigned!");
             return;
         }
 
@@ -197,7 +196,7 @@ public class LevelEditorWindow : EditorWindow
                 {
                     GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(entry.prefab);
 
-                    // ✅ Tính vị trí: X tăng dần, Z giảm dần
+                    // Tính vị trí: X tăng dần, Z giảm dần
                     float posX = x * offsetX;
                     float posZ = -y * offsetZ;
 
@@ -207,6 +206,6 @@ public class LevelEditorWindow : EditorWindow
             }
         }
 
-        Debug.Log("✅ Level generated in scene with prefab grid layout!");
+        Debug.Log("Level generated in scene with prefab grid layout!");
     }
 }
