@@ -1,29 +1,34 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using System.Collections.Generic;
+
 public class LevelEditorWindow : EditorWindow
 {
-    private int width = 5;
-    private int height = 3;
-    private string[] prefabNames; // Lưu tên prefab theo từng ô
+    private int width = 5;  // số cột (ngang)
+    private int height = 3; // số hàng (dọc)
+    private string[] prefabNames;
     private int selectedTileIndex = 0;
-
-    public TileEntry[] tileEntries; // Danh sách prefab tự động load
 
     private LevelData currentLevel;
 
-    [MenuItem("Game Tools/Level Editor (Prefab Mode)")]
+    private static readonly string[] TileOptions = new string[]
+    {
+        "Empty",
+        "Wall",
+        "Container",
+        "1",
+        "2",
+        "3"
+    };
+
+    [MenuItem("Game Tools/Level Editor (Simple Mode)")]
     public static void ShowWindow()
     {
-        GetWindow<LevelEditorWindow>("Prefab Level Editor");
+        GetWindow<LevelEditorWindow>("Simple Level Editor");
     }
 
     private void OnEnable()
     {
-        // Load sẵn prefab khi mở tool
-        LoadPrefabs();
-
         if (prefabNames == null || prefabNames.Length != width * height)
             prefabNames = new string[width * height];
     }
@@ -33,29 +38,17 @@ public class LevelEditorWindow : EditorWindow
         GUILayout.Label("⚙️ Level Settings", EditorStyles.boldLabel);
 
         EditorGUI.BeginChangeCheck();
-        width = EditorGUILayout.IntField("Width", width);
-        height = EditorGUILayout.IntField("Height", height);
+        width = Mathf.Max(1, EditorGUILayout.IntField("Columns (ngang)", width));
+        height = Mathf.Max(1, EditorGUILayout.IntField("Rows (dọc)", height));
         if (EditorGUI.EndChangeCheck())
         {
             ResizeGrid(width, height);
         }
 
         GUILayout.Space(10);
-        GUILayout.Label("🎨 Tile Prefabs (Auto Loaded from Assets/Prefabs)", EditorStyles.boldLabel);
+        GUILayout.Label("🎨 Tile Types", EditorStyles.boldLabel);
 
-        if (GUILayout.Button("🔄 Reload Prefabs"))
-        {
-            LoadPrefabs();
-        }
-
-        if (tileEntries == null || tileEntries.Length == 0)
-        {
-            EditorGUILayout.HelpBox("⚠️ Không tìm thấy prefab nào trong thư mục Assets/Prefabs!", MessageType.Warning);
-            return;
-        }
-
-        GUILayout.Space(10);
-        selectedTileIndex = GUILayout.Toolbar(selectedTileIndex, GetTileNames());
+        selectedTileIndex = GUILayout.Toolbar(selectedTileIndex, TileOptions);
 
         GUILayout.Space(10);
         DrawGrid();
@@ -68,27 +61,7 @@ public class LevelEditorWindow : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         GUILayout.Space(10);
-        if (GUILayout.Button("🚀 Generate Level in Scene"))
-            GenerateLevelInScene();
-    }
-
-    private void LoadPrefabs()
-    {
-        string[] prefabGUIDs = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Resources/Prefabs" });
-        List<TileEntry> entries = new List<TileEntry>();
-
-        foreach (string guid in prefabGUIDs)
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            if (prefab != null)
-            {
-                entries.Add(new TileEntry { name = prefab.name, prefab = prefab });
-            }
-        }
-
-        tileEntries = entries.ToArray();
-        Debug.Log($"Loaded {tileEntries.Length} prefabs from Assets/Prefabs/");
+        EditorGUILayout.HelpBox("Chế độ này chỉ để vẽ layout (Empty / Wall / Container / 1 / 2 / 3). Không có chức năng generate trong scene.", MessageType.Info);
     }
 
     private void ResizeGrid(int newWidth, int newHeight)
@@ -114,28 +87,29 @@ public class LevelEditorWindow : EditorWindow
 
     private void DrawGrid()
     {
-        for (int y = 0; y < height; y++)
+        const float cellWidth = 40f;
+        const float cellHeight = 20f;
+
+        GUILayout.Label("🧱 Level Grid", EditorStyles.boldLabel);
+
+        for (int row = 0; row < height; row++) // mỗi hàng
         {
             EditorGUILayout.BeginHorizontal();
-            for (int x = 0; x < width; x++)
+            for (int col = 0; col < width; col++) // mỗi cột
             {
-                int index = y * width + x;
-                string display = string.IsNullOrEmpty(prefabNames[index]) ? "Empty" : prefabNames[index];
-                if (GUILayout.Button(display, GUILayout.Width(70), GUILayout.Height(30)))
+                int index = row * width + col;
+                string display = "Empty";
+
+                if (prefabNames != null && index < prefabNames.Length && !string.IsNullOrEmpty(prefabNames[index]))
+                    display = prefabNames[index];
+
+                if (GUILayout.Button(display, GUILayout.Width(cellWidth), GUILayout.Height(cellHeight)))
                 {
-                    prefabNames[index] = tileEntries[selectedTileIndex].name;
+                    prefabNames[index] = TileOptions[selectedTileIndex];
                 }
             }
             EditorGUILayout.EndHorizontal();
         }
-    }
-
-    private string[] GetTileNames()
-    {
-        string[] names = new string[tileEntries.Length];
-        for (int i = 0; i < names.Length; i++)
-            names[i] = tileEntries[i].name;
-        return names;
     }
 
     private void SaveLevel()
@@ -157,55 +131,21 @@ public class LevelEditorWindow : EditorWindow
 
     private void OpenLevel()
     {
-        string path = EditorUtility.OpenFilePanel("Open Level", "Assets", "asset");
-        if (string.IsNullOrEmpty(path)) return;
+        string absPath = EditorUtility.OpenFilePanel("Open Level", Application.dataPath, "asset");
+        if (string.IsNullOrEmpty(absPath)) return;
 
-        path = FileUtil.GetProjectRelativePath(path);
+        string path = FileUtil.GetProjectRelativePath(absPath);
         currentLevel = AssetDatabase.LoadAssetAtPath<LevelData>(path);
         if (currentLevel != null)
         {
             width = currentLevel.width;
             height = currentLevel.height;
             prefabNames = (string[])currentLevel.prefabNames.Clone();
-            Debug.Log($"Loaded level: {path}");
+            Debug.Log($"📂 Loaded level: {path}");
         }
-    }
-
-    private void GenerateLevelInScene()
-    {
-        if (tileEntries == null || tileEntries.Length == 0)
+        else
         {
-            Debug.LogWarning("No tile prefabs assigned!");
-            return;
+            Debug.LogWarning("⚠️ Không thể load LevelData từ đường dẫn đã chọn.");
         }
-
-        GameObject root = new GameObject("GeneratedLevel");
-
-        float offsetX = 1.25f; // khoảng cách giữa các ô theo trục X
-        float offsetZ = 1.25f; // khoảng cách giữa các ô theo trục Z
-
-        for (int y = 0; y < height; y++)
-        {
-            for (int x = 0; x < width; x++)
-            {
-                string name = prefabNames[y * width + x];
-                if (string.IsNullOrEmpty(name)) continue;
-
-                TileEntry entry = System.Array.Find(tileEntries, t => t.name == name);
-                if (entry != null && entry.prefab != null)
-                {
-                    GameObject obj = (GameObject)PrefabUtility.InstantiatePrefab(entry.prefab);
-
-                    // Tính vị trí: X tăng dần, Z giảm dần
-                    float posX = x * offsetX;
-                    float posZ = -y * offsetZ;
-
-                    obj.transform.position = new Vector3(posX, 0f, posZ);
-                    obj.transform.SetParent(root.transform);
-                }
-            }
-        }
-
-        Debug.Log("Level generated in scene with prefab grid layout!");
     }
 }

@@ -9,12 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 589367508787283352}
+  - component: {fileID: 6494979312333753072}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &589367508787283352
 Transform:
@@ -32,6 +33,20 @@ Transform:
   - {fileID: 8718269874569498176}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6494979312333753072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2531662318878486944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6291d3300b4362459645e49fbcc4a7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isContaining: 0
+  pos: {x: 0, y: 0, z: 0}
 --- !u!1 &6509034617769801188
 GameObject:
   m_ObjectHideFlags: 0
@@ -45,11 +60,11 @@ GameObject:
   - component: {fileID: 1835271356832131762}
   - component: {fileID: 2404955640408217029}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: ContainerModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8718269874569498176
 Transform:

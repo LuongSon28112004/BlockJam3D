@@ -7,7 +7,6 @@ public class LevelData : ScriptableObject
     public int height;
     public string[] prefabNames; // Lưu tên prefab tại từng ô
     public bool alignment;
-
     // optional helper
     public string GetPrefabName(int x, int y)
     {
