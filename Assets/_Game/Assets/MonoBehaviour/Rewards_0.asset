@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd9483f620b48a307db4478309b93b61, type: 3}
+  m_Name: Rewards
+  m_EditorClassIdentifier:
+  EmptyPackage: {fileID: 11400000, guid: 7a248a3b43fc2564d816b6f6aaee73ed, type: 2}
+  CoinReward: {fileID: 11400000, guid: 8c6ad7a4d8e23384abfcd29330560f12, type: 2}
+  BronzeRewards:
+    id: 0
+    enteredLeagueReward:
+      type: {fileID: 0}
+      amount: 0
+    firstPlaceCoins: 30
+    secondPlaceCoins: 20
+    thirdPlaceCoins: 10
+  SilverRewards:
+    id: 1
+    enteredLeagueReward:
+      type: {fileID: 11400000, guid: 8697d60d7ad709b469d7d14b9c889d21, type: 2}
+      amount: 1
+    firstPlaceCoins: 45
+    secondPlaceCoins: 30
+    thirdPlaceCoins: 15
+  GoldRewards:
+    id: 2
+    enteredLeagueReward:
+      type: {fileID: 11400000, guid: 8c6ad7a4d8e23384abfcd29330560f12, type: 2}
+      amount: 75
+    firstPlaceCoins: 60
+    secondPlaceCoins: 40
+    thirdPlaceCoins: 20
+  EmeraldRewards:
+    id: 3
+    enteredLeagueReward:
+      type: {fileID: 11400000, guid: ad1c52ecdc378bf42b4a28df08e4090f, type: 2}
+      amount: 1
+    firstPlaceCoins: 75
+    secondPlaceCoins: 50
+    thirdPlaceCoins: 25
+  RubyRewards:
+    id: 4
+    enteredLeagueReward:
+      type: {fileID: 11400000, guid: c29bf164c25189548a8c3393d8fef912, type: 2}
+      amount: 1
+    firstPlaceCoins: 90
+    secondPlaceCoins: 60
+    thirdPlaceCoins: 30
+  DiamondRewards:
+    id: 5
+    enteredLeagueReward:
+      type: {fileID: 11400000, guid: fe1bdf8f893aea8459193bef77115171, type: 2}
+      amount: 1
+    firstPlaceCoins: 150
+    secondPlaceCoins: 100
+    thirdPlaceCoins: 50
+  MasterRewards:
+    id: 6
+    enteredLeagueReward:
+      type: {fileID: 11400000, guid: 9f992f1f91792c64cbc9e264f92c0878, type: 2}
+      amount: 1
+    firstPlaceCoins: 1000
+    secondPlaceCoins: 500
+    thirdPlaceCoins: 200

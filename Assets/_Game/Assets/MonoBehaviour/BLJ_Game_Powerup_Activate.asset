@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8563d32831a4a2d07476f01348442b58, type: 3}
+  m_Name: BLJ_Game_Powerup_Activate
+  m_EditorClassIdentifier:
+  audioClip:
+  - {fileID: 8300000, guid: 9c06bbcfbed021541903f044fe2a9ba5, type: 3}
+  - {fileID: 8300000, guid: 39f5fbfc79bc4dd44a291487d87b7b08, type: 3}
+  - {fileID: 8300000, guid: cf3a655dc8361f14384da91c6ef5779d, type: 3}
+  nestedAudioEvents: []
+  mixerGroup: {fileID: 24300024, guid: 95586a4c489d48a40b4f3cfcf8714de9, type: 2}
+  isStreaming: 0
+  playbackType: 0
+  audioType: 1
+  volume: -3
+  maxInstances: 1
+  playbackLimitReached: 2
+  initialDelay: 0
+  playChance: 100
+  volumeRandomization: 0
+  pitchRandomization: 1
+  unloadOnStop: 0
+  playbackTimeInterval: 0.1

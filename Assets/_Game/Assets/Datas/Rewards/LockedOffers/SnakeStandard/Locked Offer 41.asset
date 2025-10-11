@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9350abc5951b6d0d157cd577c8db3061, type: 3}
+  m_Name: Locked Offer 41
+  m_EditorClassIdentifier:
+  resource: 6
+  _displayName: t:Generic.Gift
+  uniqueID: locked_offer_41
+  hasCustomStringFormat: 0
+  customStringFormat: '{name} x{amt}'
+  _icon: {fileID: 21300000, guid: 1df7903b4cca81d40a1b5c8504d0146b, type: 2}
+  _openedIcon: {fileID: 0}
+  _useUIPrefab: 0
+  _uiPrefab: {fileID: 0}
+  _color: 0
+  _prefabGift: {fileID: 0}
+  unlocked: 0
+  skinMaterial: {fileID: 0}
+  fallbackColorIndex: 0
+  accessoryPrefab: {fileID: 0}
+  obtainableSeason: {fileID: 0}
+  releaseDate:
+    _dateTime: 01/01/2000
+  fallbackReward:
+    type: {fileID: 0}
+    amount: 0
+  children:
+  - type: {fileID: 11400000, guid: cf1230e0ef1031648add1271230a2e43, type: 2}
+    amount: 10
+  - type: {fileID: 11400000, guid: 645fe4f723696ec4680f024e029360eb, type: 2}
+    amount: 100
+  _tags: []

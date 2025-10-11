@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -6,7 +7,7 @@ public class BoardCtrl : MonoBehaviour
 {
 
     [Header("Level Configuration")]
-    public FindingPath findingPath;
+    [SerializeField] private ItemClickCtrl itemClickCtrl;
     private const int MAXTYPE = 3;
     public LevelData levelData; 
     public string prefabFolder = "Prefabs"; 
@@ -15,6 +16,12 @@ public class BoardCtrl : MonoBehaviour
     public Transform gridParent; 
     public List<BoardCell> boardCells;
     public Dictionary<string, TypeItem> DictIdType;
+    [Header("Action Event")]
+    //sử lý di chuyển xuống thanh bên duói như thế nào.
+    public Func<Vector3, BoardCell> MoveToCellPlayAction;
+    public Func<BoardCell, int> TryReserverSlotAction;
+    // sử lý khi nào thì nên check ô trống.
+    public Action<BoardCell,int> ExcuteMoveAction;
 
     private void Start()
     {
@@ -62,7 +69,7 @@ public class BoardCtrl : MonoBehaviour
         // Shuffle danh sách type để random
         for (int i = allTypes.Count - 1; i > 0; i--)
         {
-            int randIndex = Random.Range(0, i + 1);
+            int randIndex = UnityEngine.Random.Range(0, i + 1);
             (allTypes[i], allTypes[randIndex]) = (allTypes[randIndex], allTypes[i]);
         }
 
@@ -100,8 +107,8 @@ public class BoardCtrl : MonoBehaviour
         boardCells.Clear();
 
         // Khởi tạo lại danh sách container trong findPath
-        findingPath.SetCapacity(levelData.height, levelData.width); // ✅ sửa lại đúng width, height
-        findingPath.containers.Clear();
+        itemClickCtrl.FindingPath.SetCapacity(levelData.height, levelData.width); // ✅ sửa lại đúng width, height
+        itemClickCtrl.FindingPath.containers.Clear();
 
         // Tính điểm bắt đầu sao cho bàn cờ nằm chính giữa
         float startX = gridParent.position.x - (levelData.width - 1) * offsetX / 2f;
@@ -116,24 +123,25 @@ public class BoardCtrl : MonoBehaviour
             {
                 int index = row * levelData.width + col;
                 string prefabName = levelData.prefabNames[index];
-
                 if (string.IsNullOrEmpty(prefabName))
                 {
-                    findingPath.containers.Add(null);
+                    //findingPath.containers.Add(null);
                     continue;
                 }
 
                 // Chọn prefab
-                GameObject prefab;
+                GameObject prefab = null;
                 if (prefabName != "Wall" && prefabName != "Container")
-                    prefab = Resources.Load<GameObject>($"{prefabFolder}/{"BoardCell"}");
-                else
-                    prefab = Resources.Load<GameObject>($"{prefabFolder}/{prefabName}");
+                {
+                    string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName) -1);
+                    prefab = Resources.Load<GameObject>($"{prefabFolder}/{name}");
+                }
+                else prefab = Resources.Load<GameObject>($"{prefabFolder}/{prefabName}");
 
                 if (prefab == null)
                 {
                     Debug.LogWarning($"Không tìm thấy prefab: {prefabName}");
-                    findingPath.containers.Add(null);
+                    // findingPath.containers.Add(null);
                     continue;
                 }
 
@@ -143,23 +151,29 @@ public class BoardCtrl : MonoBehaviour
 
                 GameObject obj = Instantiate(prefab, new Vector3(posX, 0f, posZ), Quaternion.identity, gridParent);
                 obj.name = prefabName;
-                // if (prefabName == "BoardCell")
-                // {
-                //     GameObject prefabTemp = Resources.Load<GameObject>($"{prefabFolder}/{"Container"}");
-                //     GameObject objj = Instantiate(prefab, new Vector3(posX, 0f, posZ), Quaternion.identity, gridParent);
-                //     objj.name = "Container";
-                //     objj.GetComponent<Container>().IsContaining = true;
-                // }
-
-                // BoardCell
-                if (obj.TryGetComponent(out BoardCell boardCell))
+                if (prefabName != "Wall" && prefabName != "Container")
                 {
-                    boardCell.Pos = new Vector3(posX, 0f, posZ);
-                    boardCells.Add(boardCell);
-                    boardCell.IdType = prefabName;
-                    boardCell.ChangItemFromId(DictIdType);
-                    grid[row, col] = boardCell;
+                    GameObject prefabTemp = Resources.Load<GameObject>($"{prefabFolder}/{"Container"}");
+                    GameObject objj = Instantiate(prefabTemp, new Vector3(posX, 0f, posZ), Quaternion.identity, gridParent);
+                    objj.name = "Container";
+                    objj.GetComponent<Container>().IsContaining = true;
+                    objj.GetComponent<Container>().Pos = new Vector3(posX, 0f, posZ);
+                    itemClickCtrl.FindingPath.containers.Add(objj.GetComponent<Container>());
+                    // BoardCell
+                    if (obj.TryGetComponent(out BoardCell boardCell))
+                    {
+                        boardCell.Pos = new Vector3(posX, 0f, posZ);
+                        boardCells.Add(boardCell);
+                        boardCell.IdType = prefabName;
+                        boardCell.TypeItem = (TypeItem)(int.Parse(prefabName.ToString()) - 1);
+                        //////////////////////////////////////////
+                        //boardCell.ChangItemFromId(DictIdType);
+                        /////////////////////////////////////////
+                        boardCell.Container = objj.GetComponent<Container>();
+                        grid[row, col] = boardCell;
+                    }
                 }
+
 
                 // Container
                 Container containerToAdd = null;
@@ -169,14 +183,15 @@ public class BoardCtrl : MonoBehaviour
                 else if (prefabName == "Container")
                     containerToAdd = obj.GetComponent<Container>();
                 // else
-                //     containerToAdd = obj.GetComponentInChildren<Container>();
+                //     containerToAdd = obj.GetComponent<Container>();
 
                 if (containerToAdd != null)
                 {
                     containerToAdd.Pos = new Vector3(posX, 0f, posZ);
                 }
 
-                findingPath.containers.Add(containerToAdd);
+                if(prefabName == "Wall" || prefabName == "Container")
+                    itemClickCtrl.FindingPath.containers.Add(containerToAdd);
             }
         }
 
@@ -210,7 +225,7 @@ public class BoardCtrl : MonoBehaviour
             }
         }
 
-        Debug.Log($"✅ Level '{levelData.name}' loaded successfully under {gridParent.name}!");
+        Debug.Log($"Level '{levelData.name}' loaded successfully under {gridParent.name}!");
     }
 
 

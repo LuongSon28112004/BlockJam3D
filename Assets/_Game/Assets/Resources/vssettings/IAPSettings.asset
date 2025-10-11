@@ -1,0 +1,627 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -13238107, guid: 5533087e61cd035854f4828e2e6112dd, type: 3}
+  m_Name: IAPSettings
+  m_EditorClassIdentifier:
+  platform: android
+  noAdsProductId: blockjam.noads
+  isIAPEnabled: 1
+  subscriptionsGroup: []
+  productsFamily:
+  - None
+  - Coins
+  - Skipets
+  - EndlessOffer
+  - Card pack
+  products:
+  - _productId: blockjam.2xlcoins2
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.largecoins
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.mediumcoins
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.smallcoins
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.starter
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.xlargecoins
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.noadsbundle
+    _type: 1
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.noads
+    _type: 1
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.noadsoffer
+    _type: 1
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.noadsoffer5
+    _type: 1
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.timednoads
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.piggybank
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.piggybank3
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.piggybank4
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.starterbundle
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.masterbundle
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.megabundle
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.legendarybundle
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.championbundle
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.minibundle
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.3xlcoins
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.hardoffer
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.superspin
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.smallskipit
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.mediumskipit
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.largeskipit
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.seasonpremium
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.seasonpremium_rna
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.minioffer
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.smalloffer
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.mediumoffer
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.mediumoffer_rna
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.largeoffer
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.largeoffer_rna
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.xloffer
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.xloffer_rna
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.xloffer_rna_
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.2xloffer
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.3xloffer
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.specialoffer
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po3
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po4
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po5
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po6
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po7
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po8
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po9
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po10
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po11
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po12
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po15
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po16
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po18
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po20
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po22
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po23
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po24
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po25
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po27
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po30
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po35
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po40
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po45
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po50
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po55
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po60
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po65
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po70
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po75
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po80
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po85
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po90
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po100
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po110
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po120
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.po125
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo2
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo3
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo4
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo5
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo6
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo7
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo8
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo9
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo10
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo11
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo12
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo15
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo16
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo18
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo20
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo25
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo30
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo35
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo40
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo45
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo50
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo55
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo60
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo65
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo70
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo75
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo80
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo85
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo90
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.eo100
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.timedoffer3
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.hardoffer2
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.hardoffer3
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.hardoffer4
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.hardoffer5
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.hardoffer6
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.hardoffer7
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.hardoffer8
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.hardoffer9
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.hardoffer10
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.shopcoins3
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.shopcoins5
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.shopcoins10
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  - _productId: blockjam.shopcoins150
+    _type: 0
+    _subscriptionGroup:
+    _productFamily:
+    _usdPrice: 0
+  subscriptionSharedKey:
+  ignoreTheGoogleKeyError: 0

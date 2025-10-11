@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8563d32831a4a2d07476f01348442b58, type: 3}
+  m_Name: BLJ_BusLevel_Horn
+  m_EditorClassIdentifier:
+  audioClip:
+  - {fileID: 8300000, guid: b9727642efc75f14aa092ced3323de68, type: 3}
+  - {fileID: 8300000, guid: 6a9031d82172ad04683b0bc8a66c833f, type: 3}
+  - {fileID: 8300000, guid: b6206925d4a5bf2438abca55722b0a61, type: 3}
+  - {fileID: 8300000, guid: a8bc08f641a703149ba80e40b1991be8, type: 3}
+  - {fileID: 8300000, guid: 04da40e7017c498419c98cb7e12ee641, type: 3}
+  - {fileID: 8300000, guid: 60e4dc29379a08646a20aebb29527344, type: 3}
+  nestedAudioEvents: []
+  mixerGroup: {fileID: 24300026, guid: 19d76e492b2034d41b1d4b8d4ee05bf3, type: 2}
+  isStreaming: 0
+  playbackType: 0
+  audioType: 1
+  volume: -8
+  maxInstances: 1
+  playbackLimitReached: 1
+  initialDelay: 0.6
+  playChance: 100
+  volumeRandomization: 0
+  pitchRandomization: 0
+  unloadOnStop: 0
+  playbackTimeInterval: 0.1

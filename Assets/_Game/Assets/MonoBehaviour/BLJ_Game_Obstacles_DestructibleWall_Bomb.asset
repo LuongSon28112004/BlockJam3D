@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8563d32831a4a2d07476f01348442b58, type: 3}
+  m_Name: BLJ_Game_Obstacles_DestructibleWall_Bomb
+  m_EditorClassIdentifier:
+  audioClip:
+  - {fileID: 8300000, guid: 0321e09306fb2554296a0bab7718417a, type: 3}
+  - {fileID: 8300000, guid: 5cc9384e9599c254792b611f7731375e, type: 3}
+  - {fileID: 8300000, guid: f422c7325a3481e40b8c7c2105add861, type: 3}
+  - {fileID: 8300000, guid: b5f7ecc778b93914fb56c193b3c2c5c4, type: 3}
+  - {fileID: 8300000, guid: 9fcd4292e63d533488aacc934fd8c297, type: 3}
+  nestedAudioEvents:
+  - {fileID: 11400000, guid: 496752bbf0aaaaa49b28c5bfde5dcbff, type: 2}
+  mixerGroup: {fileID: 24300024, guid: 95586a4c489d48a40b4f3cfcf8714de9, type: 2}
+  isStreaming: 0
+  playbackType: 0
+  audioType: 1
+  volume: -3
+  maxInstances: 0
+  playbackLimitReached: 2
+  initialDelay: 0
+  playChance: 100
+  volumeRandomization: 0
+  pitchRandomization: 0
+  unloadOnStop: 0
+  playbackTimeInterval: 0.1

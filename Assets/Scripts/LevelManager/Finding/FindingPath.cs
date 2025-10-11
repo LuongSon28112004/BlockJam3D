@@ -14,44 +14,14 @@ public class FindingPath : MonoBehaviour
         ColItem = col;
     }
 
-    void Update()
+    public List<Vector3> BFSFind(Container container)
     {
-        MouseInput();
-    }
+        int index = containers.IndexOf(container);
+        int startRow = index / ColItem;
+        int startCol = index % ColItem;
 
-    private void MouseInput()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                Debug.Log(hit.collider.transform.gameObject.name);
-                Container clicked = hit.collider.transform.parent.GetComponentInChildren<Container>();
-                if (clicked != null)
-                {
-                    int index = containers.IndexOf(clicked);
-                    int startRow = index / ColItem;
-                    int startCol = index % ColItem;
-
-                    var path = FindPath(startRow, startCol);
-                    if (path != null)
-                    {
-                        Debug.Log($"Tìm thấy đường đi với {path.Count} bước.");
-                        foreach (var p in path)
-                            Debug.Log("→ " + p);
-                        hit.collider.transform.parent.GetComponentInChildren<BoardCellMovement>().Movement(path);
-                    }
-                    else
-                    {
-                        Debug.Log("Không tìm được đường đi đến hàng cuối.");
-                    }
-                }
-            }
-        }
+        var path = FindPath(startRow, startCol);
+        return path;
     }
 
     // Hàm BFS tìm đường

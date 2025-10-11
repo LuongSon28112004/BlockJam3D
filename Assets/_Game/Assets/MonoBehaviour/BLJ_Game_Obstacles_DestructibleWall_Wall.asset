@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8563d32831a4a2d07476f01348442b58, type: 3}
+  m_Name: BLJ_Game_Obstacles_DestructibleWall_Wall
+  m_EditorClassIdentifier:
+  audioClip:
+  - {fileID: 8300000, guid: 45c0c3e77c2bb7745b06699cd36e0ae1, type: 3}
+  - {fileID: 8300000, guid: 3b519a03871813840b04b84c88f05b30, type: 3}
+  - {fileID: 8300000, guid: be66bc5fab42a10479f8ad622e1e4806, type: 3}
+  nestedAudioEvents:
+  - {fileID: 11400000, guid: 1670da72c0bf1434988b5393e7cd9906, type: 2}
+  mixerGroup: {fileID: 24300024, guid: 95586a4c489d48a40b4f3cfcf8714de9, type: 2}
+  isStreaming: 0
+  playbackType: 0
+  audioType: 1
+  volume: -12
+  maxInstances: 1
+  playbackLimitReached: 0
+  initialDelay: 0.05
+  playChance: 100
+  volumeRandomization: 0
+  pitchRandomization: 0
+  unloadOnStop: 0
+  playbackTimeInterval: 0.1

@@ -1,0 +1,164 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dd211d393a33388b3d2414f03efa4a7, type: 3}
+  m_Name: FirstTry
+  m_EditorClassIdentifier:
+  _saveId: firstTry
+  _remoteConfig: firstTryEnabled
+  _displayName: t:LiveOp.FirstTry.Title
+  _description: t:LiveOp.FirstTry.Description
+  _introDescription:
+  _collectIcon: {fileID: 21300000, guid: afa337a70332fa54a97135a8e1775b31, type: 2}
+  _preview: {fileID: 21300000, guid: 1e0dd9e6a2b6bb241ae572faa6a8ca41, type: 2}
+  introPopupAddressablePath: LOIntro_firstTry
+  progressPopupAddressablePath: LOProg_firstTry
+  forcePopupOnFirstSeen: 1
+  showProgressUponJoin: 1
+  _requiredLevel: 25
+  backSimulateUponJoin: 1
+  durationAfterManualJoin:
+    _serTimeSpan: 04:00:00
+  promptImmediateRejoin: 0
+  availableStartHours: 00000000000000000600000000000000000000000000000000000000
+  availableDurations:
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 1.18:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  _rewards:
+  - type: {fileID: 11400000, guid: 38d812eeb4ceaf64e973452d737f4f82, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: bf31c5a84a4d03345b8adb9b31554f66, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: 3495edcfa7ec4574a92122ea22211336, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: 89c70f7603a43bd408543921be71faf1, type: 2}
+    amount: 25
+  - type: {fileID: 11400000, guid: 89c70f7603a43bd408543921be71faf1, type: 2}
+    amount: 20
+  - type: {fileID: 11400000, guid: 8c6ad7a4d8e23384abfcd29330560f12, type: 2}
+    amount: 15
+  - type: {fileID: 11400000, guid: 8c6ad7a4d8e23384abfcd29330560f12, type: 2}
+    amount: 10
+  - type: {fileID: 11400000, guid: 8c6ad7a4d8e23384abfcd29330560f12, type: 2}
+    amount: 10
+  - type: {fileID: 11400000, guid: 00e76d3e1ff611a4094ab3b671af477d, type: 2}
+    amount: 5
+  - type: {fileID: 11400000, guid: 00e76d3e1ff611a4094ab3b671af477d, type: 2}
+    amount: 5
+  enabled: 0
+  _available: 0
+  _active: 0
+  _unreadResults: 0
+  _joinedCurrentInstance: 0
+  _joinedCurrentWindow: 0
+  _lastsBeyondWindow: 0
+  _spillsIntoNextWindow: 0
+  _becomesAvailableLocal: 0100-01-01 12:00:00 AM -00:14
+  _becomesUnavailableLocal: 0100-01-01 12:00:00 AM -00:14
+  _becomesInactiveLocal: 0100-01-01 12:00:00 AM -00:14
+  earlyFinishDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  newlyActive: 0
+  _withinActiveInstance: 0
+  _withinAvailabilityWindow: 0
+  inGame: 0
+  _joinCountCurrentWindow: 0
+  _initialLeague: -1
+  durationType: 0
+  availableStartDays: 4
+  lastSeenIntroUTC:
+    _dateTimeStr: 2025-10-03 10:23:10 AM +02:00
+  joinDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  lastPlayedDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:10 AM +02:00
+  simulatedDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  seenDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  pointsPerLevel: 1
+  opponentCount: 49
+  multipliersByStreak: 01000000020000000300000005000000
+  oppBaseRate: 3
+  oppRateAdjustInterval: 1
+  oppRateRange:
+    minimum: 2
+    maximum: 5
+  oppRateDistribution:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.066727586
+      outSlope: 0.066727586
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.06991819
+    - serializedVersion: 3
+      time: 0.8161816
+      value: 0.18505794
+      inSlope: 0.704838
+      outSlope: 0.704838
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.3500661
+    - serializedVersion: 3
+      time: 1.0013428
+      value: 1.00176
+      inSlope: 11.987068
+      outSlope: 11.987068
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.047097277
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  oppRateDistrPresim:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.025486344
+      outSlope: 0.025486344
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.07113543
+    - serializedVersion: 3
+      time: 1
+      value: 0.05
+      inSlope: 0.086943835
+      outSlope: 0.086943835
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.058823526
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  oppAdjustedRate: 0
+  winStreak: 0
+  recentlyLostMultiplier: 0
+  recentlyLostWinStreak: 0
+  recentlyGainedScore: 0
+  recentlyGainedWinStreak: 0
+  eventPlayed: 0
+  players: []

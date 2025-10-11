@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c46d06cbe404109758a196188cd0ffd2, type: 3}
+  m_Name: AnalyticsSettings_android_worldwide
+  m_EditorClassIdentifier:
+  platform: android
+  store: worldwide
+  useFirebaseAnalytics: 1
+  useRemoteConfig: 1
+  adjustAppToken: 2e5ij14do20w
+  noAdsBundleId: blockjam.noads
+  useVoodooAnalytics: 1
+  conversionEvents:
+    UseConversionEvents: 1
+    DaysUntilExpiration: 1
+    AdEvents: []
+    UnknownEvents: []
+  isChinaStore: 0
+  appleStoreId: com.partyup.blockjam
+  voodooFunnels:
+    funnels:
+    - name: Stage_Funnel
+      steps:
+      - stepName: stage_started
+        stepPosition: 0
+      - stepName: stage_finished_1
+        stepPosition: 1
+      - stepName: stage_finished_2
+        stepPosition: 2
+      - stepName: stage_finished_3
+        stepPosition: 3
+    - name: PopUpFlow
+      steps:
+      - stepName: PopUpImpression
+        stepPosition: 1
+  gameAnalyticsGameKey: a11bb336d82f54fe92149c21ba9a93bd
+  gameAnalyticsSecretKey: 6576b7eceef5c99bf8ca9da9124348fdbac5288e
+  excludeGameAnalyticsSDK: 1
+  facebookAppId: 323673269834856

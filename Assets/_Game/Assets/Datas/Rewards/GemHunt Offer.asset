@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9350abc5951b6d0d157cd577c8db3061, type: 3}
+  m_Name: GemHunt Offer
+  m_EditorClassIdentifier:
+  resource: 6
+  _displayName: t:Generic.Gift
+  uniqueID: gemhuntoffer
+  hasCustomStringFormat: 0
+  customStringFormat: '{name} x{amt}'
+  _icon: {fileID: 21300000, guid: d25f7cf0b792a35418bd04b4f701e770, type: 2}
+  _openedIcon: {fileID: 21300000, guid: d25f7cf0b792a35418bd04b4f701e770, type: 2}
+  _useUIPrefab: 0
+  _uiPrefab: {fileID: 0}
+  _color: 0
+  _prefabGift: {fileID: 0}
+  unlocked: 0
+  skinMaterial: {fileID: 0}
+  fallbackColorIndex: 0
+  accessoryPrefab: {fileID: 0}
+  obtainableSeason: {fileID: 0}
+  releaseDate:
+    _dateTime: 01/01/2000
+  fallbackReward:
+    type: {fileID: 0}
+    amount: 0
+  children:
+  - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+    amount: 200
+  - type: {fileID: 11400000, guid: 51a3319bd6966764192b8526c4db200e, type: 2}
+    amount: 60
+  - type: {fileID: 11400000, guid: b84e28426f98ab241812a5cf21e22b27, type: 2}
+    amount: 2
+  - type: {fileID: 11400000, guid: cf1230e0ef1031648add1271230a2e43, type: 2}
+    amount: 3
+  - type: {fileID: 11400000, guid: a52102958980c10469c786e253694b3d, type: 2}
+    amount: 1
+  _tags: []

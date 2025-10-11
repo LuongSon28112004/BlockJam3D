@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1489143077, guid: 79e15ea0fcc517e8392e7fd31dd8b7ab, type: 3}
+  m_Name: NakamaServer
+  m_EditorClassIdentifier:
+  devEnviro:
+    host: https://grpc.blockjam.voodoo-gaming-dev.io:443
+    serverKey: mYcsn81b2UxeZmBYNByp2mFY
+  prodEnviro:
+    host: https://grpc.blockjam.voodoo-gaming.io:443
+    serverKey: QiqDVpQBM9KSft7d45Xl3UF6
+  logLevel: 1

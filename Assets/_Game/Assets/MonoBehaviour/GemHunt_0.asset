@@ -1,0 +1,203 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b65358801938f35f6a62666b5971dd9f, type: 3}
+  m_Name: GemHunt
+  m_EditorClassIdentifier:
+  _saveId: gemHunt
+  _remoteConfig: gemHuntEnabled
+  _displayName: t:LiveOp.GemHunt.Title
+  _description: t:LiveOp.GemHunt.Description
+  _introDescription:
+  _collectIcon: {fileID: 21300000, guid: 7af3801c548a9b843af7f425c469356c, type: 2}
+  _preview: {fileID: 21300000, guid: 82a60557f8a6788448a44a21791ad182, type: 2}
+  introPopupAddressablePath: LOIntro_gemHunt
+  progressPopupAddressablePath: LOProg_gemHunt
+  forcePopupOnFirstSeen: 1
+  showProgressUponJoin: 1
+  _requiredLevel: 10
+  backSimulateUponJoin: 0
+  durationAfterManualJoin:
+    _serTimeSpan: 04:00:00
+  promptImmediateRejoin: 0
+  availableStartHours: 00000000000000000000000000000000000000000000000000000000
+  availableDurations:
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 3.06:00:00
+  - _serTimeSpan: 00:00:00
+  _rewards:
+  - type: {fileID: 11400000, guid: fa22603d8257f8e41be30c1e12f7383d, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: 98b414f299cdce344beb176fe639c247, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: 29bc1ed40a7ae744396fada684f302ff, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: cc095d8e2c1aeec43a63ebc9cba1dd4b, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: 318083e4fd8cfe44ab1b1ec0ce80997d, type: 2}
+    amount: 1
+  enabled: 0
+  _available: 0
+  _active: 0
+  _unreadResults: 0
+  _joinedCurrentInstance: 0
+  _joinedCurrentWindow: 0
+  _lastsBeyondWindow: 0
+  _spillsIntoNextWindow: 0
+  _becomesAvailableLocal: 0100-01-01 12:00:00 AM -00:14
+  _becomesUnavailableLocal: 0100-01-01 12:00:00 AM -00:14
+  _becomesInactiveLocal: 0100-01-01 12:00:00 AM -00:14
+  earlyFinishDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  newlyActive: 0
+  _withinActiveInstance: 0
+  _withinAvailabilityWindow: 0
+  inGame: 0
+  _joinCountCurrentWindow: 0
+  _initialLeague: -1
+  durationType: 0
+  availableStartDays: 32
+  lastSeenIntroUTC:
+    _dateTimeStr: 2025-10-03 10:23:10 AM +02:00
+  joinDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  lastPlayedDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:10 AM +02:00
+  simulatedDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  seenDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  startingPickaxes: 5
+  rooms:
+  - ID: 0
+    gridSize: {x: 4, y: 4}
+    gems:
+    - ID: 1
+      size: 25
+      position: {x: 0, y: 0}
+    - ID: 2
+      size: 20
+      position: {x: 0, y: 0}
+    - ID: 3
+      size: 20
+      position: {x: 0, y: 0}
+    - ID: 4
+      size: 27
+      position: {x: 0, y: 0}
+  - ID: 1
+    gridSize: {x: 5, y: 5}
+    gems:
+    - ID: 1
+      size: 26
+      position: {x: 0, y: 0}
+    - ID: 2
+      size: 24
+      position: {x: 0, y: 0}
+    - ID: 3
+      size: 21
+      position: {x: 0, y: 0}
+    - ID: 4
+      size: 21
+      position: {x: 0, y: 0}
+    - ID: 5
+      size: 24
+      position: {x: 0, y: 0}
+  - ID: 2
+    gridSize: {x: 6, y: 6}
+    gems:
+    - ID: 1
+      size: 101
+      position: {x: 0, y: 0}
+    - ID: 2
+      size: 29
+      position: {x: 0, y: 0}
+    - ID: 3
+      size: 60
+      position: {x: 0, y: 0}
+    - ID: 4
+      size: 60
+      position: {x: 0, y: 0}
+    - ID: 5
+      size: 28
+      position: {x: 0, y: 0}
+    - ID: 6
+      size: 28
+      position: {x: 0, y: 0}
+  - ID: 3
+    gridSize: {x: 7, y: 7}
+    gems:
+    - ID: 1
+      size: 22
+      position: {x: 0, y: 0}
+    - ID: 2
+      size: 103
+      position: {x: 0, y: 0}
+    - ID: 3
+      size: 102
+      position: {x: 0, y: 0}
+    - ID: 4
+      size: 20
+      position: {x: 0, y: 0}
+    - ID: 5
+      size: 102
+      position: {x: 0, y: 0}
+    - ID: 6
+      size: 22
+      position: {x: 0, y: 0}
+    - ID: 7
+      size: 44
+      position: {x: 0, y: 0}
+  - ID: 4
+    gridSize: {x: 8, y: 8}
+    gems:
+    - ID: 1
+      size: 104
+      position: {x: 0, y: 0}
+    - ID: 2
+      size: 30
+      position: {x: 0, y: 0}
+    - ID: 3
+      size: 31
+      position: {x: 0, y: 0}
+    - ID: 4
+      size: 30
+      position: {x: 0, y: 0}
+    - ID: 5
+      size: 31
+      position: {x: 0, y: 0}
+    - ID: 6
+      size: 32
+      position: {x: 0, y: 0}
+    - ID: 7
+      size: 32
+      position: {x: 0, y: 0}
+    - ID: 8
+      size: 105
+      position: {x: 0, y: 0}
+  - ID: 5
+    gridSize: {x: 0, y: 0}
+    gems:
+    - ID: 1
+      size: 25
+      position: {x: 0, y: 0}
+  gemHuntRoomsData:
+    roomsData: []
+  totalPickaxes: 5
+  collectedPickaxes: 0
+  pickaxesUsed: 0
+  currentRoom: 0
+  offersPurchased: 0
+  total_reveal_cost_parsed: 190
+  rewardCollected: 1

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8563d32831a4a2d07476f01348442b58, type: 3}
+  m_Name: BLJ_BusLevel_BusArrive
+  m_EditorClassIdentifier:
+  audioClip:
+  - {fileID: 8300000, guid: 2d4b65688a8de5a44a67a09b1963936c, type: 3}
+  - {fileID: 8300000, guid: 35dcdb81ff6a37d4cbe0b8441b9f2992, type: 3}
+  - {fileID: 8300000, guid: ca7726207e02e5044b4447ee2a80bab6, type: 3}
+  nestedAudioEvents:
+  - {fileID: 11400000, guid: 5bf9be4c88339ea4394b7a8bde89fe42, type: 2}
+  mixerGroup: {fileID: 24300026, guid: 19d76e492b2034d41b1d4b8d4ee05bf3, type: 2}
+  isStreaming: 0
+  playbackType: 0
+  audioType: 1
+  volume: -3
+  maxInstances: 0
+  playbackLimitReached: 0
+  initialDelay: 0
+  playChance: 100
+  volumeRandomization: 0
+  pitchRandomization: 0
+  unloadOnStop: 0
+  playbackTimeInterval: 0.1

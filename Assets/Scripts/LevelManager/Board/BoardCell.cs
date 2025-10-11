@@ -3,9 +3,9 @@ using UnityEngine;
 
 public enum TypeItem
 {
-    TypeOne,   // Đỏ
-    TypeTwo,   // Vàng
-    TypeThree, // Xanh
+    BlueBase,   // Đỏ
+    BrownBase,   // Vàng
+    GreenBase, // Xanh
 } //=> for override
 
 public class BoardCell : MonoBehaviour
@@ -31,10 +31,14 @@ public class BoardCell : MonoBehaviour
     [SerializeField] private Animator anim;
     [SerializeField] private BoxCollider box;
     [SerializeField] private BoardCellMovement boardCellMovement;
+    [SerializeField] private Container container;// container init start contains it
 
     // === Properties ===
     public Vector3 Pos { get => pos; set => pos = value; }
     public string IdType { get => idType; set => idType = value; }
+    public Container Container { get => container; set => container = value; }
+    public TypeItem TypeItem { get => typeItem; set => typeItem = value; }
+    public BoardCellMovement BoardCellMovement { get => boardCellMovement; set => boardCellMovement = value; }
 
     // public List<BoardCell> Neighbors => neighbors;
     // public TypeItem TypeItem { get => typeItem; set => typeItem = value; }

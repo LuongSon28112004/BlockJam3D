@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6acaa5d21b0d898b6936127d03055ec2, type: 3}
+  m_Name: BombRace
+  m_EditorClassIdentifier:
+  _saveId: bombrace
+  _remoteConfig: bombRaceEnabled
+  _displayName: t:LiveOp.BombRace.Title
+  _description: t:LiveOp.BombRace.Description
+  _introDescription: t:LiveOp.BombRace.IntroText
+  _collectIcon: {fileID: 21300000, guid: 7989a51c6cd68854d804dac7cea34bf4, type: 2}
+  _preview: {fileID: 21300000, guid: 7470ed3ce0a216843967f1f6e540d2ca, type: 2}
+  introPopupAddressablePath: LOIntro_bombRace
+  progressPopupAddressablePath: LOProg_bombRace
+  forcePopupOnFirstSeen: 1
+  showProgressUponJoin: 1
+  _requiredLevel: 10
+  backSimulateUponJoin: 0
+  durationAfterManualJoin:
+    _serTimeSpan: 01:00:00
+  promptImmediateRejoin: 0
+  availableStartHours: 00000000000000000000000000000000000000000000000000000000
+  availableDurations:
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 1.00:00:00
+  _rewards:
+  - type: {fileID: 11400000, guid: 94e6c89f9b58ae440a0f8f562e4297d9, type: 2}
+    amount: 1
+  enabled: 0
+  _available: 0
+  _active: 0
+  _unreadResults: 0
+  _joinedCurrentInstance: 0
+  _joinedCurrentWindow: 0
+  _lastsBeyondWindow: 0
+  _spillsIntoNextWindow: 0
+  _becomesAvailableLocal: 0001-01-01 12:00:00 AM +00:00
+  _becomesUnavailableLocal: 0001-01-01 12:00:00 AM +00:00
+  _becomesInactiveLocal: 0001-01-01 12:00:00 AM +00:00
+  earlyFinishDateUTC:
+    _dateTimeStr: 2025-09-18 02:50:36 PM +02:00
+  newlyActive: 0
+  _withinActiveInstance: 0
+  _withinAvailabilityWindow: 0
+  inGame: 0
+  _joinCountCurrentWindow: 0
+  _initialLeague: -1
+  durationType: 2
+  availableStartDays: 127
+  lastSeenIntroUTC:
+    _dateTimeStr: 2025-09-18 02:50:36 PM +02:00
+  joinDateUTC:
+    _dateTimeStr: 2025-09-18 02:50:36 PM +02:00
+  lastPlayedDateUTC:
+    _dateTimeStr: 2025-09-17 11:06:32 AM +02:00
+  simulatedDateUTC:
+    _dateTimeStr: 2025-09-18 02:50:36 PM +02:00
+  seenDateUTC:
+    _dateTimeStr: 2025-09-18 02:50:36 PM +02:00
+  missionsCollectImage: {fileID: 21300000, guid: 238d5007bb4ed9a4aa4a82523bea85d3, type: 2}
+  opponentBaseRate:
+    minimum: 100
+    maximum: 180
+  scoreToWin: 0
+  oldEventScore: 0
+  newEventScore: 0
+  lastViewedEventScore: 0
+  lastViewedActionIndex: -1
+  dioramaLastViewedActionIndex: -1
+  winStreak: 0
+  recentlyLostWinStreak: 0
+  dailyWinStreak: 0
+  rewardCollected: 0
+  totalWins: 0
+  oldPlayerScore: 0
+  players: []
+  actionHistory: []
+  blocksGained:
+  blocksGainedOpponent:

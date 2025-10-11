@@ -1,0 +1,186 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e610d2b14c6c75de58f15a65cc6dd4a1, type: 3}
+  m_Name: Season 24
+  m_EditorClassIdentifier:
+  id: 2025_09
+  _hasCustomName: 1
+  _customDisplayName: t:Season.Title.24
+  _seasonNumber: 7
+  coverImage: {fileID: 21300000, guid: 82cef7532ffbb584f87b270f97b4a678, type: 2}
+  dateAvailableUTC:
+    _dateTimeStr: 2025-09-01 06:00:00 AM +02:00
+  dateExpiresUTC:
+    _dateTimeStr: 2025-10-01 06:00:00 AM +02:00
+  forceShowUponFirstAvailable: 1
+  doubleKeysViaRV: 0
+  includeBonusBank: 1
+  bonusBankRequiredTrackId: paid
+  bonusBankKeysPerTier: 10
+  bonusBankMaxTiers: 50
+  bonusBankTierReward:
+    type: {fileID: 11400000, guid: 645fe4f723696ec4680f024e029360eb, type: 2}
+    amount: 15
+  RewardProgression:
+    tracks:
+    - id: free
+      _title: t:Season.FreePass
+      accessType: 4
+      priceGems: 0
+      productId:
+      productSubId:
+      _purchasedByDefault: 1
+      _purchased: 1
+      _rewards:
+      - type: {fileID: 11400000, guid: 7e98d1222947fbf4bbf8230c57150264, type: 2}
+        amount: 5
+      - type: {fileID: 11400000, guid: 51a3319bd6966764192b8526c4db200e, type: 2}
+        amount: 10
+      - type: {fileID: 11400000, guid: 7e98d1222947fbf4bbf8230c57150264, type: 2}
+        amount: 5
+      - type: {fileID: 11400000, guid: cf1230e0ef1031648add1271230a2e43, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 7e98d1222947fbf4bbf8230c57150264, type: 2}
+        amount: 5
+      - type: {fileID: 11400000, guid: 7f41f2f0ba303ca4ab7e1b183eff4d7f, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 51a3319bd6966764192b8526c4db200e, type: 2}
+        amount: 10
+      - type: {fileID: 11400000, guid: 7e98d1222947fbf4bbf8230c57150264, type: 2}
+        amount: 5
+      - type: {fileID: 11400000, guid: cf1230e0ef1031648add1271230a2e43, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 7e98d1222947fbf4bbf8230c57150264, type: 2}
+        amount: 5
+      - type: {fileID: 11400000, guid: d490e26465a245f4fa2b28343f03d6ef, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 7e98d1222947fbf4bbf8230c57150264, type: 2}
+        amount: 5
+      - type: {fileID: 11400000, guid: 51a3319bd6966764192b8526c4db200e, type: 2}
+        amount: 30
+      - type: {fileID: 11400000, guid: b84e28426f98ab241812a5cf21e22b27, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 645fe4f723696ec4680f024e029360eb, type: 2}
+        amount: 10
+      - type: {fileID: 11400000, guid: 0a7afa37fd223a64d87ad9bec08b03c4, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: b84e28426f98ab241812a5cf21e22b27, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 7e98d1222947fbf4bbf8230c57150264, type: 2}
+        amount: 5
+      - type: {fileID: 11400000, guid: 51a3319bd6966764192b8526c4db200e, type: 2}
+        amount: 30
+      - type: {fileID: 11400000, guid: 7e98d1222947fbf4bbf8230c57150264, type: 2}
+        amount: 5
+      - type: {fileID: 11400000, guid: e194198d44d58ed47925fb49b8e5f62b, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 7e98d1222947fbf4bbf8230c57150264, type: 2}
+        amount: 5
+      - type: {fileID: 11400000, guid: b84e28426f98ab241812a5cf21e22b27, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 645fe4f723696ec4680f024e029360eb, type: 2}
+        amount: 10
+      - type: {fileID: 11400000, guid: 51a3319bd6966764192b8526c4db200e, type: 2}
+        amount: 60
+      - type: {fileID: 11400000, guid: 7b5fcd5349079554ea8822f45b9f5dc9, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: cf1230e0ef1031648add1271230a2e43, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 1d953ed53f34ed94494cac0ecc2825a4, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: b84e28426f98ab241812a5cf21e22b27, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 20
+      - type: {fileID: 11400000, guid: 942fa27dc26a217488bc2e15298f194d, type: 2}
+        amount: 1
+      _redemptions:
+    - id: paid
+      _title: t:Season.PaidPass
+      accessType: 2
+      priceGems: 100
+      productId: blockjam.seasonpremium
+      productSubId:
+      _purchasedByDefault: 0
+      _purchased: 0
+      _rewards:
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 20
+      - type: {fileID: 11400000, guid: cf1230e0ef1031648add1271230a2e43, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: ad020d163b2417a4dbf6e1b6d564d1f3, type: 2}
+        amount: 20
+      - type: {fileID: 11400000, guid: 3f932cc68b3754d43a05800d81a45f78, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 15
+      - type: {fileID: 11400000, guid: 470ae24673b43cc4eb9baf17a60b5c7e, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 35
+      - type: {fileID: 11400000, guid: 51a3319bd6966764192b8526c4db200e, type: 2}
+        amount: 30
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 25
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 25
+      - type: {fileID: 11400000, guid: d6a1911176016824ea4c13cc17b632be, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: b84e28426f98ab241812a5cf21e22b27, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: cf1230e0ef1031648add1271230a2e43, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 20
+      - type: {fileID: 11400000, guid: 51a3319bd6966764192b8526c4db200e, type: 2}
+        amount: 30
+      - type: {fileID: 11400000, guid: c4e42e2eeb5c30b45aa977c50851bb3e, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: b84e28426f98ab241812a5cf21e22b27, type: 2}
+        amount: 2
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 25
+      - type: {fileID: 11400000, guid: cf1230e0ef1031648add1271230a2e43, type: 2}
+        amount: 2
+      - type: {fileID: 11400000, guid: 51a3319bd6966764192b8526c4db200e, type: 2}
+        amount: 60
+      - type: {fileID: 11400000, guid: 4c10e204482c08e43bd9ff7c4507d29e, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 15
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 30
+      - type: {fileID: 11400000, guid: 51a3319bd6966764192b8526c4db200e, type: 2}
+        amount: 60
+      - type: {fileID: 11400000, guid: 9c1c46e450eefee4c8fa980ad3e01df7, type: 2}
+        amount: 50
+      - type: {fileID: 11400000, guid: d2cce1aef33184c498aa7661342cfc98, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 3f932cc68b3754d43a05800d81a45f78, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: 809272b538360aa4b989658c39467c21, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: a52102958980c10469c786e253694b3d, type: 2}
+        amount: 1
+      - type: {fileID: 11400000, guid: ad020d163b2417a4dbf6e1b6d564d1f3, type: 2}
+        amount: 25
+      - type: {fileID: 11400000, guid: 7f210e5c4edc2224caac1768d8d78a24, type: 2}
+        amount: 1
+      _redemptions:
+    _unlockCurve: 0000000001000000020000000300000005000000050000000a0000000a0000000a0000000a0000000f0000000f0000000f0000000f0000000f000000140000001400000014000000140000001400000019000000190000001900000019000000190000001e0000001e0000001e0000001e0000001e00000032000000
+    owner: {fileID: 11400000}
+  tierLastSeen: 0
+  _currency: 0
+  currencyLastCollected: 0
+  startPopupSeen: 0
+  seen: 1
+  seenPremium: 0

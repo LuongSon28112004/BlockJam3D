@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 908db1a765feb68a2928c2ea200a18b2, type: 3}
+  m_Name: CalendarRewards
+  m_EditorClassIdentifier:
+  levelsPerReward: 7
+  rewards:
+  - type: {fileID: 11400000, guid: 645fe4f723696ec4680f024e029360eb, type: 2}
+    amount: 50
+  - type: {fileID: 11400000, guid: 87efbfd18eabffc4094da75cdc7a08fc, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: 22f9165c5cd5b224e81f3a955e038258, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: 04b95ba3d9292324d8d948b0370c3f5d, type: 2}
+    amount: 1

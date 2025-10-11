@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BusWalls
+  m_Shader: {fileID: 4800000, guid: a415bb70c2604a043a838699ce6b615e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _DIRECTION_Z
+  - _SPACE_WORLD
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+      _Bottom:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _Side:
+        m_Texture: {fileID: 2800000, guid: 706d7adf09d957c449a8de1a874a3ef6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _Top:
+        m_Texture: {fileID: 2800000, guid: a710ece068df14649856ae846ce1a466, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: {}
+    m_Floats:
+      _BUILTIN_QueueControl: 0
+      _BUILTIN_QueueOffset: 0
+      _BottomScale: -3.37
+      _BumpScale: 1
+      _Cutoff: 0.5
+      _DetailNormalMapScale: 1
+      _Direction: 2
+      _DstBlend: 0
+      _EdgeWidth: 0.5
+      _Float: 0.05
+      _GlossMapScale: 1
+      _Glossiness: 0
+      _GlossyReflections: 1
+      _GradientOffset: 23.6
+      _GradientScale: 19.96
+      _GradientStrength: 1
+      _Metallic: 0
+      _Mode: 0
+      _NoiseScale: 1
+      _OcclusionStrength: 1
+      _Offset: 1.35
+      _Parallax: 0.02
+      _RampSmooth: 0.199
+      _RampSmoothAdd: 0.561
+      _RampThreshold: 0.791
+      _RimMax: 0.85
+      _RimMin: 0.6
+      _RimPower: 1.1
+      _RimStrength: 0.5
+      _Saturate: 1.7
+      _Scale: 0.05
+      _SideScale: -0.5
+      _SmoothnessTextureChannel: 0
+      _Space: 0
+      _SpecBlend: 1
+      _SpecSmooth: 1
+      _SpecularHighlights: 1
+      _SrcBlend: 1
+      _TCP2_DISABLE_WRAPPED_LIGHT: 1
+      _TCP2_RAMPTEXT: 0
+      _TCP2_SPEC_TOON: 0
+      _TCP2_STYLIZED_FRESNEL: 0
+      _TopScale: 0.55
+      _TopSpread: 0.48
+      _UVSec: 0
+      _ZWrite: 1
+      _yPosHigh: 10
+      _yPosLow: 0
+    m_Colors:
+      _Color: {r: 0.16369992, g: 0.17986536, b: 0.5597484, a: 1}
+      _Color2: {r: 0.5620821, g: 0.570846, b: 0.8805031, a: 1}
+      _ColorA: {r: 0.3249475, g: 0.39695293, b: 0.66666657, a: 0}
+      _ColorB: {r: 0.05634661, g: 0.07181656, b: 0.23270428, a: 0}
+      _ColorHigh: {r: 0, g: 0, b: 0, a: 1}
+      _ColorLow: {r: 1, g: 0.5524123, b: 0.4433961, a: 1}
+      _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+      _HColor: {r: 1, g: 1, b: 1, a: 1}
+      _RimColor: {r: 0.4339623, g: 0.4339623, b: 0.4339623, a: 1}
+      _RimColor2: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+      _SColor: {r: 0.5, g: 0.4551887, b: 0.4551887, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 0

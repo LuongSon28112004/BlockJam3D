@@ -1,0 +1,243 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcdae37708ddb7a3ccd1b6359191296b, type: 3}
+  m_Name: PiggyRace
+  m_EditorClassIdentifier:
+  _saveId: piggyrace
+  _remoteConfig: piggyRaceEnabled
+  _displayName: t:LiveOp.PiggyRace.Title
+  _description: t:LiveOp.PiggyRace.Description
+  _introDescription:
+  _collectIcon: {fileID: 21300000, guid: 7989a51c6cd68854d804dac7cea34bf4, type: 2}
+  _preview: {fileID: 21300000, guid: 455958a7b89374942911529c92479427, type: 2}
+  introPopupAddressablePath: PiggyIntro
+  progressPopupAddressablePath: PiggyProgressPopup
+  forcePopupOnFirstSeen: 1
+  showProgressUponJoin: 1
+  _requiredLevel: 20
+  backSimulateUponJoin: 1
+  durationAfterManualJoin:
+    _serTimeSpan: 04:00:00
+  promptImmediateRejoin: 0
+  availableStartHours: 000000000c0000000000000000000000000000000000000000000000
+  availableDurations:
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 2.12:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  _rewards:
+  - type: {fileID: 11400000, guid: 028731718b536d44ebd6de189663e381, type: 2}
+    amount: 0
+  - type: {fileID: 11400000, guid: 00e76d3e1ff611a4094ab3b671af477d, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: dd763853848a8dd489e17cef4c142f77, type: 2}
+    amount: 0
+  enabled: 0
+  _available: 0
+  _active: 0
+  _unreadResults: 0
+  _joinedCurrentInstance: 0
+  _joinedCurrentWindow: 0
+  _lastsBeyondWindow: 0
+  _spillsIntoNextWindow: 0
+  _becomesAvailableLocal: 0001-01-01 12:00:00 AM +00:00
+  _becomesUnavailableLocal: 0001-01-01 12:00:00 AM +00:00
+  _becomesInactiveLocal: 0001-01-01 12:00:00 AM +00:00
+  earlyFinishDateUTC:
+    _dateTimeStr: 2025-05-22 03:05:02 AM +02:00
+  newlyActive: 0
+  _withinActiveInstance: 0
+  _withinAvailabilityWindow: 0
+  inGame: 0
+  _joinCountCurrentWindow: 0
+  _initialLeague: -1
+  durationType: 0
+  availableStartDays: 2
+  lastSeenIntroUTC:
+    _dateTimeStr: 2025-05-22 03:05:02 AM +02:00
+  joinDateUTC:
+    _dateTimeStr: 2025-05-22 03:05:02 AM +02:00
+  lastPlayedDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:10 AM +02:00
+  simulatedDateUTC:
+    _dateTimeStr: 2025-05-22 03:05:02 AM +02:00
+  seenDateUTC:
+    _dateTimeStr: 2025-05-22 03:05:02 AM +02:00
+  missionsCollectImage: {fileID: 21300000, guid: 238d5007bb4ed9a4aa4a82523bea85d3, type: 2}
+  playerCount: 50
+  winStreakMultipliers:
+  - 1
+  - 1.5
+  - 2
+  blocksPerCheckpoint: fa000000f4010000ee020000e8030000
+  blocksPerCoin: 150
+  rewardDistribution:
+  - _percentageOfPot: 10
+    numberOfPlayers: 1
+  - _percentageOfPot: 9
+    numberOfPlayers: 1
+  - _percentageOfPot: 8
+    numberOfPlayers: 1
+  - _percentageOfPot: 5
+    numberOfPlayers: 4
+  - _percentageOfPot: 3
+    numberOfPlayers: 6
+  - _percentageOfPot: 1.5
+    numberOfPlayers: 8
+  - _percentageOfPot: 0.5
+    numberOfPlayers: 29
+  oppBaseRate: 3
+  blocksPerLevel:
+    minimum: 90
+    maximum: 180
+  oppRateRange:
+    minimum: 1.8
+    maximum: 6
+  oppRateDistribution:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.05
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.2409485
+      value: 0.36247247
+      inSlope: 0.29761824
+      outSlope: 0.29761824
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.6132977
+    - serializedVersion: 3
+      time: 0.50099254
+      value: 0.60043067
+      inSlope: 0.8216269
+      outSlope: 0.8216269
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.15410084
+    - serializedVersion: 3
+      time: 0.9686598
+      value: 0.8656482
+      inSlope: 1.5980514
+      outSlope: 1.5980514
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.112824716
+      outWeight: 0.40193865
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  oppActivityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 7.012985
+      value: 0.64938354
+      inSlope: 0.05624387
+      outSlope: 0.05624387
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 9.497096
+      value: 0.3
+      inSlope: 0.009060177
+      outSlope: 0.009060177
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 11.79569
+      value: 0.8291259
+      inSlope: 0.026601052
+      outSlope: 0.026601052
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 13.897459
+      value: 0.7953129
+      inSlope: -0.069209054
+      outSlope: -0.069209054
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.6920926
+    - serializedVersion: 3
+      time: 16.225075
+      value: 0.3
+      inSlope: -0.06808085
+      outSlope: -0.06808085
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.7679064
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 18.623377
+      value: 1.002795
+      inSlope: 0.006366335
+      outSlope: 0.006366335
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 24
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  winStreak: 0
+  recentlyLostStreak: 0
+  blocksCollected: 0
+  blocksBuilt: 0
+  blocksAddedLastWin: 0
+  oppAdjustedRate: 0
+  players: []

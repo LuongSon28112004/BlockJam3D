@@ -1,0 +1,444 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9755fc2c983c0458b3f24a50e04f5d3e, type: 3}
+  m_Name: BusMiniGame
+  m_EditorClassIdentifier:
+  linkFeedback:
+  linkBeatChart:
+  mapGroupData:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 8c04465869c3d4caea9fd8a198833960
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 4a21806ad703e4da593fd4c479317e0f
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 155b6c50c81e04c29894837065ec3ee6
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 65370e35412bc48eea7732c5c4315ec8
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 3c8b38953e09c46ca87bd65a724b7058
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 07cec4834fb9b425ebb53528603b1d32
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: bb73b1f4bdbe3e744bfad4308651c6e0
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 01dab43f56f2b4d05ab0f1aee1df21aa
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: aef39be7d00e54d81b43da7135d1859b
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 2ec6535e806c344069982a1f92b7d009
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 33b851cf07d9b479986b84a065489397
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 9f5ef1319aac6bf4b86327f4aa4f14f4
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: c0288c069d515bf40a52a04e752675dd
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: c32f7a3a069a897498abfc99062b334a
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 6ebca9de8b3cfef4f9607b6902fb856d
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: a8dfd775fcb8c874488d6b3b258fb0ad
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 96834cee6cc4642e78752a64ae64b08e
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: cfa9cf5f0b04d3f43abad5e19646ab69
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 54b81b534671d0749a69b409625444e0
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 0c5ef16ed1c934916b8901ed287c7bfd
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 365d69a1979a14abcac94fbcf69d8638
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 133651fe2ae94460b911dc3e54402abe
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 91730bcefa744437d95683a365c641ca
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 9e92f954d0f1ed240bf8980fb0d109e9
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 84f41753388916f4e8b6d54b395fd1d9
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: be7e349590f6e4d0f833ec7dd9066e62
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 0b56d8eab833c494da3a7d546d2687be
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 3898b3ad8ab833545a12f392a2536efa
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 3d60d94c90c8e43508caa8490638bfb8
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 3a871944e5e2c4797a3177172e85e5fe
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: b8fe1f7a8c2ef43c992aa82c2e2ec248
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: bf993b60952f14e8a8d24d32d30d37ee
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: c6b2d174e28054df99d6ec52d6f4672a
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: d6add27a1ae4d4373a005bcc0fc27155
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: b9ac4e84ad8334da1928725337f40d23
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 25b2b9be963a341328c657984d4947df
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: a6cf2c0cd9fb14c478cec8dba87c837c
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: f11a73b95e69dfa459881d0d9d515372
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: fe1fd32902e5d4fd49a41f09ed9e5a98
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 9ddbc367891144830bc2a8ef1f03fbdf
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 1d56cb9f2ec4c6a47b62254c9b701b52
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: a8ec3c190fdfb48fa928cbd7a627301c
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 68a5b4f24398f41a88479a9ef92994b5
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 8cdec5fb81b74754aa9372ce336d769a
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: cad68319ff3cb8448b64db7b3c314667
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: d901f58bfc9064f9c876c894979fa449
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: ac2122a2d3731ae47b2638614d9db676
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 261433e03c5148a4eb1a95e79e8c3b29
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 92665f9f7362240f0a7d83ca16c4d77d
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 4ea7b4906f1154ce185c17e0013aadda
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 018e2942d85371e4aae7d5b3a54f9078
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: def16937f1ee24d218b27757afcba42f
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 4b18bf25dd40046db8883a7e3199b9d2
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: d926181b8e66745458234024d1ef81dd
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 24ca0ebaf31654887ae7b0b8e370c8ba
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 9c3b643478ceb469597aeb283653b134
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: b3d43ee3c71ea12459bcc99e4930ec5e
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 4894470a345c24db1baea177d31f2822
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 399e7d44b358644efac1feb78e8e94ef
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 2ceadbd6248ccdf46b2ac4cdb97c6cf0
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 8e8bb54c88b36d745b091747f93dcd2a
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: d88f5c944b8334b0fae8f1c47d65cbb8
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: d9922118e74e74aca8bc5f7e49f40238
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 1dc6ba69faff24b22b3f5979c484a534
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 36c3012c66a18452bb683330e30025b7
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 84bd4089850b346608348ed6b827ea85
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 3fc353bb85869428d9e2df14f8d0e06a
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 17deb0bcca887bb4f95bf3bfc2e52853
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 3f03e74aade456247a80b2b2cf26f7f7
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 3b4cf29b730fe490a904dc083c4b24fc
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 9d632d5e57b01374ab1a44d8c7782f1e
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: a0343efc6210c1448892ce83764d905e
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: e728f6dc9957d184f8ec4c718abb6748
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: f8302f3d5ecb94049a280085ab5a35bd
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 43868209601e24644abd22bdffe9c165
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: e5bddbb2e02ea42e7a045bea09ecc845
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 17f6ea95063ad409ea877decf35f9d32
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: dc6ab63c6197eea4689ba5d2d2d5dd9e
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: a991d0e92a2451045a0bdda866a2fb8b
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: f447eff61c4d04475a650855e5c49a29
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 029bac7c920a14064989c7f6122c9a82
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: dcff202520c39f14c9132961cbe0f317
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 9f37250c6f5a94455920558f0429af9c
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: a625e761cc5614236819d36bb3a78f09
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 71276a251a86a4e2a98334d60b2599ec
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: b11d1f15e41b04f6290fab7ee0a1537c
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 0160a1c3b4fd73248af4fec6e9a2f833
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 7227474fd5e65482399f1b441061d24d
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 9abfc995a45604c7cbb7d9aee3a7e9fb
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 4e083480766dd45129ecde2a453131c3
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 43cffff8f4da54d2d87e9c84d4619b74
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 96fff941918319b44aae63fe1a7d1dbb
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 9143749aa9d8646caa1c638b612b23fb
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 8ea35110ba5256c4b84752386d1b0fbf
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 81c0444689f714a3a85f70c9aa3ce39f
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: d60effae7c765074e8fcfdf52016845d
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 3d96798e2b55de7429574201675483c2
+      m_SubObjectName:
+      m_SubObjectType:
+  - mapDataSectionsRef:
+    - m_AssetGUID: 605cd794abf034ea689a7abed1cc6bc3
+      m_SubObjectName:
+      m_SubObjectType:
+  anticipationMechanicsAnalyzer:
+    _mechanicUnlockData:
+    - mechanic: 0
+      startLevel: 0
+      endLevel: 0
+    - mechanic: 1
+      startLevel: 0
+      endLevel: 0
+    - mechanic: 2
+      startLevel: 0
+      endLevel: 0
+    - mechanic: 16
+      startLevel: 0
+      endLevel: 4
+    - mechanic: 4
+      startLevel: 4
+      endLevel: 5
+    - mechanic: 128
+      startLevel: 5
+      endLevel: 12
+    - mechanic: 8
+      startLevel: 12
+      endLevel: 19
+    - mechanic: 64
+      startLevel: 19
+      endLevel: 20
+    - mechanic: 256
+      startLevel: 20
+      endLevel: 38
+    - mechanic: 512
+      startLevel: 38
+      endLevel: 53
+    - mechanic: 32
+      startLevel: 53
+      endLevel: 63

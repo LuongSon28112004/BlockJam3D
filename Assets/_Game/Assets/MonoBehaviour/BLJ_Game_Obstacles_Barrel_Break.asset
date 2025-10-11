@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8563d32831a4a2d07476f01348442b58, type: 3}
+  m_Name: BLJ_Game_Obstacles_Barrel_Break
+  m_EditorClassIdentifier:
+  audioClip:
+  - {fileID: 8300000, guid: 1c91526862c34864a8c695b1ab17e9c6, type: 3}
+  - {fileID: 8300000, guid: e51902b99b9487a4d8a919d4526c76d9, type: 3}
+  - {fileID: 8300000, guid: 3a6c490410575334097ef06da996043a, type: 3}
+  - {fileID: 8300000, guid: 7eec047a034dd444fa5421a228b34674, type: 3}
+  - {fileID: 8300000, guid: 9f7407a9e19abe6459cbb2e91ff8cffb, type: 3}
+  - {fileID: 8300000, guid: 94a91d241f79c484e977bac52c96bbd2, type: 3}
+  nestedAudioEvents:
+  - {fileID: 11400000, guid: 17b1d52e8c50ced45ac85a2ec3634a3d, type: 2}
+  mixerGroup: {fileID: 24300024, guid: 95586a4c489d48a40b4f3cfcf8714de9, type: 2}
+  isStreaming: 0
+  playbackType: 0
+  audioType: 1
+  volume: -6
+  maxInstances: 1
+  playbackLimitReached: 2
+  initialDelay: 0
+  playChance: 100
+  volumeRandomization: 0
+  pitchRandomization: 0
+  unloadOnStop: 0
+  playbackTimeInterval: 0.1

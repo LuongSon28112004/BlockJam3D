@@ -1,0 +1,714 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f259a45c832c3b770b659a982c83c62, type: 3}
+  m_Name: Ruby
+  m_EditorClassIdentifier:
+  tag: 4
+  NumSimPlayers: 99
+  PromotionRank: 10
+  DemotionRank: 65
+  PresimulationDuration: 0.16
+  UnsimulationMagnitude: 0
+  scores:
+  - name: whaleGood0
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Ears White
+  - name: jaxDontEat
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.000102030404
+    premium: 0
+    avatarID: 7 Skin Purple
+    accessoryID: Accessory Hearts
+  - name: User3559609
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.00040812162
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Green Trapper
+  - name: User4703345
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.0009182737
+    premium: 0
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory Sunhat Pink
+  - name: evaLevel
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.0016324865
+    premium: 0
+    avatarID: 91 Skin White
+    accessoryID: Accessory 0 None
+  - name: jsus3
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.00255076
+    premium: 0
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory Ears White
+  - name: 1137421836
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.0036730948
+    premium: 0
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory Hearts
+  - name: carlQuad
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.0049994895
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Ears White
+  - name: ayyFoxL
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.006529946
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Sheriff Hat
+  - name: green
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.008264463
+    premium: 0
+    avatarID: 91 Skin White
+    accessoryID: Accessory Hearts
+  - name: wild8
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.01020304
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Santa
+  - name: 5591080
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.012345679
+    premium: 0
+    avatarID: 4 Skin Yellow
+    accessoryID: Accessory Sheriff Hat
+  - name: eaglesPig7
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.014692379
+    premium: 0
+    avatarID: 9 Skin Teal
+    accessoryID: Accessory Sunhat Pink
+  - name: beastbro
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.017243138
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory St Patrick
+  - name: User7186818
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.019997958
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Purple Knit
+  - name: lvWolf1
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.022956843
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Orange Knit
+  - name: 1765257951
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.026119784
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Purple Knit
+  - name: User7660305
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.029486785
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Cowboy Hat
+  - name: User592835
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.033057854
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Santa
+  - name: User8260758
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.036832977
+    premium: 0
+    avatarID: 91 Skin White
+    accessoryID: Accessory Santa
+  - name: pax9
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.04081216
+    premium: 0
+    avatarID: 4 Skin Yellow
+    accessoryID: Accessory Green Trapper
+  - name: besthole8
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.044995412
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory 0 None
+  - name: YOO9689
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.049382716
+    premium: 0
+    avatarID: 9 Skin Teal
+    accessoryID: Accessory Cowboy Hat
+  - name: wild67Wild
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.053974085
+    premium: 0
+    avatarID: 4 Skin Yellow
+    accessoryID: Accessory Cowboy Hat
+  - name: ed92
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.058769517
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory Ears Brown
+  - name: AlienIsBac
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.063769
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory St Patrick
+  - name: Ryan
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.06897255
+    premium: 0
+    avatarID: 91 Skin White
+    accessoryID: Accessory Purple Knit
+  - name: madrid3
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.07438017
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Green Trapper
+  - name: josie39jos
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.07999183
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory Brown Trapper
+  - name: bit3Bit3
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.08580757
+    premium: 0
+    avatarID: 7 Skin Purple
+    accessoryID: Accessory Sheriff Hat
+  - name: hannah6
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.09182737
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Brown Trapper
+  - name: jamie
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.09805121
+    premium: 0
+    avatarID: 5 Skin Magenta
+    accessoryID: Accessory Brown Trapper
+  - name: tulsa6
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.104479134
+    premium: 0
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory Sheriff Hat
+  - name: macie0
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.11111112
+    premium: 1
+    avatarID: 7 Skin Purple
+    accessoryID: Accessory Ears Brown
+  - name: doge1
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.11794714
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Sunhat
+  - name: speed1
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.124987245
+    premium: 0
+    avatarID: 9 Skin Teal
+    accessoryID: Accessory Sheriff Hat
+  - name: Thunder6
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.13223141
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Brown Trapper
+  - name: 1Speed
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.13967961
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory Sheriff Hat
+  - name: Victor013
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.14733191
+    premium: 0
+    avatarID: 9 Skin Teal
+    accessoryID: Accessory Santa
+  - name: Stan8
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.15518826
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Hearts
+  - name: alexis
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.16324864
+    premium: 0
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory Sheriff Hat
+  - name: miraHalfmi
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.17151311
+    premium: 0
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory Ears Brown
+  - name: eric1
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.17998165
+    premium: 0
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory Cowboy Hat
+  - name: peace0box
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.18865421
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Green Trapper
+  - name: kyle5
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.19753087
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Blue Pom Pom
+  - name: broncos8
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.20661159
+    premium: 0
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory Brown Trapper
+  - name: User2908888
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.21589634
+    premium: 0
+    avatarID: 5 Skin Magenta
+    accessoryID: Accessory Green Trapper
+  - name: duck7
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.22538517
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Santa
+  - name: 3860260287
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.23507807
+    premium: 0
+    avatarID: 5 Skin Magenta
+    accessoryID: Accessory Santa
+  - name: User230858
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.244975
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory 0 None
+  - name: cam122
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.255076
+    premium: 1
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Blue Pom Pom
+  - name: User4257798
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.26538107
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory Sheriff Hat
+  - name: 319216247
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.2758902
+    premium: 0
+    avatarID: 91 Skin White
+    accessoryID: Accessory Hearts
+  - name: sndra5
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.28660342
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Cowboy Hat
+  - name: wade6
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.29752067
+    premium: 0
+    avatarID: 5 Skin Magenta
+    accessoryID: Accessory Santa
+  - name: rye59
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.308642
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory Blue Pom Pom
+  - name: jax099
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.31996733
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory St Patrick
+  - name: amir
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.33149678
+    premium: 0
+    avatarID: 91 Skin White
+    accessoryID: Accessory Sheriff Hat
+  - name: nextNext
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.34323028
+    premium: 0
+    avatarID: 7 Skin Purple
+    accessoryID: Accessory Brown Trapper
+  - name: 7Bit
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.35516784
+    premium: 0
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory Brown Trapper
+  - name: vader
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.36730948
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory Sheriff Hat
+  - name: User733929
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.37965518
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Brown Trapper
+  - name: al475
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.39220485
+    premium: 0
+    avatarID: 7 Skin Purple
+    accessoryID: Accessory Green Trapper
+  - name: User8482926
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.40495867
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Sheriff Hat
+  - name: danBull
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.41791654
+    premium: 1
+    avatarID: 5 Skin Magenta
+    accessoryID: Accessory Ears Brown
+  - name: TwtUpCantC
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.43107846
+    premium: 1
+    avatarID: 7 Skin Purple
+    accessoryID: Accessory Orange Knit
+  - name: low868
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.44444448
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Purple Knit
+  - name: papaisb
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.45801446
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory St Patrick
+  - name: sam3
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.47178856
+    premium: 0
+    avatarID: 5 Skin Magenta
+    accessoryID: Accessory Sunhat Pink
+  - name: User8118911
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.48576674
+    premium: 0
+    avatarID: 5 Skin Magenta
+    accessoryID: Accessory Hearts
+  - name: 328170273
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.49994898
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory Hearts
+  - name: jeff
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.5143353
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Purple Knit
+  - name: jay1
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.52892566
+    premium: 0
+    avatarID: 7 Skin Purple
+    accessoryID: Accessory Ears White
+  - name: slayers7
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.54372
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Ears Brown
+  - name: phaIsBack3
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.55871844
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Brown Trapper
+  - name: karen
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.573921
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory Orange Knit
+  - name: paceAtom4
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.58932763
+    premium: 0
+    avatarID: 7 Skin Purple
+    accessoryID: Accessory Hearts
+  - name: jonasUp5
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.60493827
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Sheriff Hat
+  - name: User7874573
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.62075305
+    premium: 0
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory Sunhat
+  - name: dj9Green
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.63677174
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Blue Pom Pom
+  - name: lils9
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.6529946
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Sheriff Hat
+  - name: world7
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.6694215
+    premium: 1
+    avatarID: 91 Skin White
+    accessoryID: Accessory Ears Brown
+  - name: User8820369
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.68605244
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory 0 None
+  - name: Goat
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.7028875
+    premium: 0
+    avatarID: 9 Skin Teal
+    accessoryID: Accessory Blue Pom Pom
+  - name: User3117970
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.7199266
+    premium: 0
+    avatarID: 91 Skin White
+    accessoryID: Accessory 0 None
+  - name: User3077022
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.7371696
+    premium: 0
+    avatarID: 4 Skin Yellow
+    accessoryID: Accessory Santa
+  - name: gust0
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.75461686
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory St Patrick
+  - name: Games2
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.7722681
+    premium: 1
+    avatarID: 1 Skin Blue
+    accessoryID: Accessory St Patrick
+  - name: littles4
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.79012346
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Ears White
+  - name: sara85
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.8081829
+    premium: 0
+    avatarID: 6 Skin Orange
+    accessoryID: Accessory Santa
+  - name: evil
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.82644635
+    premium: 0
+    avatarID: 7 Skin Purple
+    accessoryID: Accessory St Patrick
+  - name: batWorm
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.8449137
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Brown Trapper
+  - name: User3360829
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.86358535
+    premium: 0
+    avatarID: 2 Skin Red
+    accessoryID: Accessory Cowboy Hat
+  - name: bigPro7
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.88246095
+    premium: 0
+    avatarID: 4 Skin Yellow
+    accessoryID: Accessory Brown Trapper
+  - name: laura645
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.9015407
+    premium: 0
+    avatarID: 8 Skin Brown
+    accessoryID: Accessory Green Trapper
+  - name: User6304111
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.92082447
+    premium: 1
+    avatarID: 5 Skin Magenta
+    accessoryID: Accessory Blue Pom Pom
+  - name: Faze0
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.94031227
+    premium: 0
+    avatarID: 3 Skin Green
+    accessoryID: Accessory Green Trapper
+  - name: Wids0
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.96000403
+    premium: 0
+    avatarID: 9 Skin Teal
+    accessoryID: Accessory Cowboy Hat
+  - name: User4989217
+    score: 0
+    ratePerHour: 0.675
+    difficultyMod: 0.9799
+    premium: 0
+    avatarID: 91 Skin White
+    accessoryID: Accessory Sheriff Hat

@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d591a439e24a2c8ee80f45ae09238049, type: 3}
+  m_Name: StreakRace
+  m_EditorClassIdentifier:
+  _saveId: streakRace
+  _remoteConfig: streakRaceEnabled
+  _displayName: t:LiveOp.StreakRace.Title
+  _description: t:LiveOp.StreakRace.Description
+  _introDescription: t:LiveOp.StreakRace.IntroText
+  _collectIcon: {fileID: 21300000, guid: e03512473299afa4aa8a5965efd5491f, type: 2}
+  _preview: {fileID: 21300000, guid: 26b25e39dacdbe746904dc01c9afdd9d, type: 2}
+  introPopupAddressablePath: LOIntro StreakRace
+  progressPopupAddressablePath: LOProgress StreakRace
+  forcePopupOnFirstSeen: 1
+  showProgressUponJoin: 1
+  _requiredLevel: 10
+  backSimulateUponJoin: 1
+  durationAfterManualJoin:
+    _serTimeSpan: 04:00:00
+  promptImmediateRejoin: 1
+  availableStartHours: 00000000000000000000000000000000000000000000000000000000
+  availableDurations:
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 1.00:00:00
+  _rewards:
+  - type: {fileID: 11400000, guid: 4293090c7d375e9458bb9435ed7d8c89, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: cd8a97dab42d6d84c828a580d7408967, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: 9a797d5a7e6851a4bbd67ff8165d45db, type: 2}
+    amount: 1
+  enabled: 0
+  _available: 0
+  _active: 0
+  _unreadResults: 0
+  _joinedCurrentInstance: 0
+  _joinedCurrentWindow: 0
+  _lastsBeyondWindow: 0
+  _spillsIntoNextWindow: 0
+  _becomesAvailableLocal: 0100-01-01 12:00:00 AM -00:14
+  _becomesUnavailableLocal: 0100-01-01 12:00:00 AM -00:14
+  _becomesInactiveLocal: 0100-01-01 12:00:00 AM -00:14
+  earlyFinishDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  newlyActive: 0
+  _withinActiveInstance: 0
+  _withinAvailabilityWindow: 0
+  inGame: 0
+  _joinCountCurrentWindow: 0
+  _initialLeague: -1
+  durationType: 2
+  availableStartDays: 84
+  lastSeenIntroUTC:
+    _dateTimeStr: 2025-10-03 10:23:10 AM +02:00
+  joinDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  lastPlayedDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:10 AM +02:00
+  simulatedDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  seenDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  opponentCount: 4
+  difficultyDefault: 10
+  difficultyIncrementWin: 2
+  difficultyIncrementLose: -2
+  difficultyRange:
+    minimum: 6
+    maximum: 15
+  difficultyDistribution:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _oldPreview: {fileID: 21300000, guid: 2e61c7cb88142cc4c99f772c2389ba46, type: 2}
+  streaksToWinByStage:
+  stage: 0
+  stagePrevious: 0
+  collectedStreak: 0
+  difficulty: 0
+  opponentWon: 0
+  players: []

@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3de52c95eac794c5c12f114d7d76f8ea, type: 3}
+  m_Name: BlockRace
+  m_EditorClassIdentifier:
+  _saveId: blockrace
+  _remoteConfig: blockRaceEnabled
+  _displayName: t:LiveOp.BlockRace.Title
+  _description: t:LiveOp.BlockRace.Description
+  _introDescription: t:LiveOp.BlockRace.IntroText
+  _collectIcon: {fileID: 21300000, guid: a3ec7be5bc12f8b479242734a5968a95, type: 2}
+  _preview: {fileID: 21300000, guid: 946b7ebc8c138884f9685ae243f3d34d, type: 2}
+  introPopupAddressablePath: LOIntro_blockrace
+  progressPopupAddressablePath: LOProg_blockrace
+  forcePopupOnFirstSeen: 1
+  showProgressUponJoin: 1
+  _requiredLevel: 10
+  backSimulateUponJoin: 1
+  durationAfterManualJoin:
+    _serTimeSpan: 04:00:00
+  promptImmediateRejoin: 0
+  availableStartHours: 00000000000000000000000000000000000000000000000000000000
+  availableDurations:
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 00:00:00
+  - _serTimeSpan: 1.00:00:00
+  - _serTimeSpan: 00:00:00
+  _rewards:
+  - type: {fileID: 11400000, guid: f34708d72535cc24482b4d9aaa381f21, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: f2d87f77f6343c04d9177d717cb43ea0, type: 2}
+    amount: 1
+  - type: {fileID: 11400000, guid: 52de3663525677148826943b4eb25a2b, type: 2}
+    amount: 1
+  enabled: 0
+  _available: 0
+  _active: 0
+  _unreadResults: 0
+  _joinedCurrentInstance: 0
+  _joinedCurrentWindow: 0
+  _lastsBeyondWindow: 0
+  _spillsIntoNextWindow: 0
+  _becomesAvailableLocal: 0100-01-01 12:00:00 AM -00:14
+  _becomesUnavailableLocal: 0100-01-01 12:00:00 AM -00:14
+  _becomesInactiveLocal: 0100-01-01 12:00:00 AM -00:14
+  earlyFinishDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  newlyActive: 0
+  _withinActiveInstance: 0
+  _withinAvailabilityWindow: 0
+  inGame: 0
+  _joinCountCurrentWindow: 0
+  _initialLeague: -1
+  durationType: 1
+  availableStartDays: 43
+  lastSeenIntroUTC:
+    _dateTimeStr: 2025-10-03 10:23:10 AM +02:00
+  joinDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  lastPlayedDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:10 AM +02:00
+  simulatedDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  seenDateUTC:
+    _dateTimeStr: 2025-10-03 10:23:11 AM +02:00
+  playerCount: 5
+  oppBaseRate: 6
+  oppRateAdjustInterval: 2
+  oppRateRange:
+    minimum: 4
+    maximum: 10
+  oppRateDistribution:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.33
+      value: 0.72
+      inSlope: 0.92537314
+      outSlope: 0.92537314
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.67
+      value: 0.92
+      inSlope: 0.41791043
+      outSlope: 0.41791043
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _oldPreview: {fileID: 21300000, guid: 6e4a34d1e0f1b0447beed82166000a40, type: 2}
+  levelsToWin: 0
+  levelStart: 0
+  levelCollected: 0
+  levelFinal: 0
+  levelTarget: 0
+  oppAdjustedRate: 0
+  players: []

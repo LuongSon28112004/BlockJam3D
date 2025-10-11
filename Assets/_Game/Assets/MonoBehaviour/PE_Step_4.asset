@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f6161afe1ee3df5248d1c4a241be315, type: 3}
+  m_Name: PE_Step_4
+  m_EditorClassIdentifier:
+  focusedObjectTags:
+  - PE_Step_Multiplier
+  ignoreInactiveObjects: 0
+  delayToSpawnCursor: 0
+  tutorialCursor: {fileID: 1812933307399117, guid: be04ebc0dc3f6c749b2d56c37a7688c0, type: 2}
+  cursorOffset: {x: -50, y: -150, z: 0}
+  cursorAngleOffset: 0
+  pointerSpawnTag: PE_Step_Multiplier
+  pointerTargetTag: PE_Step_Multiplier
+  preventUnblock: 0
+  preventUnblockAfterEndOfFtue: 0
+  isBlockerColorOverride: 0
+  blockerColor: {r: 0, g: 0, b: 0, a: 1}
+  IsCoverClickToNext: 0
+  isCoverColorDisableDuringBefore: 0
+  isCoverColorDisableOnAfter: 1
+  blockerPromptLocalizationKey:
+  delayToSpawnText: 0
+  textPrefab: {fileID: 114611581532019530, guid: d0772ac01ae7bb84cb80ddcb8fa93235, type: 2}
+  localizationKey: CoOpEvent.TutHand3
+  localizationParams: []
+  position: {x: 0, y: 0}
+  timeBefore: 0
+  timeToNext: 0
+  timeAfter: 1.15
+  IsTimeToNext: 0
+  triggers:
