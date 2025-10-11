@@ -6,45 +6,82 @@ using System;
 
 public class BoardCellMovement : MonoBehaviour
 {
-    private float timerPerCellMatrixSecond = 0.05f;
-    private int timerPerCellMatrixMiliSecond = 50;
+    [Header("Timing Settings")]
+    [SerializeField] private float timerPerCellMatrixSecond = 0.05f;
+    [SerializeField] private float distancePerCell = 1.25f;
+
     private float totalCell;
-    private float DistancePerCell = 1.25f;
+
+    /// <summary>
+    /// Di chuyển qua các ô trên ma trận theo danh sách vị trí.
+    /// </summary>
     public async Task MovementMatrix(List<Vector3> containers)
     {
-        totalCell = containers.Count;
         if (containers == null || containers.Count == 0)
         {
             Debug.LogWarning("containers rỗng, không thể di chuyển.");
             return;
         }
 
+        totalCell = containers.Count;
+
         for (int i = 1; i < containers.Count; i++)
         {
             Vector3 nextPos = containers[i];
-            transform.parent.DOMove(nextPos, timerPerCellMatrixSecond);
-            await Task.Delay(timerPerCellMatrixMiliSecond);
+
+            if (transform.parent == null)
+            {
+                Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
+                return;
+            }
+
+            Tween moveTween = transform.parent.DOMove(nextPos, timerPerCellMatrixSecond)
+                .SetEase(Ease.InOutSine);
+
+            await moveTween.AsyncWaitForCompletion();
         }
 
         Debug.Log("Đã hoàn thành di chuyển trên ma trận.");
     }
 
-    public void MovementToCellPlay(Vector3 pos)
+    /// <summary>
+    /// Di chuyển từ ma trận xuống vị trí CellPlay với thời gian tính theo khoảng cách.
+    /// </summary>
+    public async Task MovementToCellPlay(Vector3 pos)
     {
-        if (transform.parent == null) return;
+        if (transform.parent == null)
+        {
+            Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
+            return;
+        }
 
-        float distanceMagnitude = Vector3.Magnitude(pos - transform.parent.position);
-        float timer = distanceMagnitude / DistancePerCell;
-        timer *= timerPerCellMatrixSecond;
+        float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
+        float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
 
-        transform.parent.DOMove(pos, timer);
+        Tween moveTween = transform.parent.DOMove(pos, timer)
+            .SetEase(Ease.OutCubic);
+
+        await moveTween.AsyncWaitForCompletion();
+
         Debug.Log("Đã di chuyển xuống CellPlay.");
     }
 
-    public void MovementToPos(Vector3 pos)
+    /// <summary>
+    /// Di chuyển đến vị trí cụ thể (ví dụ cho reposition hoặc chỉnh vị trí nhanh).
+    /// </summary>
+    public async Task MovementToPos(Vector3 pos)
     {
-        if (transform.parent == null) return;
+        if (transform.parent == null)
+        {
+            Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
+            return;
+        }
 
-        transform.parent.DOMove(pos, timerPerCellMatrixSecond);
+        Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond)
+            .SetEase(Ease.InOutSine);
+
+        await moveTween.AsyncWaitForCompletion();
+
+        Debug.Log("Đã hoàn thành MovementToPos.");
     }
 }

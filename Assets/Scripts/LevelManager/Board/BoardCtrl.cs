@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -17,12 +18,9 @@ public class BoardCtrl : MonoBehaviour
     public List<BoardCell> boardCells;
     public Dictionary<string, TypeItem> DictIdType;
     [Header("Action Event")]
-    //sử lý di chuyển xuống thanh bên duói như thế nào.
-    public Func<Vector3, BoardCell> MoveToCellPlayAction;
-    public Func<BoardCell, int> TryReserverSlotAction;
-    // sử lý khi nào thì nên check ô trống.
-    public Action<BoardCell,int> ExcuteMoveAction;
-
+    public Action<BoardCell> checkAndSavePosAction;
+    public Func<Vector3,Task> MoveToPosAction;
+    public Func<Task> MoveToCellPlay;
     private void Start()
     {
         if (levelData == null)
