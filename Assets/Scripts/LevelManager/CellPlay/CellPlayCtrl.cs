@@ -327,7 +327,8 @@ public class CellPlayCtrl : MonoBehaviour
         {
             BoardCellMovement bc = boardCells[i].BoardCellMovement;
             cellPlays[indexStartEmpty].IsContaining = true;
-            await bc.MovementToPos(cellPlays[indexStartEmpty].Pos);
+            // nếu muốn di chuyển tuần từ thì dùng await
+            _= bc.MovementToPos(cellPlays[indexStartEmpty].Pos);
             indexStartEmpty += 1;
         }
 

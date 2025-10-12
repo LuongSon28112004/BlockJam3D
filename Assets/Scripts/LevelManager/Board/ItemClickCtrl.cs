@@ -61,7 +61,7 @@ public class ItemClickCtrl : MonoBehaviour
                     return;
                 }
                 if (boardCell == null) return;
-                var (path, hasPath) = FindingPath.BFSFind(boardCell.Container);
+                var (path, hasPath) = await findingPath.BFSFind(boardCell.Container);
                 if (!hasPath)
                 {
                     isProcessing = false;
