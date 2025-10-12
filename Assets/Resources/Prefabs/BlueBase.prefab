@@ -94,21 +94,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idType: 1
   typeItem: 0
-  meshFilter: {fileID: 0}
-  meshRenderer: {fileID: 0}
-  meshTypes:
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  materialTypes:
-  - {fileID: 2100000, guid: 2113bc2105558cf45a75477141dc8cbf, type: 2}
-  - {fileID: 2100000, guid: f2e7a6a054728e94cb1521ed39a1136a, type: 2}
-  - {fileID: 2100000, guid: c6c0e6be9b4552c45bd36e603bc3f569, type: 2}
-  neighbors: []
   hasClick: 0
+  neighbors: []
   pos: {x: 0, y: 0, z: 0}
-  anim: {fileID: 0}
-  box: {fileID: 0}
+  boardCellAnimation: {fileID: 1914893369096470440}
+  box: {fileID: 7712481420621958709}
   boardCellMovement: {fileID: 3564272716203641698}
   container: {fileID: 0}
 --- !u!1 &4479461214511588577
@@ -155,6 +145,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 821d280205a287a4588b826e8c7bbe21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timerPerCellMatrixSecond: 0.05
+  distancePerCell: 1.25
 --- !u!1 &7773678263157784966
 GameObject:
   m_ObjectHideFlags: 0

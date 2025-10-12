@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,25 +13,33 @@ public class FindingPath : MonoBehaviour
         ColItem = col;
     }
 
-    public List<Vector3> BFSFind(Container container)
+    // Hàm BFSFind trả về cả path và bool
+    public (List<Vector3> path, bool hasPath) BFSFind(Container container)
     {
         int index = containers.IndexOf(container);
         int startRow = index / ColItem;
         int startCol = index % ColItem;
 
+        // Trường hợp đặc biệt: đang ở hàng cuối cùng
+        if (startRow == rowItem - 1)
+        {
+            return (new List<Vector3>(), true);
+        }
+
         var path = FindPath(startRow, startCol);
-        return path;
+        bool hasPath = path != null && path.Count > 0;
+
+        return (path, hasPath);
     }
 
     // Hàm BFS tìm đường
-    public List<Vector3> FindPath(int startRow, int startCol)
+    private List<Vector3> FindPath(int startRow, int startCol)
     {
-        // Các hướng di chuyển: lên, xuống, trái, phải
         int[] dx = { -1, 1, 0, 0 };
         int[] dy = { 0, 0, -1, 1 };
 
         bool[,] visited = new bool[rowItem, ColItem];
-        (int r, int c)[,] parent = new (int, int)[rowItem, ColItem]; // lưu lại đường đi
+        (int r, int c)[,] parent = new (int, int)[rowItem, ColItem];
 
         Queue<(int r, int c)> queue = new Queue<(int, int)>();
         queue.Enqueue((startRow, startCol));
@@ -45,7 +52,6 @@ public class FindingPath : MonoBehaviour
             // Nếu là hàng cuối và container tồn tại
             if (r == rowItem - 1 && GetContainer(r, c) != null)
             {
-                // Truy vết ngược đường đi
                 return ReconstructPath(parent, startRow, startCol, r, c);
             }
 
@@ -101,6 +107,4 @@ public class FindingPath : MonoBehaviour
         path.Reverse();
         return path;
     }
-
-    // -------------------- DEMO --------------------
 }

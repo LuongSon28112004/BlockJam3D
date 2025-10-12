@@ -9,5 +9,10 @@ public class BoardCellAnimation : MonoBehaviour
         //anim.Set
     }
 
+    public void SetActive()
+    {
+        anim.SetBool("IsActive", true);
+    }
+
     
 }

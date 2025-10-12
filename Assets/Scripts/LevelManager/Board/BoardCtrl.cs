@@ -193,39 +193,71 @@ public class BoardCtrl : MonoBehaviour
             }
         }
 
-        // ======== GÁN NEIGHBOR ========
-        for (int row = 0; row < levelData.height; row++)
+       // ======== GÁN NEIGHBOR ========
+    for (int row = 0; row < levelData.height; row++)
+    {
+        for (int col = 0; col < levelData.width; col++)
         {
-            for (int col = 0; col < levelData.width; col++)
+            BoardCell current = grid[row, col];
+            if (current == null) continue;
+
+            current.ClearNeighbors();
+
+            // Chỉ 4 hướng: Trên, Dưới, Trái, Phải
+            int[,] directions = new int[,]
             {
-                BoardCell current = grid[row, col];
-                if (current == null) continue;
+                { 0, 1 },   // trên
+                { 0, -1 },  // dưới
+                { -1, 0 },  // trái
+                { 1, 0 }    // phải
+            };
 
-                current.ClearNeighbors();
+            for (int d = 0; d < directions.GetLength(0); d++)
+            {
+                int dx = directions[d, 0];
+                int dy = directions[d, 1];
 
-                for (int dy = -1; dy <= 1; dy++)
+                int nx = col + dx;
+                int ny = row + dy;
+
+                if (nx >= 0 && nx < levelData.width && ny >= 0 && ny < levelData.height)
                 {
-                    for (int dx = -1; dx <= 1; dx++)
-                    {
-                        if (dx == 0 && dy == 0) continue;
-
-                        int nx = col + dx;
-                        int ny = row + dy;
-
-                        if (nx >= 0 && nx < levelData.width && ny >= 0 && ny < levelData.height)
-                        {
-                            BoardCell neighbor = grid[ny, nx];
-                            if (neighbor != null)
-                                current.AddNeighbor(neighbor);
-                        }
-                    }
+                    BoardCell neighbor = grid[ny, nx];
+                    if (neighbor != null)
+                        current.AddNeighbor(neighbor);
                 }
             }
+
+            // ✅ Kiểm tra hàng xóm phía dưới (row + 1)
+            int belowRow = row + 1;
+            if (belowRow >= levelData.height || grid[belowRow, col] == null)
+                {
+                current.BoardCellAnimation.SetActive();
+                current.HasClick = true;
+            }
+            else
+            {
+                current.HasClick = false;
+            }
         }
+    }
+
 
         Debug.Log($"Level '{levelData.name}' loaded successfully under {gridParent.name}!");
     }
 
-
+   public void UpdateBoardCell()
+    {
+        for (int i = 0; i < boardCells.Count; i++)
+        {
+            if (boardCells[i] == null)
+            {
+                Debug.Log($"Ô tại vị trí {i} bị missing");
+                // Xử lý nếu cần, ví dụ: xóa khỏi danh sách
+                boardCells.RemoveAt(i);
+                i--; // Giảm i để không bỏ qua phần tử kế tiếp
+            }
+        }
+    }
 
 }
