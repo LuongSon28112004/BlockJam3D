@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 821d280205a287a4588b826e8c7bbe21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timerPerCellMatrixSecond: 0.05
+  distancePerCell: 1.25
 --- !u!1 &8255590342691674121
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,21 +95,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idType: 1
   typeItem: 0
-  meshFilter: {fileID: 0}
-  meshRenderer: {fileID: 0}
-  meshTypes:
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  materialTypes:
-  - {fileID: 2100000, guid: 2113bc2105558cf45a75477141dc8cbf, type: 2}
-  - {fileID: 2100000, guid: f2e7a6a054728e94cb1521ed39a1136a, type: 2}
-  - {fileID: 2100000, guid: c6c0e6be9b4552c45bd36e603bc3f569, type: 2}
-  neighbors: []
   hasClick: 0
+  neighbors: []
   pos: {x: 0, y: 0, z: 0}
-  anim: {fileID: 0}
-  box: {fileID: 0}
+  boardCellAnimation: {fileID: 707055217398719887}
+  box: {fileID: 2917563538002243972}
   boardCellMovement: {fileID: 7266360916322397189}
   container: {fileID: 0}
 --- !u!1 &9221853569323221669
@@ -228,6 +220,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc534d4e1fcfa0e41a338e2d04a7f3a2, type: 3}
+--- !u!65 &2917563538002243972 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 65922122422777017, guid: bc534d4e1fcfa0e41a338e2d04a7f3a2, type: 3}
+  m_PrefabInstance: {fileID: 2924937626699433277}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2925515147251386710 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4208657871506539, guid: bc534d4e1fcfa0e41a338e2d04a7f3a2, type: 3}

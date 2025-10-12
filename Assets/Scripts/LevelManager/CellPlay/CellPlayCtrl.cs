@@ -109,11 +109,17 @@ public class CellPlayCtrl : MonoBehaviour
         if (insertIndex == boardCells.Count)
         {
             boardCells.Add(newCell);
+            //tắt click
+            newCell.HasClick = false;
             countCellType[newCell.TypeItem] += 1;
         }
         else
         {
             countCellType[newCell.TypeItem] += 1;
+            // lưu vị trí boardCell cần trèn là ô insertIndex luôn 
+            boardCells[insertIndex] = newCell;
+            // tắt click
+            newCell.HasClick = false;
         }
 
         // Cập nhật container
@@ -192,11 +198,12 @@ public class CellPlayCtrl : MonoBehaviour
     /// </summary>
     public async Task JumpCell(BoardCell boardCell)
     {
-        // DOMoveY trả về Tween, ta chuyển nó thành Task để await được
-        await boardCell.transform.DOMoveY(boardCell.transform.position.y + 1f, 0.1f)
-            .SetLoops(2, LoopType.Yoyo)
+        // Nhảy lên rồi dừng ở vị trí mới (không quay lại)
+        await boardCell.transform.DOMoveY(boardCell.transform.position.y + 3f, 0.15f)
+            .SetEase(Ease.OutQuad) // hiệu ứng nhảy mượt
             .AsyncWaitForCompletion();
     }
+
 
     /// <summary>
     /// Kiểm tra và xử lý các ô trùng loại >= 3.
@@ -227,126 +234,109 @@ public class CellPlayCtrl : MonoBehaviour
         await Task.WhenAll(jumpTasks);
 
         // // Gộp các ô đã match
-        // foreach (var type in matchedTypes)
-        // {
-        //     await CombineCell(type);
-        // }
+        // await Task.Delay(100);
+        foreach (var type in matchedTypes)
+        {
+            await CombineCell(type);
+        }
     }
 
     // merge và xóa các ô 
-    // public async Task CombineCell(TypeItem type)
-    // {
-    //     // Lấy danh sách 3 cell cùng loại
-    //     List<BoardCell> sameTypeCells = new List<BoardCell>();
-    //     for (int i = 0; i < boardCells.Count; i++)
-    //     {
-    //         if (boardCells[i] != null && boardCells[i].TypeItem == type)
-    //         {
-    //             sameTypeCells.Add(boardCells[i]);
-    //         }
-    //     }
+    public async Task CombineCell(TypeItem type)
+    {
+        // Lấy danh sách 3 cell cùng loại
+        List<BoardCell> sameTypeCells = new List<BoardCell>();
+        List<int> indexs = new List<int>();
+        for (int i = 0; i < boardCells.Count; i++)
+        {
+            if (boardCells[i] != null && boardCells[i].TypeItem == type)
+            {
+                sameTypeCells.Add(boardCells[i]);
+                indexs.Add(i);
+            }
+        }
 
-    //     if (sameTypeCells.Count < 3) return;
+        if (sameTypeCells.Count < 3) return;
 
-    //     // Xác định vị trí trung tâm (ô thứ 2)
-    //     int firstIndex = boardCells.IndexOf(sameTypeCells[0]);
-    //     int lastIndex = boardCells.IndexOf(sameTypeCells[2]);
-    //     int midIndex = (firstIndex + lastIndex) / 2;
-    //     Vector3 targetPos = cellPlays[midIndex].Pos;
+        // Xác định vị trí trung tâm (ô thứ 2)
+        int firstIndex = boardCells.IndexOf(sameTypeCells[0]);
+        int lastIndex = boardCells.IndexOf(sameTypeCells[2]);
+        int midIndex = (firstIndex + lastIndex) / 2;
+        Vector3 targetPos = cellPlays[midIndex].Pos;
 
-    //     // Gộp 3 cell về giữa (animation)
-    //     List<Task> moveTasks = new List<Task>();
-    //     foreach (var cell in sameTypeCells)
-    //     {
-    //         moveTasks.Add(cell.transform.DOMove(targetPos, 0.25f).AsyncWaitForCompletion());
-    //     }
-    //     await Task.WhenAll(moveTasks);
+        // Gộp 3 cell về giữa (animation)
+        List<Task> moveTasks = new List<Task>();
+        foreach (var cell in sameTypeCells)
+        {
+            moveTasks.Add(cell.transform.DOMove(targetPos, 0.25f).AsyncWaitForCompletion());
+        }
+        await Task.WhenAll(moveTasks);
 
-    //     // Tạo cell mới tại vị trí trung tâm
-    //     GameObject newCellObj = Instantiate(prefabCell, targetPos, Quaternion.identity, spawnPoint);
-    //     BoardCell newCell = newCellObj.GetComponent<BoardCell>();
-    //     newCell.TypeItem = type; // Nếu muốn nâng cấp loại, có thể thay ở đây
+        await RemoveItem(sameTypeCells,indexs);
 
-    //     // Gọi hàm nổ (xóa 3 cell cũ)
-    //     await Explode(sameTypeCells);
+    }
 
-    //     // Thêm cell mới vào danh sách đúng vị trí
-    //     if (midIndex > boardCells.Count) midIndex = boardCells.Count;
-    //     boardCells.Insert(midIndex, newCell);
-    //     cellPlays[midIndex].IsContaining = true;
+    public async Task RemoveItem(List<BoardCell> sameTypeCells, List<int> indexs)
+    {
+        // Xóa animation hoặc object thực tế
+        foreach (var cell in sameTypeCells)
+        {
+            if (cell != null)
+            {
+                Destroy(cell.gameObject);
+            }
+        }
 
-    //     // Cập nhật lại số lượng loại
-    //     countCellType[type] = 1;
+        // Xóa khỏi danh sách boardCells theo thứ tự giảm dần
+        indexs.Sort();
+        indexs.Reverse(); // từ lớn đến nhỏ
 
-    //     // Dịch lại các cell còn lại cho khớp vị trí
-    //     await RearrangeCells();
-    // }
+        foreach (int idx in indexs)
+        {
+            if (idx >= 0 && idx < boardCells.Count)
+            {
+                boardCells.RemoveAt(idx);
+                cellPlays[idx].IsContaining = false;
+            }
+        }
 
-    // /// <summary>
-    // /// Xóa nhiều cell cùng lúc (nổ 3 cell cũ).
-    // /// </summary>
-    // private async Task Explode(List<BoardCell> cellsToRemove)
-    // {
-    //     if (cellsToRemove == null || cellsToRemove.Count == 0) return;
+        // Cập nhật lại biến đếm
+        foreach (var cell in sameTypeCells)
+        {
+            countCellType[cell.TypeItem] -= 1;
+        }
 
-    //     // Xử lý animation nổ
-    //     List<Task> explodeTasks = new List<Task>();
-    //     foreach (var cell in cellsToRemove)
-    //     {
-    //         explodeTasks.Add(cell.transform
-    //             .DOScale(Vector3.zero, 0.15f)
-    //             .AsyncWaitForCompletion());
-    //     }
+        Debug.Log("Đã xóa các cell cùng loại và cập nhật danh sách.");
+        await ShiftCellsLeft();
+    }
+    
+     private async Task ShiftCellsLeft()
+    {
+        int indexStartEmpty = 0;
+        for (int i = 0; i < cellPlays.Count; i++)
+        {
+            if (!cellPlays[i].IsContaining)
+            {
+                indexStartEmpty = i;
+                break;
+            }
 
-    //     await Task.WhenAll(explodeTasks);
+        }
 
-    //     // Sau khi animation xong: thực sự xóa khỏi danh sách & scene
-    //     // => phải xóa theo thứ tự giảm dần để tránh lệch chỉ số
-    //     List<int> indexes = new List<int>();
-    //     foreach (var cell in cellsToRemove)
-    //     {
-    //         int index = boardCells.IndexOf(cell);
-    //         if (index >= 0)
-    //             indexes.Add(index);
-    //     }
+        for (int i = indexStartEmpty; i < boardCells.Count; i++)
+        {
+            BoardCellMovement bc = boardCells[i].BoardCellMovement;
+            cellPlays[indexStartEmpty].IsContaining = true;
+            await bc.MovementToPos(cellPlays[indexStartEmpty].Pos);
+            indexStartEmpty += 1;
+        }
 
-    //     indexes.Sort((a, b) => b.CompareTo(a)); // sắp giảm dần
-
-    //     foreach (var index in indexes)
-    //     {
-    //         var cell = boardCells[index];
-    //         boardCells.RemoveAt(index);
-    //         cellPlays[index].IsContaining = false;
-    //         Destroy(cell.gameObject);
-    //     }
-
-    //     // Giảm số lượng trong countCellType
-    //     var type = cellsToRemove[0].TypeItem;
-    //     if (countCellType.ContainsKey(type))
-    //     {
-    //         countCellType[type] = Mathf.Max(0, countCellType[type] - cellsToRemove.Count);
-    //     }
-    // }
-
-
-    // /// <summary>
-    // /// Dịch lại tất cả các cell còn lại cho sát nhau.
-    // /// </summary>
-    // private async Task RearrangeCells()
-    // {
-    //     for (int i = 0; i < boardCells.Count; i++)
-    //     {
-    //         if (boardCells[i] != null)
-    //         {
-    //             await boardCells[i].BoardCellMovement.MovementToPos(cellPlays[i].Pos);
-    //             cellPlays[i].IsContaining = true;
-    //         }
-    //     }
-
-    //     // Đánh dấu các slot trống ở cuối
-    //     for (int i = boardCells.Count; i < cellPlays.Count; i++)
-    //     {
-    //         cellPlays[i].IsContaining = false;
-    //     }
-    // }
+        for (int i = indexStartEmpty; i < cellPlays.Count; i++)
+        {
+            cellPlays[i].IsContaining = false;
+        }
+        //update lại các ô trong BoarlCellCtrl
+        await Task.Delay(100);
+        LevelManager.Instance.BoardCtrl.UpdateBoardCell();
+    }
 }

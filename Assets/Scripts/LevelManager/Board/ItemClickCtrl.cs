@@ -48,33 +48,36 @@ public class ItemClickCtrl : MonoBehaviour
             if (isProcessing) return;
            // if (!await clickLock.WaitAsync(0)) return; // đang bận thì bỏ qua
 
-            try
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit))
+            {
+                isProcessing = true;
+                Debug.Log(hit.collider.gameObject.name);
+                BoardCell boardCell = hit.transform.parent.GetComponent<BoardCell>();
+                if(!boardCell.HasClick)
                 {
-                    isProcessing = true;
-                    Debug.Log(hit.collider.gameObject.name);
-                    BoardCell boardCell = hit.transform.parent.GetComponent<BoardCell>();
-                    if (boardCell == null) return;
-
-                    LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell);
-
-                    List<Vector3> path = FindingPath.BFSFind(boardCell.Container);
-
-                    boardCell.Container.IsContaining = false;
-                    boardCell.Container = null;
-
-                    await MoveLeaveMatrix(path, boardCell);
-
-                    await LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke();
                     isProcessing = false;
+                    return;
                 }
-            }
-            finally
-            {
-                //clickLock.Release();
+                if (boardCell == null) return;
+                var (path, hasPath) = FindingPath.BFSFind(boardCell.Container);
+                if (!hasPath)
+                {
+                    isProcessing = false;
+                    return;
+                }
+                LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell);
+                //setActive cac NeighBor
+                boardCell.SetActiveNeighBor();
+
+                boardCell.Container.IsContaining = false;
+                boardCell.Container = null;
+
+                await MoveLeaveMatrix(path, boardCell);
+
+                await LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke();
+                isProcessing = false;
             }
         }
 }
