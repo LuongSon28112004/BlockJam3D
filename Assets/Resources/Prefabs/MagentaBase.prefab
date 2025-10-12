@@ -140,21 +140,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idType: 1
   typeItem: 0
-  meshFilter: {fileID: 0}
-  meshRenderer: {fileID: 0}
-  meshTypes:
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  materialTypes:
-  - {fileID: 2100000, guid: 2113bc2105558cf45a75477141dc8cbf, type: 2}
-  - {fileID: 2100000, guid: f2e7a6a054728e94cb1521ed39a1136a, type: 2}
-  - {fileID: 2100000, guid: c6c0e6be9b4552c45bd36e603bc3f569, type: 2}
-  neighbors: []
   hasClick: 0
+  neighbors: []
   pos: {x: 0, y: 0, z: 0}
-  anim: {fileID: 0}
-  box: {fileID: 0}
+  boardCellAnimation: {fileID: 2084944823176013233}
+  box: {fileID: 5688519554340761369}
   boardCellMovement: {fileID: 5427463400565578169}
   container: {fileID: 0}
 --- !u!1001 &5628262112368830717
@@ -267,23 +257,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4567154255944283, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.98768836
       objectReference: {fileID: 0}
     - target: {fileID: 4567154255944283, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: -0.1564345
       objectReference: {fileID: 0}
     - target: {fileID: 4567154255944283, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4567154255944283, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4567154255944283, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -18
       objectReference: {fileID: 0}
     - target: {fileID: 4567154255944283, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -381,6 +371,11 @@ PrefabInstance:
 --- !u!4 &5623768188950409894 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4567154255944283, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
+  m_PrefabInstance: {fileID: 5628262112368830717}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &5688519554340761369 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 65923380025526244, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
   m_PrefabInstance: {fileID: 5628262112368830717}
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &5713388657223925279 stripped

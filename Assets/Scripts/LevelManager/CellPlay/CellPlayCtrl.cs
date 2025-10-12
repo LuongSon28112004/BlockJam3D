@@ -40,7 +40,7 @@ public class CellPlayCtrl : MonoBehaviour
         countCellType.Add(TypeItem.BlueBase, 0);
         countCellType.Add(TypeItem.BrownBase, 0);
         countCellType.Add(TypeItem.GreenBase, 0);
-
+        countCellType.Add(TypeItem.MagentaBase, 0);
     }
 
     private void OnDisable()

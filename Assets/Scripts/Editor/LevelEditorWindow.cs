@@ -18,7 +18,8 @@ public class LevelEditorWindow : EditorWindow
         "Container",
         "1",
         "2",
-        "3"
+        "3",
+        "4"
     };
 
     [MenuItem("Game Tools/Level Editor (Simple Mode)")]

@@ -3,9 +3,11 @@ using UnityEngine;
 
 public enum TypeItem
 {
-    BlueBase,   // Đỏ
-    BrownBase,   // Vàng
-    GreenBase, // Xanh
+    BlueBase,
+    BrownBase,
+    GreenBase,
+    MagentaBase
+
 } //=> for override
 
 public class BoardCell : MonoBehaviour
