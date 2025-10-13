@@ -11,8 +11,7 @@ public class ItemClickCtrl : MonoBehaviour
     public FindingPath FindingPath { get => findingPath; set => findingPath = value; }
 
     private RaycastHit hit;
-    private bool isProcessing = false;
-    //private SemaphoreSlim clickLock = new SemaphoreSlim(1, 1);
+    private Queue<BoardCell> queBoardCellsClick;
 
 
     void Start()
@@ -22,7 +21,7 @@ public class ItemClickCtrl : MonoBehaviour
             Debug.LogError("❌ LevelManager hoặc BoardCtrl chưa được khởi tạo!");
             return;
         }
-
+        queBoardCellsClick = new Queue<BoardCell>();
         LevelManager.Instance.BoardCtrl.MoveToPosAction += MoveToPos;
     }
 
@@ -45,29 +44,20 @@ public class ItemClickCtrl : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (isProcessing) return;
-           // if (!await clickLock.WaitAsync(0)) return; // đang bận thì bỏ qua
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out hit))
             {
-                isProcessing = true;
                 Debug.Log(hit.collider.gameObject.name);
                 BoardCell boardCell = hit.transform.parent.GetComponent<BoardCell>();
-                if(!boardCell.HasClick)
-                {
-                    isProcessing = false;
-                    return;
-                }
                 if (boardCell == null) return;
+                if(!boardCell.HasClick) return;
+                queBoardCellsClick.Enqueue(boardCell);
                 var (path, hasPath) = await findingPath.BFSFind(boardCell.Container);
-                if (!hasPath)
-                {
-                    isProcessing = false;
-                    return;
-                }
-                LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell);
+                if (!hasPath) return;
+                boardCell.BoardCellAnimation.SetRunning();
+                await LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell);
                 //setActive cac NeighBor
                 boardCell.SetActiveNeighBor();
 
@@ -75,9 +65,7 @@ public class ItemClickCtrl : MonoBehaviour
                 boardCell.Container = null;
 
                 await MoveLeaveMatrix(path, boardCell);
-
-                await LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke();
-                isProcessing = false;
+                await LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke(boardCell);
             }
         }
 }
@@ -108,7 +96,8 @@ public class ItemClickCtrl : MonoBehaviour
             return;
         }
 
-        BoardCell boardCell = hit.collider.transform.parent?.GetComponent<BoardCell>();
+        BoardCell boardCell = queBoardCellsClick.Dequeue();
+        Debug.Log("okok move" + boardCell.TypeItem);
         if (boardCell == null)
         {
             Debug.LogWarning("Không tìm thấy BoardCell.");

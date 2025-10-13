@@ -7,7 +7,7 @@ using System;
 public class BoardCellMovement : MonoBehaviour
 {
     [Header("Timing Settings")]
-    [SerializeField] private float timerPerCellMatrixSecond = 0.05f;
+    [SerializeField] private float timerPerCellMatrixSecond = 0.1f;
     [SerializeField] private float distancePerCell = 1.25f;
 
     private float totalCell;
@@ -35,6 +35,7 @@ public class BoardCellMovement : MonoBehaviour
                 return;
             }
 
+            // ⚙️ Tăng thời gian gấp đôi để di chuyển chậm hơn
             Tween moveTween = transform.parent.DOMove(nextPos, timerPerCellMatrixSecond)
                 .SetEase(Ease.InOutSine);
 
@@ -58,7 +59,8 @@ public class BoardCellMovement : MonoBehaviour
         float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
 
-        Tween moveTween = transform.parent.DOMove(pos, timer)
+        // ⚙️ Tăng thời gian gấp đôi để di chuyển chậm hơn
+        Tween moveTween = transform.parent.DOMove(pos, timer * 1.5f)
             .SetEase(Ease.OutCubic);
 
         await moveTween.AsyncWaitForCompletion();
@@ -77,6 +79,7 @@ public class BoardCellMovement : MonoBehaviour
             return;
         }
 
+        // ⚙️ Tăng thời gian gấp đôi để di chuyển chậm hơn
         Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond)
             .SetEase(Ease.InOutSine);
 

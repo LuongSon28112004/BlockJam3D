@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
+using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 
 public class BoardCtrl : MonoBehaviour
@@ -9,7 +10,7 @@ public class BoardCtrl : MonoBehaviour
 
     [Header("Level Configuration")]
     [SerializeField] private ItemClickCtrl itemClickCtrl;
-    private const int MAXTYPE = 3;
+    private const int MAXTYPE = 4;
     public LevelData levelData; 
     public string prefabFolder = "Prefabs"; 
 
@@ -19,35 +20,12 @@ public class BoardCtrl : MonoBehaviour
     public Dictionary<string, TypeItem> DictIdType;
 
     [Header("Action Event")]
-    public Action<BoardCell> checkAndSavePosAction;
+    public Func<BoardCell,Task> checkAndSavePosAction;
     public Func<Vector3,Task> MoveToPosAction;
-    public Func<Task> MoveToCellPlay;
+    public Func<BoardCell,Task> MoveToCellPlay;
     private void Start()
     {
-        if (levelData == null)
-        {
-            Debug.LogError("Chưa gán LevelData!");
-            return;
-        }
-
-        if (gridParent == null)
-        {
-            Debug.LogError("Chưa gán Grid để chứa các ô!");
-            return;
-        }
-
-        // align ban co
-        if (levelData.alignment)
-        {
-            Vector3 parentPos = gridParent.parent.position;
-            parentPos.x = -0.6f;
-            gridParent.parent.position = parentPos;
-        }
-
-        // //init findpath
-        // findingPath.SetCapacity(levelData.width, levelData.height);
-
-        //LoadLevel();
+        
     }
 
     // public void SetIdTypeRandom()
@@ -87,12 +65,30 @@ public class BoardCtrl : MonoBehaviour
 
 
 
-   public void LoadLevel(LevelData levelData)
+   public async Task LoadLevel(LevelData levelData)
     {
         // random ngẫu nhiên để các level không trùng type
         //SetIdTypeRandom();
 
         this.levelData = levelData;
+        if (levelData == null)
+        {
+            Debug.LogError("Chưa gán LevelData!");
+            return;
+        }
+
+        if (gridParent == null)
+        {
+            Debug.LogError("Chưa gán Grid để chứa các ô!");
+            return;
+        }
+        // align ban co
+        if (levelData.alignment)
+        {
+            Vector3 parentPos = gridParent.parent.position;
+            parentPos.x = -0.6f;
+            gridParent.parent.position = parentPos;
+        }
 
         float offsetX = 1.25f;
         float offsetZ = 1.25f;
@@ -132,15 +128,16 @@ public class BoardCtrl : MonoBehaviour
                 }
 
                 // Chọn prefab
+                // string address = "Assets/Resources_moved/Prefabs/";
                 GameObject prefab = null;
                 if (prefabName != "Wall" && prefabName != "Container")
                 {
                     string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName) -1);
-                    prefab = Resources.Load<GameObject>($"{prefabFolder}/{name}");
+                    prefab = AddressableManager.Instance.GetPrefab($"{name}");
                 }
                 else
                 {
-                    prefab = Resources.Load<GameObject>($"{prefabFolder}/{prefabName}");
+                    prefab = AddressableManager.Instance.GetPrefab($"{prefabName}");
                     if(prefabName == "Wall")
                     {
                         IsWall[row, col] = true;
@@ -162,7 +159,7 @@ public class BoardCtrl : MonoBehaviour
                 obj.name = prefabName;
                 if (prefabName != "Wall" && prefabName != "Container")
                 {
-                    GameObject prefabTemp = Resources.Load<GameObject>($"{prefabFolder}/{"Container"}");
+                    GameObject prefabTemp = AddressableManager.Instance.GetPrefab("Container");
                     GameObject objj = Instantiate(prefabTemp, new Vector3(posX, 0f, posZ), Quaternion.identity, gridParent);
                     objj.name = "Container";
                     objj.GetComponent<Container>().IsContaining = true;
@@ -204,7 +201,7 @@ public class BoardCtrl : MonoBehaviour
             }
         }
 
-       // ======== GÁN NEIGHBOR ========
+        // ======== GÁN NEIGHBOR ========
         for (int row = 0; row < levelData.height; row++)
         {
             for (int col = 0; col < levelData.width; col++)
@@ -241,7 +238,7 @@ public class BoardCtrl : MonoBehaviour
 
                 // Kiểm tra hàng xóm phía dưới (row + 1)
                 int belowRow = row + 1;
-                if (belowRow >= levelData.height || (grid[belowRow, col] == null && !IsWall[belowRow,col]) )
+                if (belowRow >= levelData.height || (grid[belowRow, col] == null && !IsWall[belowRow, col]))
                 {
                     current.BoardCellAnimation.SetActive();
                     current.HasClick = true;
@@ -252,6 +249,14 @@ public class BoardCtrl : MonoBehaviour
                 }
             }
         }
+        
+          transform.position = new Vector3(4f, transform.position.y, transform.position.z);
+        // Di chuyển từ x = 1.5 đến x = 0 trong 0.25 giây
+        var tween = transform.DOMoveX(0f, 0.25f).SetEase(Ease.Linear);
+        var tcs = new TaskCompletionSource<bool>();
+        tween.OnComplete(() => tcs.TrySetResult(true));
+        tween.OnKill(() => tcs.TrySetResult(true));
+        await tcs.Task;
 
 
         Debug.Log($"Level '{levelData.name}' loaded successfully under {gridParent.name}!");
@@ -268,6 +273,10 @@ public class BoardCtrl : MonoBehaviour
                 boardCells.RemoveAt(i);
                 i--; // Giảm i để không bỏ qua phần tử kế tiếp
             }
+        }
+        if(boardCells.Count == 0)
+        {
+            LevelManager.Instance.NextRound.Invoke();
         }
     }
 

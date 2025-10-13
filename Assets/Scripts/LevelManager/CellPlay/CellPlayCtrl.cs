@@ -8,6 +8,7 @@ using UnityEngine;
 public class CellPlayCtrl : MonoBehaviour
 {
     private const int MAX_ROW = 7;
+    
 
     [SerializeField] private List<BoardCell> boardCells;   // danh sách các ô hiện có (theo thứ tự trái -> phải)
     [SerializeField] private List<Container> cellPlays;    // danh sách container (vị trí)
@@ -83,9 +84,10 @@ public class CellPlayCtrl : MonoBehaviour
         }
     }
 
-    public void checkAndSavePos(BoardCell newCell)
+    public async Task checkAndSavePos(BoardCell newCell)
     {
         if (boardCells.Count == MAX_ROW) return;
+        
         // Xác định vị trí cần chèn
         int insertIndex = FindInsertIndex(newCell);
 
@@ -98,6 +100,7 @@ public class CellPlayCtrl : MonoBehaviour
 
         // Lưu vị trí chèn vào queue
         listPos.Enqueue(insertIndex);
+        Debug.Log("okok" + listPos.Count + insertIndex + newCell.TypeItem);
 
         // Dịch các ô phía sau sang phải (nếu cần)
         if (insertIndex < boardCells.Count)
@@ -176,20 +179,34 @@ public class CellPlayCtrl : MonoBehaviour
         return false;
     }
 
-    public async Task MoveToCell()
+    public async Task MoveToCell(BoardCell boardCell)
     {
         if (listPos.Count > 0)
         {
             int index = listPos.Dequeue();
+            Debug.Log("okok move" + index + boardCell.TypeItem);
 
             // Thực hiện di chuyển đến vị trí
+            boardCell.Pos = cellPlays[index].Pos;
             await LevelManager.Instance.BoardCtrl.MoveToPosAction.Invoke(cellPlays[index].Pos);
+            boardCell.BoardCellAnimation.SetIdle();
+
 
             // Kiểm tra match-3 sau khi di chuyển xong
             if (check_3Item())
             {
                 await checkMatch_3(); // chờ animation hoàn tất
             }
+            //check lose
+            if (boardCells.Count == MAX_ROW)
+            {
+                LevelManager.Instance.LoseGame.Invoke();
+            }
+            
+            if(LevelManager.Instance.Round == 3 && boardCells.Count == 0)
+            {
+                LevelManager.Instance.WinGame.Invoke();
+            } 
         }
     }
     
@@ -229,6 +246,7 @@ public class CellPlayCtrl : MonoBehaviour
                 }
             }
         }
+        if (jumpTasks.Count == 0) return;
 
         // Đợi tất cả nhảy xong
         await Task.WhenAll(jumpTasks);
@@ -268,7 +286,8 @@ public class CellPlayCtrl : MonoBehaviour
         List<Task> moveTasks = new List<Task>();
         foreach (var cell in sameTypeCells)
         {
-            moveTasks.Add(cell.transform.DOMove(targetPos, 0.25f).AsyncWaitForCompletion());
+            cell.BoardCellAnimation.SetRaise();
+            moveTasks.Add(cell.transform.DOMove(targetPos + new Vector3(0,3f,0), 0.15f).AsyncWaitForCompletion());
         }
         await Task.WhenAll(moveTasks);
 

@@ -440,7 +440,7 @@ GameObject:
   - component: {fileID: 447519719}
   - component: {fileID: 447519718}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -828,10 +828,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Level: 1
-  levelDatas:
-  - {fileID: 11400000, guid: b6b2293c6e0f92246bb798cc4df146d7, type: 2}
+  Round: 0
+  levelDatas: []
   BoardCtrl: {fileID: 2015014349}
   cellPlayCtrl: {fileID: 180589251}
+  canvas: {fileID: 447519720}
+  popupLose: {fileID: 7702868498491095954, guid: 474f3851cdb14f14b91cf932d93d417a, type: 3}
+  popupWin: {fileID: 8130131894821316984, guid: 2affc6876140b714ebe1f4b3c23ba247, type: 3}
 --- !u!4 &1614532944
 Transform:
   m_ObjectHideFlags: 0
@@ -840,7 +843,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1614532942}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
