@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,6 +35,9 @@ public class BoardCell : MonoBehaviour
     [SerializeField] private BoxCollider box;
     [SerializeField] private BoardCellMovement boardCellMovement;
     [SerializeField] private Container container;// container init start contains it
+    [Header("Barrel")]
+    [SerializeField] private GameObject barrel;
+    [SerializeField] private BarrelCell barrelCell;
 
     // === Properties ===
     public Vector3 Pos { get => pos; set => pos = value; }
@@ -43,6 +47,9 @@ public class BoardCell : MonoBehaviour
     public BoardCellMovement BoardCellMovement { get => boardCellMovement; set => boardCellMovement = value; }
     public bool HasClick { get => hasClick; set => hasClick = value; }
     public BoardCellAnimation BoardCellAnimation { get => boardCellAnimation; set => boardCellAnimation = value; }
+    public GameObject Barrel { get => barrel; set => barrel = value; }
+    public BarrelCell BarrelCell { get => barrelCell; set => barrelCell = value; }
+
 
     // public List<BoardCell> Neighbors => neighbors;
     // public TypeItem TypeItem { get => typeItem; set => typeItem = value; }
@@ -84,18 +91,33 @@ public class BoardCell : MonoBehaviour
         neighbors.Remove(cell);
     }
 
-    public void SetActiveNeighBor()
+    public IEnumerator SetActiveNeighBor()
     {
-        for(int i = 0; i < neighbors.Count; i++)
+        for (int i = 0; i < neighbors.Count; i++)
         {
+            if (neighbors[i].Barrel.activeSelf)
+            {
+                StartCoroutine(neighbors[i].PlayBarrelAnimation());
+            }
             neighbors[i].HasClick = true;
             neighbors[i].BoardCellAnimation.SetActive();
             neighbors[i].RemoveNeighbor(this);
+            yield return new WaitForSeconds(0.15f);
+            neighbors[i].Barrel.SetActive(false);
         }
+        yield break;
     }
 
     public void ClearNeighbors()
     {
         neighbors.Clear();
     }
+
+    public IEnumerator PlayBarrelAnimation()
+        {
+            if (barrelCell != null && barrelCell.BarrelCelAnimation != null)
+                StartCoroutine(barrelCell.BarrelCelAnimation.PlayBarrelAnimation());
+            else
+                yield break;
+        }
 }

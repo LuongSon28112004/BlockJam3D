@@ -24,7 +24,7 @@ public class AddressableManager : SingletonDDOL<AddressableManager>
         await PreloadAllPrefabsAsync();
         await PreloadAllLevelsAsync();
         _isPreloaded = true;
-        Debug.Log("✅ All Addressable prefabs & levels loaded and grouped!");
+        Debug.Log("All Addressable prefabs & levels loaded and grouped!");
     }
 
     // =========================

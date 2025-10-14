@@ -15,7 +15,7 @@ public class FindingPath : MonoBehaviour
     }
 
     // Hàm BFSFind trả về cả path và bool
-    public async Task<(List<Vector3> path, bool hasPath)> BFSFind(Container container)
+    public (List<Vector3> path, bool hasPath) BFSFind(Container container)
     {
         int index = containers.IndexOf(container);
         int startRow = index / ColItem;
@@ -27,14 +27,14 @@ public class FindingPath : MonoBehaviour
             return (new List<Vector3>(), true);
         }
 
-        var path = await FindPath(startRow, startCol);
+        var path = FindPath(startRow, startCol);
         bool hasPath = path != null && path.Count > 0;
 
         return (path, hasPath);
     }
 
     // Hàm BFS tìm đường
-    private async Task<List<Vector3>> FindPath(int startRow, int startCol)
+    private List<Vector3>FindPath(int startRow, int startCol)
     {
         int[] dx = { -1, 1, 0, 0 };
         int[] dy = { 0, 0, -1, 1 };

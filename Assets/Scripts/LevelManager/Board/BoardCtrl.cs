@@ -1,8 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DG.Tweening;
-using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 
 public class BoardCtrl : MonoBehaviour
@@ -11,61 +11,26 @@ public class BoardCtrl : MonoBehaviour
     [Header("Level Configuration")]
     [SerializeField] private ItemClickCtrl itemClickCtrl;
     private const int MAXTYPE = 4;
-    public LevelData levelData; 
-    public string prefabFolder = "Prefabs"; 
+    public LevelData levelData;
+    public string prefabFolder = "Prefabs";
 
     [Header("Parent Container")]
-    public Transform gridParent; 
+    public Transform gridParent;
     public List<BoardCell> boardCells;
     public Dictionary<string, TypeItem> DictIdType;
 
     [Header("Action Event")]
-    public Func<BoardCell,Task> checkAndSavePosAction;
-    public Func<Vector3,Task> MoveToPosAction;
-    public Func<BoardCell,Task> MoveToCellPlay;
+    public Func<BoardCell, IEnumerator> checkAndSavePosAction;
+    public Func<BoardCell, IEnumerator> MoveToCellPlay;
+    // ✅ Thay đổi: MoveToPosAction nên trả về IEnumerator để được yield return
+    public Func<Vector3, IEnumerator> MoveToPosAction; 
+
     private void Start()
     {
-        
+
     }
 
-    // public void SetIdTypeRandom()
-    // {
-    //     // Xóa dict cũ
-    //     DictIdType = new Dictionary<string, TypeItem>();
-
-    //     // Danh sách ID (từ 1 đến MAXTYPE)
-    //     List<string> ids = new List<string>();
-    //     for (int i = 1; i <= MAXTYPE; i++)
-    //     {
-    //         ids.Add(i.ToString());
-    //     }
-
-    //     // Danh sách TypeItem
-    //     List<TypeItem> allTypes = new List<TypeItem>((TypeItem[])System.Enum.GetValues(typeof(TypeItem)));
-
-    //     // Shuffle danh sách type để random
-    //     for (int i = allTypes.Count - 1; i > 0; i--)
-    //     {
-    //         int randIndex = UnityEngine.Random.Range(0, i + 1);
-    //         (allTypes[i], allTypes[randIndex]) = (allTypes[randIndex], allTypes[i]);
-    //     }
-
-    //     // Gán từng ID với TypeItem tương ứng
-    //     for (int i = 0; i < MAXTYPE; i++)
-    //     {
-    //         DictIdType.Add(ids[i], allTypes[i]);
-    //     }
-
-    //     // // Debug kiểm tra
-    //     // foreach (var kvp in DictIdType)
-    //     // {
-    //     //     Debug.Log($"ID: {kvp.Key} → Type: {kvp.Value}");
-    //     // }
-    // }
-
-
-
-   public async Task LoadLevel(LevelData levelData)
+    public async Task LoadLevel(LevelData levelData)
     {
         // random ngẫu nhiên để các level không trùng type
         //SetIdTypeRandom();
@@ -102,7 +67,7 @@ public class BoardCtrl : MonoBehaviour
         boardCells.Clear();
 
         // Khởi tạo lại danh sách container trong findPath
-        itemClickCtrl.FindingPath.SetCapacity(levelData.height, levelData.width); // ✅ sửa lại đúng width, height
+        itemClickCtrl.FindingPath.SetCapacity(levelData.height, levelData.width);
         itemClickCtrl.FindingPath.containers.Clear();
 
         // Tính điểm bắt đầu sao cho bàn cờ nằm chính giữa
@@ -128,17 +93,17 @@ public class BoardCtrl : MonoBehaviour
                 }
 
                 // Chọn prefab
-                // string address = "Assets/Resources_moved/Prefabs/";
                 GameObject prefab = null;
                 if (prefabName != "Wall" && prefabName != "Container")
                 {
-                    string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName) -1);
+                    // ✅ Sửa lỗi tham chiếu: Sử dụng Enum.GetName(typeof(TypeItem), int.Parse(prefabName))
+                    string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
                     prefab = AddressableManager.Instance.GetPrefab($"{name}");
                 }
                 else
                 {
                     prefab = AddressableManager.Instance.GetPrefab($"{prefabName}");
-                    if(prefabName == "Wall")
+                    if (prefabName == "Wall")
                     {
                         IsWall[row, col] = true;
                     }
@@ -147,7 +112,6 @@ public class BoardCtrl : MonoBehaviour
                 if (prefab == null)
                 {
                     Debug.LogWarning($"Không tìm thấy prefab: {prefabName}");
-                    // findingPath.containers.Add(null);
                     continue;
                 }
 
@@ -170,11 +134,11 @@ public class BoardCtrl : MonoBehaviour
                     {
                         boardCell.Pos = new Vector3(posX, 0f, posZ);
                         boardCells.Add(boardCell);
-                        boardCell.IdType = prefabName;
-                        boardCell.TypeItem = (TypeItem)(int.Parse(prefabName.ToString()) - 1);
-                        //////////////////////////////////////////
+                        boardCell.IdType = prefabName[0].ToString();
+                        boardCell.TypeItem = (TypeItem)(int.Parse(prefabName[0].ToString()) - 1);
+                        if(prefabName.Length > 1) boardCell.Barrel.SetActive(true);
+                        else boardCell.Barrel.SetActive(false);
                         //boardCell.ChangItemFromId(DictIdType);
-                        /////////////////////////////////////////
                         boardCell.Container = objj.GetComponent<Container>();
                         grid[row, col] = boardCell;
                     }
@@ -188,15 +152,13 @@ public class BoardCtrl : MonoBehaviour
                     containerToAdd = null;
                 else if (prefabName == "Container")
                     containerToAdd = obj.GetComponent<Container>();
-                // else
-                //     containerToAdd = obj.GetComponent<Container>();
 
                 if (containerToAdd != null)
                 {
                     containerToAdd.Pos = new Vector3(posX, 0f, posZ);
                 }
 
-                if(prefabName == "Wall" || prefabName == "Container")
+                if (prefabName == "Wall" || prefabName == "Container")
                     itemClickCtrl.FindingPath.containers.Add(containerToAdd);
             }
         }
@@ -214,10 +176,10 @@ public class BoardCtrl : MonoBehaviour
                 // Chỉ 4 hướng: Trên, Dưới, Trái, Phải
                 int[,] directions = new int[,]
                 {
-                    { 0, 1 },   // trên
-                    { 0, -1 },  // dưới
-                    { -1, 0 },  // trái
-                    { 1, 0 }    // phải
+                    { 0, 1 },   // trên (col, row + 1)
+                    { 0, -1 },  // dưới (col, row - 1)
+                    { -1, 0 },  // trái (col - 1, row)
+                    { 1, 0 }    // phải (col + 1, row)
                 };
 
                 for (int d = 0; d < directions.GetLength(0); d++)
@@ -225,8 +187,8 @@ public class BoardCtrl : MonoBehaviour
                     int dx = directions[d, 0];
                     int dy = directions[d, 1];
 
-                    int nx = col + dx;
-                    int ny = row + dy;
+                    int nx = col + dx; // Cột mới
+                    int ny = row + dy; // Hàng mới
 
                     if (nx >= 0 && nx < levelData.width && ny >= 0 && ny < levelData.height)
                     {
@@ -238,6 +200,7 @@ public class BoardCtrl : MonoBehaviour
 
                 // Kiểm tra hàng xóm phía dưới (row + 1)
                 int belowRow = row + 1;
+                // Nếu dưới cùng hoặc ô dưới là null (không có item) và không phải là Wall
                 if (belowRow >= levelData.height || (grid[belowRow, col] == null && !IsWall[belowRow, col]))
                 {
                     current.BoardCellAnimation.SetActive();
@@ -249,9 +212,9 @@ public class BoardCtrl : MonoBehaviour
                 }
             }
         }
-        
-          transform.position = new Vector3(4f, transform.position.y, transform.position.z);
-        // Di chuyển từ x = 1.5 đến x = 0 trong 0.25 giây
+
+        transform.position = new Vector3(4f, transform.position.y, transform.position.z);
+        // Di chuyển từ x = 4f đến x = 0 trong 0.25 giây
         var tween = transform.DOMoveX(0f, 0.25f).SetEase(Ease.Linear);
         var tcs = new TaskCompletionSource<bool>();
         tween.OnComplete(() => tcs.TrySetResult(true));
@@ -262,7 +225,7 @@ public class BoardCtrl : MonoBehaviour
         Debug.Log($"Level '{levelData.name}' loaded successfully under {gridParent.name}!");
     }
 
-   public void UpdateBoardCell()
+     public void UpdateBoardCell()
     {
         for (int i = 0; i < boardCells.Count; i++)
         {
@@ -279,5 +242,4 @@ public class BoardCtrl : MonoBehaviour
             LevelManager.Instance.NextRound.Invoke();
         }
     }
-
 }

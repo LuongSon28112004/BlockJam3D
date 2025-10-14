@@ -1,8 +1,6 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class ItemClickCtrl : MonoBehaviour
@@ -12,20 +10,24 @@ public class ItemClickCtrl : MonoBehaviour
 
     private RaycastHit hit;
     private Queue<BoardCell> queBoardCellsClick;
+    private Queue<BoardCell> queBoardCellsMoveToPos;
 
-
-    void Start()
+    private void Start()
     {
         if (LevelManager.Instance == null || LevelManager.Instance.BoardCtrl == null)
         {
-            Debug.LogError("❌ LevelManager hoặc BoardCtrl chưa được khởi tạo!");
+            Debug.LogError("LevelManager hoặc BoardCtrl chưa được khởi tạo!");
             return;
         }
+
         queBoardCellsClick = new Queue<BoardCell>();
+        queBoardCellsMoveToPos = new Queue<BoardCell>();
+
+        // Đăng ký event coroutine
         LevelManager.Instance.BoardCtrl.MoveToPosAction += MoveToPos;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         if (LevelManager.Instance != null && LevelManager.Instance.BoardCtrl != null)
         {
@@ -33,84 +35,90 @@ public class ItemClickCtrl : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        
-        _ = OnClickItem();
-    }
-
-
-   private async Task OnClickItem()
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
-        {
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit))
-            {
-                Debug.Log(hit.collider.gameObject.name);
-                BoardCell boardCell = hit.transform.parent.GetComponent<BoardCell>();
-                if (boardCell == null) return;
-                if(!boardCell.HasClick) return;
-                queBoardCellsClick.Enqueue(boardCell);
-                var (path, hasPath) = await findingPath.BFSFind(boardCell.Container);
-                if (!hasPath) return;
-                boardCell.BoardCellAnimation.SetRunning();
-                await LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell);
-                //setActive cac NeighBor
-                boardCell.SetActiveNeighBor();
-
-                boardCell.Container.IsContaining = false;
-                boardCell.Container = null;
-
-                await MoveLeaveMatrix(path, boardCell);
-                await LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke(boardCell);
-            }
-        }
-}
-
-    private async Task MoveLeaveMatrix(List<Vector3> path, BoardCell boardCell)
-    {
-        if (boardCell == null)
-        {
-            Debug.LogWarning("Không có BoardCell hợp lệ để di chuyển.");
-            return;
-        }
-
-        BoardCellMovement movement = boardCell.GetComponentInChildren<BoardCellMovement>();
-        if (movement == null)
-        {
-            Debug.LogWarning("Không tìm thấy BoardCellMovement.");
-            return;
-        }
-
-        await movement.MovementMatrix(path);
+            StartCoroutine(OnClickItem());
     }
 
-    private async Task MoveToPos(Vector3 pos)
+    private IEnumerator OnClickItem()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            Debug.Log(hit.collider.gameObject.name);
+            BoardCell boardCell = hit.transform.parent.GetComponent<BoardCell>();
+            if (boardCell == null || !boardCell.HasClick) yield break;
+
+            queBoardCellsClick.Enqueue(boardCell);
+            queBoardCellsMoveToPos.Enqueue(boardCell);
+
+            var (path, hasPath) = findingPath.BFSFind(boardCell.Container);
+            if (!hasPath) yield break;
+
+            boardCell.BoardCellAnimation.SetRunning();
+
+            // Gọi coroutine trong BoardCtrl
+            if (LevelManager.Instance.BoardCtrl.checkAndSavePosAction != null)
+                yield return StartCoroutine(LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell));
+
+            // Active neighbor
+            StartCoroutine(boardCell.SetActiveNeighBor());
+
+            boardCell.Container.IsContaining = false;
+            boardCell.Container = null;
+
+            // Rời khỏi matrix
+            yield return StartCoroutine(MoveLeaveMatrix(path));
+
+            // Di chuyển đến cell play
+            if (LevelManager.Instance.BoardCtrl.MoveToCellPlay != null)
+               StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke(boardCell)); // yield return 
+        }
+    }
+
+    private IEnumerator MoveLeaveMatrix(List<Vector3> path)
+    {
+        if (queBoardCellsClick.Count == 0) yield break;
+
+        BoardCell boardCell = queBoardCellsClick.Dequeue();
+        if (boardCell == null) yield break;
+
+        BoardCellMovement movement = boardCell.GetComponentInChildren<BoardCellMovement>();
+        if (movement == null) yield break;
+
+        yield return StartCoroutine(movement.MovementMatrix(path));
+    }
+
+    private IEnumerator MoveToPos(Vector3 pos)
     {
         if (hit.collider == null)
         {
             Debug.LogWarning("Không có collider hợp lệ để di chuyển.");
-            return;
+            yield break;
         }
 
-        BoardCell boardCell = queBoardCellsClick.Dequeue();
-        Debug.Log("okok move" + boardCell.TypeItem);
+        if (queBoardCellsMoveToPos.Count == 0)
+        {
+            Debug.LogWarning("Hàng đợi di chuyển trống.");
+            yield break;
+        }
+
+        BoardCell boardCell = queBoardCellsMoveToPos.Dequeue();
         if (boardCell == null)
         {
             Debug.LogWarning("Không tìm thấy BoardCell.");
-            return;
+            yield break;
         }
 
         BoardCellMovement movement = boardCell.GetComponentInChildren<BoardCellMovement>();
         if (movement == null)
         {
             Debug.LogWarning("Không tìm thấy BoardCellMovement.");
-            return;
+            yield break;
         }
 
-        await movement.MovementToCellPlay(pos);
+        yield return StartCoroutine(movement.MovementToCellPlay(pos));
     }
 }

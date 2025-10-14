@@ -1,7 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using System.Threading.Tasks;
 using System;
 
 public class BoardCellMovement : MonoBehaviour
@@ -13,57 +13,57 @@ public class BoardCellMovement : MonoBehaviour
     private float totalCell;
 
     /// <summary>
-    /// Di chuyển qua các ô trên ma trận theo danh sách vị trí.
+    /// Di chuyển qua các ô trên ma trận theo danh sách vị trí (Coroutine).
     /// </summary>
-    public async Task MovementMatrix(List<Vector3> containers)
+    public IEnumerator MovementMatrix(List<Vector3> containers)
     {
         if (containers == null || containers.Count == 0)
         {
             Debug.LogWarning("containers rỗng, không thể di chuyển.");
-            return;
+            yield break;
         }
 
         totalCell = containers.Count;
 
         for (int i = 1; i < containers.Count; i++)
         {
-            Vector3 nextPos = containers[i];
-
             if (transform.parent == null)
             {
                 Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
-                return;
+                yield break;
             }
 
-            // ⚙️ Tăng thời gian gấp đôi để di chuyển chậm hơn
-            Tween moveTween = transform.parent.DOMove(nextPos, timerPerCellMatrixSecond)
+            Vector3 nextPos = containers[i];
+
+            // Tạo tween di chuyển
+            Tween moveTween = transform.parent.DOMove(nextPos, timerPerCellMatrixSecond * 2)
                 .SetEase(Ease.InOutSine);
 
-            await moveTween.AsyncWaitForCompletion();
+            // Chờ tween hoàn thành
+            yield return moveTween.WaitForCompletion();
         }
 
         Debug.Log("Đã hoàn thành di chuyển trên ma trận.");
     }
 
     /// <summary>
-    /// Di chuyển từ ma trận xuống vị trí CellPlay với thời gian tính theo khoảng cách.
+    /// Di chuyển từ ma trận xuống vị trí CellPlay với thời gian tính theo khoảng cách (Coroutine).
     /// </summary>
-    public async Task MovementToCellPlay(Vector3 pos)
+    public IEnumerator MovementToCellPlay(Vector3 pos)
     {
         if (transform.parent == null)
         {
             Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
-            return;
+            yield break;
         }
 
         float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
 
-        // ⚙️ Tăng thời gian gấp đôi để di chuyển chậm hơn
-        Tween moveTween = transform.parent.DOMove(pos, timer * 1.5f)
+        Tween moveTween = transform.parent.DOMove(pos, timer * 2f)
             .SetEase(Ease.OutCubic);
 
-        await moveTween.AsyncWaitForCompletion();
+        yield return moveTween.WaitForCompletion();
 
         Debug.Log("Đã di chuyển xuống CellPlay.");
     }
@@ -71,19 +71,18 @@ public class BoardCellMovement : MonoBehaviour
     /// <summary>
     /// Di chuyển đến vị trí cụ thể (ví dụ cho reposition hoặc chỉnh vị trí nhanh).
     /// </summary>
-    public async Task MovementToPos(Vector3 pos)
+    public IEnumerator MovementToPos(Vector3 pos)
     {
         if (transform.parent == null)
         {
             Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
-            return;
+            yield break;
         }
 
-        // ⚙️ Tăng thời gian gấp đôi để di chuyển chậm hơn
-        Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond)
+        Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond * 2)
             .SetEase(Ease.InOutSine);
 
-        await moveTween.AsyncWaitForCompletion();
+        yield return moveTween.WaitForCompletion();
 
         Debug.Log("Đã hoàn thành MovementToPos.");
     }
