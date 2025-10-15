@@ -12,6 +12,8 @@ public class ItemClickCtrl : MonoBehaviour
     private Queue<BoardCell> queBoardCellsClick;
     private Queue<BoardCell> queBoardCellsMoveToPos;
 
+    [SerializeField] private bool isProcessingClick = false;
+
     private void Start()
     {
         if (LevelManager.Instance == null || LevelManager.Instance.BoardCtrl == null)
@@ -43,39 +45,54 @@ public class ItemClickCtrl : MonoBehaviour
 
     private IEnumerator OnClickItem()
     {
+        if (isProcessingClick) yield break; // Nếu đang xử lý, bỏ qua lần click mới
+        isProcessingClick = true; // Đánh dấu đang xử lý
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
         if (Physics.Raycast(ray, out hit))
         {
             Debug.Log(hit.collider.gameObject.name);
             BoardCell boardCell = hit.transform.parent.GetComponent<BoardCell>();
-            if (boardCell == null || !boardCell.HasClick) yield break;
+            if (boardCell == null || !boardCell.HasClick)
+            {
+                isProcessingClick = false; // Kết thúc xử lý
+                yield break;
+            }
 
             queBoardCellsClick.Enqueue(boardCell);
             queBoardCellsMoveToPos.Enqueue(boardCell);
 
             var (path, hasPath) = findingPath.BFSFind(boardCell.Container);
-            if (!hasPath) yield break;
+            if (!hasPath)
+            {
+                Debug.Log("No path found to the bottom row.");
+                isProcessingClick = false; // Kết thúc xử lý
+                yield break;
+            }
 
             boardCell.BoardCellAnimation.SetRunning();
 
             // Gọi coroutine trong BoardCtrl
             if (LevelManager.Instance.BoardCtrl.checkAndSavePosAction != null)
-             StartCoroutine(LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell));
+                StartCoroutine(LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell));
 
             // Active neighbor
             StartCoroutine(boardCell.SetActiveNeighBor());
 
+            Container container = boardCell.Container;
+
             boardCell.Container.IsContaining = false;
             boardCell.Container = null;
+
+            StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container,null)); 
 
             // Rời khỏi matrix
             yield return StartCoroutine(MoveLeaveMatrix(path));
 
             // Di chuyển đến cell play
             if (LevelManager.Instance.BoardCtrl.MoveToCellPlay != null)
-               StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke()); // yield return 
+            yield return StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke()); // yield return 
         }
+        isProcessingClick = false; // Kết thúc xử lý
     }
 
     private IEnumerator MoveLeaveMatrix(List<Vector3> path)

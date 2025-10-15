@@ -777,7 +777,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1324499476}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: GridCellPlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1118,6 +1118,7 @@ MonoBehaviour:
   prefabFolder: Prefabs
   gridParent: {fileID: 2040771915}
   boardCells: []
+  boardAll: []
 --- !u!4 &2015014350
 Transform:
   m_ObjectHideFlags: 0
@@ -1145,7 +1146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2040771915}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: GridBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
