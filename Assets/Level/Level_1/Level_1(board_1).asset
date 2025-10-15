@@ -263,9 +263,9 @@ MonoBehaviour:
   - Wall
   - Wall
   - Wall
-  - 3
-  - Wall
   - 1
+  - Wall
+  - GSPDown
   - Wall
   - Wall
   - Wall
@@ -277,7 +277,7 @@ MonoBehaviour:
   - Container
   - Wall
   - Wall
-  - 3
+  - GSPBottomRight
   - 1
   - 1
   - 1
@@ -316,3 +316,13 @@ MonoBehaviour:
   - Wall
   - Wall
   alignment: 0
+  totalUnits: 30
+  gsp:
+  - x: 17
+    y: 7
+    spawnCount: 5
+    type: GSPBottomRight
+  - x: 16
+    y: 10
+    spawnCount: 5
+    type: GSPDown
