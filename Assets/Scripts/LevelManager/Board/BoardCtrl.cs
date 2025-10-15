@@ -20,8 +20,8 @@ public class BoardCtrl : MonoBehaviour
     public Dictionary<string, TypeItem> DictIdType;
 
     [Header("Action Event")]
-    public Func<BoardCell, IEnumerator> checkAndSavePosAction;
-    public Func<BoardCell, IEnumerator> MoveToCellPlay;
+    public Func<BoardCell,IEnumerator> checkAndSavePosAction;
+    public Func<IEnumerator> MoveToCellPlay;
     // ✅ Thay đổi: MoveToPosAction nên trả về IEnumerator để được yield return
     public Func<Vector3, IEnumerator> MoveToPosAction; 
 

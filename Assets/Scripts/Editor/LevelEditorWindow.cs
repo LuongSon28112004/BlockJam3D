@@ -17,13 +17,14 @@ public class LevelEditorWindow : EditorWindow
         "Wall",
         "Container",
         "1",
-        "1C",
+        "1B",
         "2",
-        "2C",
+        "2B",
         "3",
-        "3C",
+        "3B",
         "4",
-        "4C"
+        "4B",
+        "GSPDown",
     };
 
     [MenuItem("Game Tools/Level Editor (Simple Mode)")]

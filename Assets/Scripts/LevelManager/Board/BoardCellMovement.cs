@@ -86,4 +86,20 @@ public class BoardCellMovement : MonoBehaviour
 
         Debug.Log("Đã hoàn thành MovementToPos.");
     }
+
+    /// <summary>
+    /// ⭐ HÀM MỚI: Trả về Tween để có thể chạy song song (dùng trong ShiftCellsLeft/Right).
+    /// </summary>
+    public Tween MovementToPosTween(Vector3 pos)
+    {
+        if (transform.parent == null)
+        {
+            Debug.LogError("Không có transform.parent, không thể tạo Tween.");
+            return null;
+        }
+
+        // Tạo và trả về Tween. Tốc độ tương đương với hàm Coroutine cũ.
+        return transform.parent.DOMove(pos, timerPerCellMatrixSecond * 2)
+            .SetEase(Ease.InOutSine);
+    }
 }

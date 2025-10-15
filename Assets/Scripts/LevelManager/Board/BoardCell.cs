@@ -102,7 +102,7 @@ public class BoardCell : MonoBehaviour
             neighbors[i].HasClick = true;
             neighbors[i].BoardCellAnimation.SetActive();
             neighbors[i].RemoveNeighbor(this);
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.25f);
             neighbors[i].Barrel.SetActive(false);
         }
         yield break;

@@ -23,8 +23,9 @@ public class AddressableManager : SingletonDDOL<AddressableManager>
     {
         await PreloadAllPrefabsAsync();
         await PreloadAllLevelsAsync();
+        await PreloadAllGridSpotsAsync(); 
         _isPreloaded = true;
-        Debug.Log("All Addressable prefabs & levels loaded and grouped!");
+        Debug.Log("All Addressable prefabs, levels & grid spots loaded!");
     }
 
     // =========================
@@ -55,13 +56,43 @@ public class AddressableManager : SingletonDDOL<AddressableManager>
             }
             else
             {
-                Debug.LogError($"❌ Failed to load prefabs with label: {label}");
+                Debug.LogError($"Failed to load prefabs with label: {label}");
             }
         }
     }
 
     // =========================
-    // LOAD LEVEL DATA (ScriptableObjects) và gom nhóm
+    // LOAD GRIDSPOT PREFABS
+    // =========================
+    private async Task PreloadAllGridSpotsAsync()
+    {
+        string label = "GridSpot";
+
+        AsyncOperationHandle<IList<GameObject>> handle = Addressables.LoadAssetsAsync<GameObject>(
+            label, null
+        );
+        await handle.Task;
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            foreach (GameObject obj in handle.Result)
+            {
+                string address = obj.name;
+                if (!_cachedPrefabs.ContainsKey(address))
+                {
+                    _cachedPrefabs[address] = obj;
+                    Debug.Log($"Loaded GridSpot prefab: {address}");
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError("Failed to load GridSpot prefabs!");
+        }
+    }
+
+    // =========================
+    // LOAD LEVEL DATA (ScriptableObjects)
     // =========================
     private async Task PreloadAllLevelsAsync()
     {
@@ -76,7 +107,6 @@ public class AddressableManager : SingletonDDOL<AddressableManager>
         {
             foreach (LevelData data in handle.Result)
             {
-                // Lấy tên gốc của Level: ví dụ "Level_1(board_2)" → group = "Level_1"
                 string baseName = GetBaseLevelName(data.name);
 
                 if (!_cachedLevelGroups.ContainsKey(baseName))
@@ -87,7 +117,6 @@ public class AddressableManager : SingletonDDOL<AddressableManager>
                 Debug.Log($"Loaded LevelData: {data.name} -> Group: {baseName}");
             }
 
-            // Sắp xếp theo thứ tự bảng (board_1, board_2, …)
             foreach (var key in _cachedLevelGroups.Keys.ToList())
             {
                 _cachedLevelGroups[key] = _cachedLevelGroups[key]
@@ -97,13 +126,12 @@ public class AddressableManager : SingletonDDOL<AddressableManager>
         }
         else
         {
-            Debug.LogError("❌ Failed to load LevelData with label 'Level'");
+            Debug.LogError("Failed to load LevelData with label 'Level'");
         }
     }
 
     private string GetBaseLevelName(string fullName)
     {
-        // Ví dụ: "Level_1(board_2)" → "Level_1"
         int idx = fullName.IndexOf('(');
         if (idx >= 0)
             return fullName.Substring(0, idx);
@@ -112,7 +140,6 @@ public class AddressableManager : SingletonDDOL<AddressableManager>
 
     private int ExtractBoardIndex(string fullName)
     {
-        // Lấy số thứ tự trong ngoặc, ví dụ "Level_1(board_3)" → 3
         int start = fullName.IndexOf("(board_") + 7;
         int end = fullName.IndexOf(")", start);
         if (start >= 0 && end > start)
@@ -132,7 +159,7 @@ public class AddressableManager : SingletonDDOL<AddressableManager>
         if (_cachedLevelGroups.TryGetValue(levelName, out List<LevelData> levels))
             return levels;
 
-        Debug.LogError($"❌ No LevelData group found with name '{levelName}'!");
+        Debug.LogError($"No LevelData group found with name '{levelName}'!");
         return null;
     }
 
@@ -147,12 +174,12 @@ public class AddressableManager : SingletonDDOL<AddressableManager>
     public GameObject GetPrefab(string address)
     {
         if (!_isPreloaded)
-            Debug.LogWarning("⚠ Addressables not preloaded yet! Make sure to wait until preload completes.");
+            Debug.LogWarning("Addressables not preloaded yet! Make sure to wait until preload completes.");
 
         if (_cachedPrefabs.TryGetValue(address, out GameObject prefab))
             return prefab;
 
-        Debug.LogError($"❌ Prefab with address '{address}' not found!");
+        Debug.LogError($"Prefab with address '{address}' not found!");
         return null;
     }
 

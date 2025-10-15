@@ -61,7 +61,7 @@ public class ItemClickCtrl : MonoBehaviour
 
             // Gọi coroutine trong BoardCtrl
             if (LevelManager.Instance.BoardCtrl.checkAndSavePosAction != null)
-                yield return StartCoroutine(LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell));
+             StartCoroutine(LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell));
 
             // Active neighbor
             StartCoroutine(boardCell.SetActiveNeighBor());
@@ -74,7 +74,7 @@ public class ItemClickCtrl : MonoBehaviour
 
             // Di chuyển đến cell play
             if (LevelManager.Instance.BoardCtrl.MoveToCellPlay != null)
-               StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke(boardCell)); // yield return 
+               StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke()); // yield return 
         }
     }
 

@@ -16,6 +16,7 @@ public class CellPlayCtrl : MonoBehaviour
     [SerializeField] private Dictionary<TypeItem, int> countCellType;
 
     private Queue<int> listPos;
+    private Queue<BoardCell> listCell;
     public string prefabFolder = "Prefabs";
 
     private void Start()
@@ -29,6 +30,7 @@ public class CellPlayCtrl : MonoBehaviour
         boardCells = new List<BoardCell>();
         cellPlays = new List<Container>();
         listPos = new Queue<int>();
+        listCell = new Queue<BoardCell>();
         InitCountCellType();
         GenerateCell();
     }
@@ -96,6 +98,7 @@ public class CellPlayCtrl : MonoBehaviour
         }
 
         listPos.Enqueue(insertIndex);
+        listCell.Enqueue(newCell);
         Debug.Log("okok" + listPos.Count + insertIndex + newCell.TypeItem);
 
         if (insertIndex < boardCells.Count)
@@ -158,25 +161,30 @@ public class CellPlayCtrl : MonoBehaviour
         return false;
     }
 
-    private IEnumerator MoveToCell(BoardCell boardCell)
+    private IEnumerator MoveToCell()
     {
         if (listPos.Count > 0)
         {
             int index = listPos.Dequeue();
-            Debug.Log("okok move" + index + boardCell.TypeItem);
+            if (listCell.Count > 0)
+            {
+                BoardCell boardCell = listCell.Dequeue();
+                if (boardCell == null) yield break;
+                Debug.Log("okok move" + index + boardCell.TypeItem);
 
-            boardCell.Pos = cellPlays[index].Pos;
-            yield return StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToPosAction(cellPlays[index].Pos));
-            boardCell.BoardCellAnimation.SetIdle();
+                boardCell.Pos = cellPlays[index].Pos;
+                yield return StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToPosAction(cellPlays[index].Pos));
+                boardCell.BoardCellAnimation.SetIdle();
 
-            if (Check3Item())
-                yield return StartCoroutine(CheckMatch3());
+                if (Check3Item())
+                    yield return StartCoroutine(CheckMatch3());
 
-            if (boardCells.Count == MAX_ROW)
-                LevelManager.Instance.LoseGame.Invoke();
+                if (boardCells.Count == MAX_ROW)
+                    LevelManager.Instance.LoseGame.Invoke();
 
-            if (LevelManager.Instance.Round == 3 && boardCells.Count == 0)
-                LevelManager.Instance.WinGame.Invoke();
+                if (LevelManager.Instance.Round == 3 && boardCells.Count == 0)
+                    LevelManager.Instance.WinGame.Invoke();
+            }
         }
     }
 
