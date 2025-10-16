@@ -179,11 +179,17 @@ public class CellPlayCtrl : MonoBehaviour
                 if (Check3Item())
                     yield return StartCoroutine(CheckMatch3());
 
-                if (boardCells.Count == MAX_ROW)
-                    LevelManager.Instance.LoseGame.Invoke();
+                 if (boardCells.Count == MAX_ROW)
+                {
+                    GameManager.Instance.LoseGame();
+                    yield break;
+                }
 
-                if (LevelManager.Instance.Round == 3 && boardCells.Count == 0)
-                    LevelManager.Instance.WinGame.Invoke();
+                // if (boardCells.Count == MAX_ROW)
+                //     LevelManager.Instance.LoseGame.Invoke();
+
+                // if (LevelManager.Instance.Round == 3 && boardCells.Count == 0)
+                //     LevelManager.Instance.WinGame.Invoke();
             }
         }
     }
@@ -245,17 +251,6 @@ public class CellPlayCtrl : MonoBehaviour
         // 3. Xử lý logic ghép 3
         foreach (var type in matchedTypes)
             yield return StartCoroutine(CombineCell(type)); 
-        
-        // ... (Giữ nguyên logic Thắng/Thua)
-        if (boardCells.Count == MAX_ROW)
-        {
-            LevelManager.Instance.LoseGame.Invoke();
-        }
-        
-        if(LevelManager.Instance.Round == 3 && boardCells.Count == 0)
-        {
-            LevelManager.Instance.WinGame.Invoke();
-        } 
     }
 
     private IEnumerator CombineCell(TypeItem type)

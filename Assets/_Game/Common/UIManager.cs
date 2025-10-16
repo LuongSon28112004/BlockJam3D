@@ -52,7 +52,7 @@ public class UIManager : master.Singleton<UIManager>
 {
     public Canvas canvas;
     public Canvas canvasScreen;
-    public GameObject blockerUI;
+    //public GameObject blockerUI;
     public Image fadeImage;
     public RectTransform screenHolder;
     public RectTransform popupHolder;
@@ -69,7 +69,7 @@ public class UIManager : master.Singleton<UIManager>
     protected override void Awake()
     {
         base.Awake();
-        blockerUI.SetActive(false);
+       // blockerUI.SetActive(false);
         ResetResolution();
         /*  for (int i = 0; i < listScreenCached.Count; i++)
           {
