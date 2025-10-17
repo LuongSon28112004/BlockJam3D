@@ -34,8 +34,10 @@ public class GameManager : SingletonDDOL<GameManager>
             yield break;
 
         gameState = newState;
-         if (newState != GameState.Pause)
-        Time.timeScale = 1;
+        if (newState != GameState.Pause && newState != GameState.Lose && newState != GameState.Win)
+        {
+            Time.timeScale = 1;
+        }
         OnGameStateChanged?.Invoke(gameState);
 
         switch (gameState)
@@ -47,15 +49,18 @@ public class GameManager : SingletonDDOL<GameManager>
             case GameState.GamePlay:
                 yield return LoadSceneAndWait("GamePlay", () =>
                 {
+                    LevelManager.Instance.Init();
                     UIManager.Instance.ShowScreen<ScreenGamePlay>();
                 });
                 break;
             case GameState.Win:
                 UIManager.Instance.ShowPopup<PopupWinGame>(null);
+                Time.timeScale = 0;
                 break;
 
             case GameState.Lose:
                 UIManager.Instance.ShowPopup<PopupLoseGame>(null);
+                Time.timeScale = 0;
                 break;
 
             case GameState.Pause:

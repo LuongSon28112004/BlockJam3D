@@ -26,7 +26,7 @@ public class BoardCtrl : MonoBehaviour
     [Header("Action Event")]
     [Header("Action Move maxtrix and move to cell play")]
     public Func<BoardCell,IEnumerator> checkAndSavePosAction;
-    public Func<IEnumerator> MoveToCellPlay;
+    public Func<Container,List<Vector3>,IEnumerator> MoveToCellPlay;
     // Thay đổi: MoveToPosAction nên trả về IEnumerator để được yield return
     public Func<Vector3, IEnumerator> MoveToPosAction;
     [Header("Action spawn Block to GridSpotSpawn")]

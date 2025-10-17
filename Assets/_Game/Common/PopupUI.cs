@@ -44,7 +44,8 @@ public abstract class PopupUI : MonoBehaviour
         Setup();
         OnHide = onClose;
         isShowing = true;
-        /*if (mainPopUp)
+        
+        if (mainPopUp)
         {
             switch (animType)
             {
@@ -60,7 +61,7 @@ public abstract class PopupUI : MonoBehaviour
                     }).SetId(this);
                     break;
             }
-        }*/
+        }
         gameObject.SetActive(true);
         OnShow?.Invoke(this);
     }

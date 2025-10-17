@@ -14,11 +14,11 @@ public class LevelManager : Singleton<LevelManager>
     public CellPlayCtrl cellPlayCtrl;
     [Header("Action")]
     public Func<Task> NextRound;
-     //public Action NextLevel;
-
-    private void Start()
+    //public Action NextLevel;
+    
+    public void Init()
     {
-        _ = LoadLevel(); // update last
+          _ = LoadLevel(); // update last
         // if (Instance != null)
         // {
         //     Debug.Log("ok");
@@ -29,8 +29,8 @@ public class LevelManager : Singleton<LevelManager>
     private async Task LoadLevel()
     {
         Round = 0;
-
-        List<LevelData> levelBoards = AddressableManager.Instance.GetLevelGroup("Level_1");
+        string levelGroupKey = "Level_" + GameManager.Instance.Level;
+        List<LevelData> levelBoards = AddressableManager.Instance.GetLevelGroup(levelGroupKey);
         levelDatas = levelBoards;
         await BoardCtrl.LoadLevel(levelDatas[Round]);
     }

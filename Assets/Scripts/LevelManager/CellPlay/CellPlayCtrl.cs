@@ -13,7 +13,14 @@ public class CellPlayCtrl : MonoBehaviour
     [SerializeField] private List<Container> cellPlays;    // danh sách container (vị trí)
     [SerializeField] private GameObject prefabCell;
     [SerializeField] private Transform spawnPoint;
+    [SerializeField] private Transform parentBoard;
     [SerializeField] private Dictionary<TypeItem, int> countCellType;
+
+    //Undo
+    [SerializeField] private bool isMatch3 = false;
+    [SerializeField] private Queue<KeyValuePair<BoardCell, Container>> undoQueue;
+    [SerializeField] private (BoardCell cell, Container container, List<Vector3> path) lastMove;
+
 
     private Queue<int> listPos;
     private Queue<BoardCell> listCell;
@@ -31,6 +38,8 @@ public class CellPlayCtrl : MonoBehaviour
         cellPlays = new List<Container>();
         listPos = new Queue<int>();
         listCell = new Queue<BoardCell>();
+        lastMove = (new BoardCell(), new Container(), new List<Vector3>());
+        undoQueue = new Queue<KeyValuePair<BoardCell, Container>>();
         InitCountCellType();
         GenerateCell();
     }
@@ -99,7 +108,7 @@ public class CellPlayCtrl : MonoBehaviour
 
         listPos.Enqueue(insertIndex);
         listCell.Enqueue(newCell);
-        Debug.Log("okok" + listPos.Count + insertIndex + newCell.TypeItem);
+       // Debug.Log("okok" + listPos.Count + insertIndex + newCell.TypeItem);
 
         if (insertIndex < boardCells.Count)
         {
@@ -156,12 +165,20 @@ public class CellPlayCtrl : MonoBehaviour
     {
         foreach (var i in countCellType)
         {
-            if (i.Value >= 3) return true;
+            if (i.Value >= 3)
+            {
+                isMatch3 = true;
+                return true;
+
+            }
         }
+        isMatch3 = false;
         return false;
     }
 
-    private IEnumerator MoveToCell()
+    
+
+    private IEnumerator MoveToCell(Container container,List<Vector3> path)
     {
         if (listPos.Count > 0)
         {
@@ -174,7 +191,17 @@ public class CellPlayCtrl : MonoBehaviour
 
                 boardCell.Pos = cellPlays[index].Pos;
                 yield return StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToPosAction(cellPlays[index].Pos));
+                // lưu lại các dữ liệu phục vụ cho Undo
                 boardCell.BoardCellAnimation.SetIdle();
+                lastMove = (boardCell, container, path);
+                undoQueue.Clear();
+                for (int i = 0; i < boardCells.Count; i++)
+                {
+                    if (boardCells[i].TypeItem == boardCell.TypeItem && boardCells[i] != boardCell)
+                    {
+                        undoQueue.Enqueue(new KeyValuePair<BoardCell, Container>(boardCells[i], cellPlays[i]));
+                    }
+                }
 
                 if (Check3Item())
                     yield return StartCoroutine(CheckMatch3());
@@ -184,12 +211,6 @@ public class CellPlayCtrl : MonoBehaviour
                     GameManager.Instance.LoseGame();
                     yield break;
                 }
-
-                // if (boardCells.Count == MAX_ROW)
-                //     LevelManager.Instance.LoseGame.Invoke();
-
-                // if (LevelManager.Instance.Round == 3 && boardCells.Count == 0)
-                //     LevelManager.Instance.WinGame.Invoke();
             }
         }
     }
@@ -363,5 +384,70 @@ public class CellPlayCtrl : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
         LevelManager.Instance.BoardCtrl.UpdateBoardCell();
+    }
+
+    //Booster
+    public IEnumerator Undo()
+    {
+        //lay data
+        if (!isMatch3)
+        {
+            var UndoItem = lastMove;
+            BoardCell boardCell = UndoItem.cell;
+            Container container = UndoItem.container;
+            List<Vector3> path = UndoItem.path;
+
+            //reset cellplay va boardcell
+            int index = boardCells.IndexOf(boardCell);
+            if (index != -1)
+            {
+                boardCells.RemoveAt(index);
+                countCellType[boardCell.TypeItem] -= 1;
+                cellPlays[index].IsContaining = false;
+                //yield return StartCoroutine(ShiftCellsLeft());
+            }
+
+
+            BoardCellMovement movement = boardCell.BoardCellMovement;
+            BoardCellAnimation animation = boardCell.BoardCellAnimation;
+            boardCell.transform.localRotation *= Quaternion.Euler(0, 180, 0);
+            yield return StartCoroutine(movement.MovementToPos(path[path.Count - 1]));
+            animation.SetRunning();
+
+            path.RemoveAt(path.Count - 1);
+            for (int i = path.Count - 1; i >= 0; i--)
+            {
+                yield return StartCoroutine(movement.MovementToPos(path[i]));
+            }
+            animation.SetIdle();
+            boardCell.transform.localRotation *= Quaternion.Euler(0, 180, 0);
+            boardCell.HasClick = true;
+            boardCell.Container = container;
+            container.IsContaining = true;
+
+        }
+        //neu da match_3
+        else
+        {
+            foreach (var i in undoQueue)
+            {
+                //lay id va tao boardcell
+                BoardCell undoCell = i.Key;
+                string name = Enum.GetName(typeof(TypeItem), undoCell.TypeItem);
+                GameObject BlockPrefab = AddressableManager.Instance.GetPrefab(name);
+                GameObject Block = Instantiate(BlockPrefab, Vector3.zero, Quaternion.identity, parentBoard);
+                //gan lai du lieu undo
+                BoardCell undoCellComp = Block.GetComponent<BoardCell>();
+                undoCellComp = undoCell;
+                //lay index de dich chuyen
+                Container undoContainer = i.Value;
+                int posCell = cellPlays.IndexOf(undoContainer);
+                yield return StartCoroutine(ShiftCellsRight(posCell));
+                boardCells[posCell] = undoCellComp;
+                undoCellComp.Pos = undoContainer.Pos;
+            }
+        }        
+
+
     }
 }

@@ -50,7 +50,17 @@ public class ItemClickCtrl : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit))
         {
+            if(hit.collider == null) 
+            {
+                isProcessingClick = false; // Kết thúc xử lý
+                yield break; 
+            }
             Debug.Log(hit.collider.gameObject.name);
+            if(hit.transform.parent == null)
+            {
+                isProcessingClick = false; // Kết thúc xử lý
+                yield break; 
+            }
             BoardCell boardCell = hit.transform.parent.GetComponent<BoardCell>();
             if (boardCell == null || !boardCell.HasClick)
             {
@@ -90,7 +100,7 @@ public class ItemClickCtrl : MonoBehaviour
 
             // Di chuyển đến cell play
             if (LevelManager.Instance.BoardCtrl.MoveToCellPlay != null)
-            yield return StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke()); // yield return 
+            yield return StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke(container,path)); // yield return 
         }
         isProcessingClick = false; // Kết thúc xử lý
     }

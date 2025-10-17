@@ -168,6 +168,8 @@ MonoBehaviour:
   cellPlays: []
   prefabCell: {fileID: 3896570732769547528, guid: 662e5906ce0db4a45980e9ca29dba1c1, type: 3}
   spawnPoint: {fileID: 1324499476}
+  parentBoard: {fileID: 2040771915}
+  isMatch3: 0
   prefabFolder: Prefabs
 --- !u!1 &410087039
 GameObject:
@@ -929,7 +931,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efe1d0dec37c94b4bb62cc8b0c566aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Level: 1
   Round: 0
   levelDatas: []
   BoardCtrl: {fileID: 2015014349}
