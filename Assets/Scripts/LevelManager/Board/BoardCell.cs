@@ -38,6 +38,8 @@ public class BoardCell : MonoBehaviour
     [Header("Barrel")]
     [SerializeField] private GameObject barrel;
     [SerializeField] private BarrelCell barrelCell;
+    // [Header("VFX")]
+    // [SerializeField] 
 
     // === Properties ===
     public Vector3 Pos { get => pos; set => pos = value; }
