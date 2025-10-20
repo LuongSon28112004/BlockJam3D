@@ -12,6 +12,7 @@ public class LevelManager : Singleton<LevelManager>
     public List<LevelData> levelDatas;
     public BoardCtrl BoardCtrl;
     public CellPlayCtrl cellPlayCtrl;
+    public BoosterCtrl boosterCtrl;
     [Header("Action")]
     public Func<Task> NextRound;
     //public Action NextLevel;

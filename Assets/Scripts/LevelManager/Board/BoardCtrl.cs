@@ -18,23 +18,28 @@ public class BoardCtrl : MonoBehaviour
 
     [Header("Parent Container")]
     public Transform gridParent;
-    public List<BoardCell> boardCells;
+    private List<BoardCell> boardCells;
     public List<GameObject> boardAlls;
     public List<GridSpotSpawn> gridSpotSpawns;
     //public Dictionary<string, TypeItem> DictIdType;
 
     [Header("Action Event")]
     [Header("Action Move maxtrix and move to cell play")]
-    public Func<BoardCell,IEnumerator> checkAndSavePosAction;
+    public Func<BoardCell,Action<int>,IEnumerator> checkAndSavePosAction;
     public Func<Container,List<Vector3>,IEnumerator> MoveToCellPlay;
     // Thay đổi: MoveToPosAction nên trả về IEnumerator để được yield return
     public Func<Vector3, IEnumerator> MoveToPosAction;
     [Header("Action spawn Block to GridSpotSpawn")]
-    public Func<Container,BoardCell, IEnumerator> SpawnBlockToGSPAction;
+    public Func<Container, BoardCell, IEnumerator> SpawnBlockToGSPAction;
+
+
+    //getter & setter
+    public List<BoardCell> BoardCells { get => boardCells; set => boardCells = value; }
 
     void Start()
     {
         SpawnBlockToGSPAction += CheckSpawnBlock;
+        BoardCells = new List<BoardCell>();
     }
 
     void OnDisable()
@@ -221,7 +226,11 @@ public class BoardCtrl : MonoBehaviour
                         boardCells.Add(boardCell);
                         boardCell.IdType = prefabName[0].ToString();
                         boardCell.TypeItem = (TypeItem)(int.Parse(prefabName[0].ToString()) - 1);
-                        if (prefabName.Length > 1) boardCell.Barrel.SetActive(true);
+                        if (prefabName.Length > 1)
+                        {
+                            boardCell.Barrel.SetActive(true);
+                            boardCell.BarrelCell.BarrelCelAnimation.PlayBarrelDefault();
+                        } 
                         else boardCell.Barrel.SetActive(false);
                         //boardCell.ChangItemFromId(DictIdType);
                         boardCell.Container = objj.GetComponent<Container>();
@@ -299,7 +308,14 @@ public class BoardCtrl : MonoBehaviour
                     {
                         BoardCell neighbor = grid[ny, nx];
                         if (neighbor != null)
-                            current.AddNeighbor(neighbor);
+                        {
+                            DirectionNeighBor directionNeighBor = DirectionNeighBor.Top;
+                            if (d == 0) directionNeighBor = DirectionNeighBor.Bottom;
+                            if (d == 1) directionNeighBor = DirectionNeighBor.Top;
+                            if (d == 2) directionNeighBor = DirectionNeighBor.Left;
+                            if (d == 3) directionNeighBor = DirectionNeighBor.Right;
+                            current.AddNeighbor(neighbor,directionNeighBor);
+                        }
                     }
                 }
 

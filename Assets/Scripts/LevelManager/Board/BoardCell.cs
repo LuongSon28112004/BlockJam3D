@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,12 +12,52 @@ public enum TypeItem
 
 } //=> for override
 
+public enum DirectionNeighBor
+{
+    Top,
+    Bottom,
+    Left,
+    Right,
+}
+
+[Serializable]
+public class NeighBors
+{
+    public DirectionNeighBor directionNeighBor;
+    public BoardCell boardCell;
+
+    public NeighBors(BoardCell boardCell , DirectionNeighBor directionNeighBor)
+    {
+        this.boardCell = boardCell;
+        this.directionNeighBor = directionNeighBor;
+    }
+
+
+
+    public override bool Equals(object obj)
+    {
+        if (obj is NeighBors other)
+        {
+            return directionNeighBor == other.directionNeighBor &&
+                   boardCell == other.boardCell;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return (directionNeighBor, boardCell).GetHashCode();
+    }
+}
+
 public class BoardCell : MonoBehaviour
 {
     [Header("Item Settings")]
     [SerializeField] string idType;
     [SerializeField] private TypeItem typeItem;
     [SerializeField] private bool hasClick;
+    [SerializeField] private bool isBoosterAdd;
+    [SerializeField] private bool isInCellPlay;
 
     // [Header("Visual References")]
     // [SerializeField] private MeshFilter meshFilter;
@@ -27,7 +68,7 @@ public class BoardCell : MonoBehaviour
     // [SerializeField] private List<Material> materialTypes;
 
     [Header("Neighbors")]
-    [SerializeField] private List<BoardCell> neighbors = new List<BoardCell>();
+    [SerializeField] private List<NeighBors> neighbors = new List<NeighBors>();
 
     [Header("Other Info")]
     [SerializeField] private Vector3 pos;
@@ -38,8 +79,6 @@ public class BoardCell : MonoBehaviour
     [Header("Barrel")]
     [SerializeField] private GameObject barrel;
     [SerializeField] private BarrelCell barrelCell;
-    // [Header("VFX")]
-    // [SerializeField] 
 
     // === Properties ===
     public Vector3 Pos { get => pos; set => pos = value; }
@@ -51,6 +90,10 @@ public class BoardCell : MonoBehaviour
     public BoardCellAnimation BoardCellAnimation { get => boardCellAnimation; set => boardCellAnimation = value; }
     public GameObject Barrel { get => barrel; set => barrel = value; }
     public BarrelCell BarrelCell { get => barrelCell; set => barrelCell = value; }
+    public bool IsBoosterAdd { get => isBoosterAdd; set => isBoosterAdd = value; }
+    public List<NeighBors> Neighbors { get => neighbors; set => neighbors = value; }
+    public bool IsInCellPlay { get => isInCellPlay; set => isInCellPlay = value; }
+
 
 
     // public List<BoardCell> Neighbors => neighbors;
@@ -82,32 +125,46 @@ public class BoardCell : MonoBehaviour
     //         meshRenderer.material = materialTypes[index];
     // }
 
-    public void AddNeighbor(BoardCell cell)
+    public void AddNeighbor(BoardCell cell,DirectionNeighBor directionNeighBor)
     {
-        if (cell != null && !neighbors.Contains(cell))
-            neighbors.Add(cell);
+        if (cell != null && ! neighbors.Contains(new NeighBors(cell,directionNeighBor)))
+        {
+             neighbors.Add(new NeighBors(cell, directionNeighBor));
+        }
     }
 
-    public void RemoveNeighbor(BoardCell cell)
-    {
-        neighbors.Remove(cell);
-    }
+    // public void RemoveNeighbor(NeighBors neighBors)
+    // {
+    //     neighbors.Remove(neighbors);
+    // }
 
     public IEnumerator SetActiveNeighBor()
     {
         for (int i = 0; i < neighbors.Count; i++)
         {
-            if (neighbors[i].Barrel.activeSelf)
+            if (neighbors[i] == null) continue;
+            if (neighbors[i].boardCell.Barrel == null) continue;
+            if (neighbors[i].boardCell.Barrel.activeSelf)
             {
-                StartCoroutine(neighbors[i].PlayBarrelAnimation());
+                StartCoroutine(neighbors[i].boardCell.PlayBarrelAnimation());
             }
-            neighbors[i].HasClick = true;
-            neighbors[i].BoardCellAnimation.SetActive();
-            neighbors[i].RemoveNeighbor(this);
+            neighbors[i].boardCell.HasClick = true;
+            neighbors[i].boardCell.BoardCellAnimation.SetActive();
+            //neighbors[i].boardCell.RemoveNeighbor(this);
             yield return new WaitForSeconds(0.25f);
-            neighbors[i].Barrel.SetActive(false);
+            neighbors[i].boardCell.Barrel.SetActive(false);
         }
         yield break;
+    }
+
+    public void SetInActiveNeighBor()
+    {
+        for(int i = 0; i < neighbors.Count; i++)
+        {
+            if (neighbors[i].boardCell == null || neighbors[i].boardCell.IsInCellPlay) continue;
+            neighbors[i].boardCell.HasClick = false;
+            neighbors[i].boardCell.BoardCellAnimation.SetInActive();
+        }
     }
 
     public void ClearNeighbors()
@@ -116,10 +173,15 @@ public class BoardCell : MonoBehaviour
     }
 
     public IEnumerator PlayBarrelAnimation()
-        {
-            if (barrelCell != null && barrelCell.BarrelCelAnimation != null)
-                StartCoroutine(barrelCell.BarrelCelAnimation.PlayBarrelAnimation());
-            else
-                yield break;
-        }
+    {
+        if (barrelCell != null && barrelCell.BarrelCelAnimation != null)
+            StartCoroutine(barrelCell.BarrelCelAnimation.PlayBarrelAnimation());
+        else
+            yield break;
+    }
+
+    public void PlayBarrelAnimationDefaut()
+    {
+        barrelCell.BarrelCelAnimation.PlayBarrelDefault();
+    }
 }

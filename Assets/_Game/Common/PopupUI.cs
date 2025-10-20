@@ -90,10 +90,10 @@ public abstract class PopupUI : MonoBehaviour
     {
         Hide();
     }
-    private void OnDestroy()
-    {
-        DOTween.Kill(this);
-    }
+    // private void OnDestroy()
+    // {
+    //     DOTween.Kill(this);
+    // }
     protected virtual void OnPopupDestroyed()
     {
 

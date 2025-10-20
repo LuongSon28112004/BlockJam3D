@@ -60,6 +60,7 @@ public class GameManager : SingletonDDOL<GameManager>
 
             case GameState.Lose:
                 UIManager.Instance.ShowPopup<PopupLoseGame>(null);
+                yield return new WaitForSeconds(0.4f);
                 Time.timeScale = 0;
                 break;
 

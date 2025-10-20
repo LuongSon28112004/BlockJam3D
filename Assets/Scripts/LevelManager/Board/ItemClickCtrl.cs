@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ItemClickCtrl : MonoBehaviour
@@ -68,39 +69,65 @@ public class ItemClickCtrl : MonoBehaviour
                 yield break;
             }
 
-            queBoardCellsClick.Enqueue(boardCell);
-            queBoardCellsMoveToPos.Enqueue(boardCell);
-
-            var (path, hasPath) = findingPath.BFSFind(boardCell.Container);
-            if (!hasPath)
+            if (!boardCell.IsBoosterAdd)
             {
-                Debug.Log("No path found to the bottom row.");
-                isProcessingClick = false; // Kết thúc xử lý
-                yield break;
+                queBoardCellsClick.Enqueue(boardCell);
+                queBoardCellsMoveToPos.Enqueue(boardCell);
+
+                var (path, hasPath) = findingPath.BFSFind(boardCell.Container);
+                if (!hasPath)
+                {
+                    Debug.Log("No path found to the bottom row.");
+                    isProcessingClick = false; // Kết thúc xử lý
+                    yield break;
+                }
+
+                boardCell.BoardCellAnimation.SetRunning();
+
+                // Gọi coroutine trong BoardCtrl
+                if (LevelManager.Instance.BoardCtrl.checkAndSavePosAction != null)
+                    StartCoroutine(LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell, (i) => { }));
+
+                // Active neighbor
+                StartCoroutine(boardCell.SetActiveNeighBor());
+
+                Container container = boardCell.Container;
+
+                boardCell.Container.IsContaining = false;
+                boardCell.Container = null;
+                boardCell.IsInCellPlay = true;
+
+                StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container, null));
+
+                // Rời khỏi matrix
+                yield return StartCoroutine(MoveLeaveMatrix(path));
+
+                // Di chuyển đến cell play
+                if (LevelManager.Instance.BoardCtrl.MoveToCellPlay != null)
+                    yield return StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke(container, path)); // yield return 
             }
-
-            boardCell.BoardCellAnimation.SetRunning();
-
-            // Gọi coroutine trong BoardCtrl
-            if (LevelManager.Instance.BoardCtrl.checkAndSavePosAction != null)
-                StartCoroutine(LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell));
-
-            // Active neighbor
-            StartCoroutine(boardCell.SetActiveNeighBor());
-
-            Container container = boardCell.Container;
-
-            boardCell.Container.IsContaining = false;
-            boardCell.Container = null;
-
-            StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container,null)); 
-
-            // Rời khỏi matrix
-            yield return StartCoroutine(MoveLeaveMatrix(path));
-
-            // Di chuyển đến cell play
-            if (LevelManager.Instance.BoardCtrl.MoveToCellPlay != null)
-            yield return StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToCellPlay.Invoke(container,path)); // yield return 
+            else
+            {
+                BoardCellAnimation boardCellAnimation = boardCell.BoardCellAnimation;
+                BoardCellMovement boardCellMovement = boardCell.BoardCellMovement;
+                boardCellAnimation.SetRunning();
+                // Gọi coroutine trong BoardCtrl
+                int index = -1;
+                if (LevelManager.Instance.BoardCtrl.checkAndSavePosAction != null)
+                    yield return StartCoroutine(LevelManager.Instance.BoardCtrl.checkAndSavePosAction.Invoke(boardCell, (i) => {
+                        index = i; 
+                    }));
+                if(index != -1)
+                {
+                    Container container = LevelManager.Instance.cellPlayCtrl.CellPlays[index];
+                    boardCell.transform.localRotation *= Quaternion.Euler(0, 180, 0);
+                    yield return boardCellMovement.MovementToCellPlay(container.Pos);
+                    boardCell.IsBoosterAdd = false;
+                    boardCellAnimation.SetIdle();
+                    boardCell.transform.localRotation *= Quaternion.Euler(0, 180, 0);
+                }
+                
+            }
         }
         isProcessingClick = false; // Kết thúc xử lý
     }

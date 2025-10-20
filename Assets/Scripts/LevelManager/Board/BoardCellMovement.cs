@@ -7,8 +7,8 @@ using System;
 public class BoardCellMovement : MonoBehaviour
 {
     [Header("Timing Settings")]
-    [SerializeField] private float timerPerCellMatrixSecond = 0.1f;
-    [SerializeField] private float distancePerCell = 1.25f;
+    private float timerPerCellMatrixSecond = 0.15f;
+    private float distancePerCell = 1.25f;
 
     private float totalCell;
 
@@ -36,7 +36,7 @@ public class BoardCellMovement : MonoBehaviour
             Vector3 nextPos = containers[i];
 
             // Tạo tween di chuyển
-            Tween moveTween = transform.parent.DOMove(nextPos, timerPerCellMatrixSecond * 2)
+            Tween moveTween = transform.parent.DOMove(nextPos, timerPerCellMatrixSecond)
                 .SetEase(Ease.InOutSine);
 
             // Chờ tween hoàn thành
@@ -60,7 +60,7 @@ public class BoardCellMovement : MonoBehaviour
         float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
 
-        Tween moveTween = transform.parent.DOMove(pos, timer * 2f)
+        Tween moveTween = transform.parent.DOMove(pos, timer)
             .SetEase(Ease.OutCubic);
 
         yield return moveTween.WaitForCompletion();
@@ -79,7 +79,9 @@ public class BoardCellMovement : MonoBehaviour
             yield break;
         }
 
-        Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond * 2)
+        float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
+        float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
+        Tween moveTween = transform.parent.DOMove(pos, timer)
             .SetEase(Ease.InOutSine);
 
         yield return moveTween.WaitForCompletion();
@@ -98,8 +100,11 @@ public class BoardCellMovement : MonoBehaviour
             return null;
         }
 
+        float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
+        float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
+
         // Tạo và trả về Tween. Tốc độ tương đương với hàm Coroutine cũ.
-        return transform.parent.DOMove(pos, timerPerCellMatrixSecond * 2)
+        return transform.parent.DOMove(pos, timer)
             .SetEase(Ease.InOutSine);
     }
 }

@@ -73,12 +73,12 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickAdd()
     {
-        Debug.Log("Add Clicked");
+        StartCoroutine(LevelManager.Instance.boosterCtrl.Add());
     }
 
     private void OnClickUndo()
     {
-        StartCoroutine(LevelManager.Instance.cellPlayCtrl.Undo());
+        StartCoroutine(LevelManager.Instance.boosterCtrl.Undo());
     }
 
 
