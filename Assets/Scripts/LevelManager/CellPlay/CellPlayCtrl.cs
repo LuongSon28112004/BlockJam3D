@@ -217,11 +217,18 @@ public class CellPlayCtrl : MonoBehaviour
 
                 // check match 3
                 if (Check3Item())
+                    //StartCoroutine(CheckMatch3());
                     yield return StartCoroutine(CheckMatch3());
 
                 if (boardCells.Count == MAX_ROW)
                 {
                     GameManager.Instance.LoseGame();
+                    yield break;
+                }
+
+                if(boardCells.Count == 0 && LevelManager.Instance.Round == 3)
+                {
+                    GameManager.Instance.WinGame();
                     yield break;
                 }
             }

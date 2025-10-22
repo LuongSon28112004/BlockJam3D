@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,11 @@ public class ScreenGamePlay : ScreenUI
     [SerializeField] private Button ShuffleButton;
     [SerializeField] private Button MagnetButton;
     [SerializeField] private Button SettingButton;
+    [Header("Round")]
+    [SerializeField] private Sprite IconRoundDo;
+    [SerializeField] private Image Round_1;
+    [SerializeField] private Image Round_2;
+    [SerializeField] private Image Round_3;
 
     [SerializeField] private Image iconUndo;
     [SerializeField] private Image iconAdd;
@@ -25,6 +31,7 @@ public class ScreenGamePlay : ScreenUI
         ShuffleButton.onClick.AddListener(OnClickShuffle);
         MagnetButton.onClick.AddListener(OnClickMagnet);
         SettingButton.onClick.AddListener(OnClickSetting);
+        CustomeEventSystem.Instance.ChangeRoundAction += ChangeRound;
     }
 
     private void OnDisable()
@@ -33,6 +40,7 @@ public class ScreenGamePlay : ScreenUI
         AddButton.onClick.RemoveListener(OnClickAdd);
         ShuffleButton.onClick.RemoveListener(OnClickShuffle);
         MagnetButton.onClick.RemoveListener(OnClickMagnet);
+        CustomeEventSystem.Instance.ChangeRoundAction -= ChangeRound;
     }
 
 
@@ -89,6 +97,19 @@ public class ScreenGamePlay : ScreenUI
     }
 
 
+    //Round
+    public void ChangeRound(int round)
+    {
+        if (round == 1)
+        {
+            Round_2.sprite = IconRoundDo;
+        }
+        
+        if(round == 2)
+        {
+            Round_3.sprite = IconRoundDo;
+        }
+    }
 
 
 

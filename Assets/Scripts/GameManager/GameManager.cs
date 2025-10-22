@@ -70,7 +70,7 @@ public class GameManager : SingletonDDOL<GameManager>
         }
     }
     
-    private IEnumerator LoadSceneAndWait(string sceneName, Action onLoaded)
+    public IEnumerator LoadSceneAndWait(string sceneName, Action onLoaded)
     {
         AsyncOperation async = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         while (!async.isDone)
@@ -99,8 +99,11 @@ public class GameManager : SingletonDDOL<GameManager>
 
     public void BackToMenu()
     {
+
         StartCoroutine(ChangeState(GameState.Menu));
+
     }
+
 
     public void PauseGame()
     {

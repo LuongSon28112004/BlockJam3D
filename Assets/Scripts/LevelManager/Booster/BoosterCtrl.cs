@@ -59,7 +59,7 @@ public class BoosterCtrl : MonoBehaviour
         yield return StartCoroutine(MoveBackward(cell, path));
 
         // 3 Cập nhật trạng thái cuối cùng
-        yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.ShiftCellsLeft());
+        yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.ShiftCellsLeft()); //tat tam
         ResetCellAfterUndo(cell, container);
 
         // inactive lại các hàng xóm

@@ -68,56 +68,56 @@ public class BoardCtrl : MonoBehaviour
     /// Random TypeItem tiếp theo theo trọng số, đảm bảo mỗi loại có ít nhất 3 quân khi đạt totalCount.
     /// </summary>
     public TypeItem GetNextRandomType(int totalCount)
+{
+    // Gộp quân ban đầu và quân mới sinh ra
+    Dictionary<TypeItem, int> typeCounts = new Dictionary<TypeItem, int>();
+
+    foreach (TypeItem type in Enum.GetValues(typeof(TypeItem)))
     {
-        // Đếm số lượng từng loại hiện có
-        Dictionary<TypeItem, int> typeCounts = new Dictionary<TypeItem, int>();
-        foreach (TypeItem type in Enum.GetValues(typeof(TypeItem)))
-        {
-            typeCounts[type] = boardCells.Count(c => c.TypeItem == type);
-        }
-
-        // 🔹 1. Nếu gần đầy (còn lại ít hơn số loại * 3)
-        int remainingSlots = totalCount - boardCells.Count;
-
-        // Kiểm tra xem có loại nào chưa đủ 3
-        List<TypeItem> mustFillTypes = typeCounts
-            .Where(kv => kv.Value < 3)
-            .Select(kv => kv.Key)
-            .ToList();
-
-        // Nếu còn ít slot mà vẫn có loại chưa đủ 3 → ép random loại đó
-        if (remainingSlots <= mustFillTypes.Count * 3 && mustFillTypes.Count > 0)
-        {
-            return mustFillTypes[UnityEngine.Random.Range(0, mustFillTypes.Count)];
-        }
-
-        // 🔹 2. Ngược lại → random theo trọng số (bình thường)
-        int maxCount = typeCounts.Values.Max();
-        Dictionary<TypeItem, float> weights = new Dictionary<TypeItem, float>();
-
-        foreach (var kv in typeCounts)
-        {
-            // Loại xuất hiện ít → trọng số cao hơn
-            weights[kv.Key] = (maxCount - kv.Value + 1);
-        }
-
-        // Random theo trọng số
-        float totalWeight = weights.Values.Sum();
-        float rand = UnityEngine.Random.Range(0, totalWeight);
-        float cumulative = 0;
-
-        foreach (var kv in weights)
-        {
-            cumulative += kv.Value;
-            if (rand <= cumulative)
-                return kv.Key;
-        }
-
-        return TypeItem.BlueBase; // fallback
+        int initialCount = initialTypeCounts.ContainsKey(type) ? initialTypeCounts[type] : 0;
+        int currentExtra = boardCells.Count(c => c.TypeItem == type) - initialCount;
+        typeCounts[type] = initialCount + Mathf.Max(0, currentExtra);
     }
 
+    int remainingSlots = totalCount - boardCells.Count;
 
-    public async Task LoadLevel(LevelData levelData)
+    // Loại nào chưa đủ 3 quân tổng thì ưu tiên random
+    List<TypeItem> mustFillTypes = typeCounts
+        .Where(kv => kv.Value < 3)
+        .Select(kv => kv.Key)
+        .ToList();
+
+    if (remainingSlots <= mustFillTypes.Count * 3 && mustFillTypes.Count > 0)
+    {
+        return mustFillTypes[UnityEngine.Random.Range(0, mustFillTypes.Count)];
+    }
+
+    // Random theo trọng số để cân bằng số lượng giữa các loại
+    int maxCount = typeCounts.Values.Max();
+    Dictionary<TypeItem, float> weights = new Dictionary<TypeItem, float>();
+
+    foreach (var kv in typeCounts)
+    {
+        weights[kv.Key] = (maxCount - kv.Value + 1);
+    }
+
+    float totalWeight = weights.Values.Sum();
+    float rand = UnityEngine.Random.Range(0, totalWeight);
+    float cumulative = 0;
+
+    foreach (var kv in weights)
+    {
+        cumulative += kv.Value;
+        if (rand <= cumulative)
+            return kv.Key;
+    }
+
+    return TypeItem.BlueBase; // fallback
+}
+
+
+
+    public IEnumerator LoadLevel(LevelData levelData)
     {
         // random ngẫu nhiên để các level không trùng type
         //SetIdTypeRandom();
@@ -126,13 +126,13 @@ public class BoardCtrl : MonoBehaviour
         if (levelData == null)
         {
             Debug.LogError("Chưa gán LevelData!");
-            return;
+            yield break; ;
         }
 
         if (gridParent == null)
         {
             Debug.LogError("Chưa gán Grid để chứa các ô!");
-            return;
+            yield break;
         }
         // align ban co
         if (levelData.alignment)
@@ -190,7 +190,7 @@ public class BoardCtrl : MonoBehaviour
                 }
                 else
                 {
-    
+
                     prefab = AddressableManager.Instance.GetPrefab($"{prefabName}");
                     if (prefabName == "Wall")
                     {
@@ -230,7 +230,7 @@ public class BoardCtrl : MonoBehaviour
                         {
                             boardCell.Barrel.SetActive(true);
                             boardCell.BarrelCell.BarrelCelAnimation.PlayBarrelDefault();
-                        } 
+                        }
                         else boardCell.Barrel.SetActive(false);
                         //boardCell.ChangItemFromId(DictIdType);
                         boardCell.Container = objj.GetComponent<Container>();
@@ -255,7 +255,7 @@ public class BoardCtrl : MonoBehaviour
                     }
                 }
 
-                
+
                 boardAlls.Add(obj);
 
 
@@ -314,7 +314,7 @@ public class BoardCtrl : MonoBehaviour
                             if (d == 1) directionNeighBor = DirectionNeighBor.Top;
                             if (d == 2) directionNeighBor = DirectionNeighBor.Left;
                             if (d == 3) directionNeighBor = DirectionNeighBor.Right;
-                            current.AddNeighbor(neighbor,directionNeighBor);
+                            current.AddNeighbor(neighbor, directionNeighBor);
                         }
                     }
                 }
@@ -339,7 +339,7 @@ public class BoardCtrl : MonoBehaviour
         {
             for (int col = 0; col < levelData.width; col++)
             {
-                if (gridContainerSpot[row, col] != null && gridContainerSpot[row,col] is Container)
+                if (gridContainerSpot[row, col] != null && gridContainerSpot[row, col] is Container)
                 {
                     int top = row - 1;
                     int bottom = row + 1;
@@ -356,10 +356,10 @@ public class BoardCtrl : MonoBehaviour
                         bool isBottom = gridSpotSpawn.CheckDirection(Direction.Down);
                         if (isBottom && bottom < levelData.height)
                         {
-                            gridSpotSpawn.AddContainer(gridContainerSpot[row, col],Direction.Down);
+                            gridSpotSpawn.AddContainer(gridContainerSpot[row, col], Direction.Down);
                         }
                     }
-                    
+
                     index = bottom * levelData.width + col;
                     obj = null;
                     if (index >= 0 && index < boardAlls.Count)
@@ -371,7 +371,7 @@ public class BoardCtrl : MonoBehaviour
                         bool isTop = gridSpotSpawn1.CheckDirection(Direction.Up);
                         if (isTop && top >= 0)
                         {
-                            gridSpotSpawn1.AddContainer(gridContainerSpot[row, col],Direction.Up);
+                            gridSpotSpawn1.AddContainer(gridContainerSpot[row, col], Direction.Up);
                         }
                     }
                     index = row * levelData.width + left;
@@ -385,7 +385,7 @@ public class BoardCtrl : MonoBehaviour
                         bool isRight = gridSpotSpawn2.CheckDirection(Direction.Right);
                         if (isRight && right < levelData.width)
                         {
-                            gridSpotSpawn2.AddContainer(gridContainerSpot[row, col],Direction.Right);
+                            gridSpotSpawn2.AddContainer(gridContainerSpot[row, col], Direction.Right);
                         }
                     }
                     index = row * levelData.width + right;
@@ -399,7 +399,7 @@ public class BoardCtrl : MonoBehaviour
                         bool isLeft = gridSpotSpawn3.CheckDirection(Direction.Left);
                         if (isLeft && left >= 0)
                         {
-                            gridSpotSpawn3.AddContainer(gridContainerSpot[row, col],Direction.Left);
+                            gridSpotSpawn3.AddContainer(gridContainerSpot[row, col], Direction.Left);
                         }
                     }
                 }
@@ -407,17 +407,42 @@ public class BoardCtrl : MonoBehaviour
         }
 
 
+        // Đặt vị trí ban đầu
         transform.position = new Vector3(4f, transform.position.y, transform.position.z);
+
         // Di chuyển từ x = 4f đến x = 0 trong 0.25 giây
-        var tween = transform.DOMoveX(0f, 0.25f).SetEase(Ease.Linear);
-        var tcs = new TaskCompletionSource<bool>();
-        tween.OnComplete(() => tcs.TrySetResult(true));
-        tween.OnKill(() => tcs.TrySetResult(true));
-        await tcs.Task;
+        Tween tween = transform.DOMoveX(0f, 0.25f).SetEase(Ease.Linear);
+
+        // Đợi tween chạy xong
+        yield return tween.WaitForCompletion();
+
+        Debug.Log("Hoàn tất di chuyển!");
+        //=============================
+        // Sau khi hoàn tất spawn toàn bộ boardCells ban đầu
+        InitTypeCounts();
+
 
 
         Debug.Log($"Level '{levelData.name}' loaded successfully under {gridParent.name}!");
     }
+    
+    private Dictionary<TypeItem, int> initialTypeCounts = new Dictionary<TypeItem, int>();
+
+    private void InitTypeCounts()
+    {
+        initialTypeCounts.Clear();
+        foreach (TypeItem type in Enum.GetValues(typeof(TypeItem)))
+        {
+            initialTypeCounts[type] = boardCells.Count(c => c.TypeItem == type);
+        }
+
+        Debug.Log("Initial type counts:");
+        foreach (var kv in initialTypeCounts)
+        {
+            Debug.Log($" - {kv.Key}: {kv.Value}");
+        }
+    }
+
 
      public void UpdateBoardCell()
     {
@@ -433,7 +458,7 @@ public class BoardCtrl : MonoBehaviour
         }
         if(boardCells.Count == 0)
         {
-            LevelManager.Instance.NextRound.Invoke();
+            StartCoroutine(LevelManager.Instance.NextRound.Invoke());
         }
     }
 }

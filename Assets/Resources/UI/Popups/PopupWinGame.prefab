@@ -327,10 +327,10 @@ RectTransform:
   - {fileID: 259214502284446155}
   m_Father: {fileID: 1091283829310766292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 784, y: 908}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4293022812149837792
 CanvasRenderer:
@@ -517,7 +517,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1091283829310766292}
-  - component: {fileID: 2953103586271586625}
+  - component: {fileID: 502918500172504785}
+  - component: {fileID: 2383790741210774439}
+  - component: {fileID: 5755484393468145203}
   m_Layer: 5
   m_Name: PopupWinGame
   m_TagString: Untagged
@@ -543,9 +545,47 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 784, y: 908}
+  m_SizeDelta: {x: 1440, y: 3088}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2953103586271586625
+--- !u!222 &502918500172504785
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8130131894821316984}
+  m_CullTransparentMesh: 1
+--- !u!114 &2383790741210774439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8130131894821316984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5755484393468145203
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -558,10 +598,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isCache: 0
-  ButtonClose: {fileID: 3568958946346846613}
-  animType: 0
-  mainPopUp: {fileID: 0}
-  buttonOk: {fileID: 0}
+  ButtonClose: {fileID: 0}
+  animType: 2
+  mainPopUp: {fileID: 3757031506015807219}
+  buttonOk: {fileID: 3568958946346846613}
 --- !u!1 &8574255566177806546
 GameObject:
   m_ObjectHideFlags: 0

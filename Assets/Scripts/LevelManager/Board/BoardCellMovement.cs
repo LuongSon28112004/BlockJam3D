@@ -7,7 +7,7 @@ using System;
 public class BoardCellMovement : MonoBehaviour
 {
     [Header("Timing Settings")]
-    private float timerPerCellMatrixSecond = 0.15f;
+    private float timerPerCellMatrixSecond = 0.1f;
     private float distancePerCell = 1.25f;
 
     private float totalCell;
