@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,11 +20,23 @@ public class ScreenGamePlay : ScreenUI
     [SerializeField] private Image Round_1;
     [SerializeField] private Image Round_2;
     [SerializeField] private Image Round_3;
+    [SerializeField] private TextMeshProUGUI textLevel;
 
+    [Header("Coin")]
+    [SerializeField] private TextMeshProUGUI textCoin;
+
+    [Header("Booster")]
     [SerializeField] private Image iconUndo;
     [SerializeField] private Image iconAdd;
     [SerializeField] private Image iconShuffle;
     [SerializeField] private Image iconMagnet;
+
+    [SerializeField] private TextMeshProUGUI textUndo;
+    [SerializeField] private TextMeshProUGUI textAdd;
+    [SerializeField] private TextMeshProUGUI textShuffle;
+    [SerializeField] private TextMeshProUGUI textMagnet;
+
+    [SerializeField] private List<BoosterData> boosterDatas;
 
 
     private void OnEnable()
@@ -31,7 +46,12 @@ public class ScreenGamePlay : ScreenUI
         ShuffleButton.onClick.AddListener(OnClickShuffle);
         MagnetButton.onClick.AddListener(OnClickMagnet);
         SettingButton.onClick.AddListener(OnClickSetting);
+        UndoButton.interactable = false;
+        AddButton.interactable = false;
+        ShuffleButton.interactable = false;
+        MagnetButton.interactable = false;
         CustomeEventSystem.Instance.ChangeRoundAction += ChangeRound;
+        CustomeEventSystem.Instance.ChangeCoinAction += ChangeTextCoin;
     }
 
     private void OnDisable()
@@ -41,12 +61,34 @@ public class ScreenGamePlay : ScreenUI
         ShuffleButton.onClick.RemoveListener(OnClickShuffle);
         MagnetButton.onClick.RemoveListener(OnClickMagnet);
         CustomeEventSystem.Instance.ChangeRoundAction -= ChangeRound;
+        CustomeEventSystem.Instance.ChangeCoinAction -= ChangeTextCoin;
     }
 
 
     void Start()
     {
         addAnimationIcon();
+        this.InitCoinText();
+        this.InitPriceBooster();
+        this.LoadTextLevel();
+    }
+
+    private void LoadTextLevel()
+    {
+        textLevel.text = "Level "+  UserData.level.ToString();
+    }
+
+    private void InitPriceBooster()
+    {
+        textUndo.text = boosterDatas[0].price.ToString();
+        textAdd.text = boosterDatas[1].price.ToString();
+        textShuffle.text = boosterDatas[2].price.ToString();
+        textMagnet.text = boosterDatas[3].price.ToString();
+    }
+
+    private void InitCoinText()
+    {
+        textCoin.text = UserData.coin.ToString();
     }
 
     private void addAnimationIcon()
@@ -74,21 +116,29 @@ public class ScreenGamePlay : ScreenUI
     private void OnClickMagnet()
     {
         Debug.Log("Magnet Clicked");
+        UserData.coin -= boosterDatas[3].price;
+        CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
     }
 
     private void OnClickShuffle()
     {
         Debug.Log("Shuffle Clicked");
+        UserData.coin -= boosterDatas[2].price;
+        CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
     }
 
     private void OnClickAdd()
     {
         StartCoroutine(LevelManager.Instance.boosterCtrl.Add());
+        UserData.coin -= boosterDatas[1].price;
+        CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
     }
 
     private void OnClickUndo()
     {
         StartCoroutine(LevelManager.Instance.boosterCtrl.Undo());
+        UserData.coin -= boosterDatas[0].price;
+        CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
     }
 
     private void OnClickSetting()
@@ -104,12 +154,19 @@ public class ScreenGamePlay : ScreenUI
         {
             Round_2.sprite = IconRoundDo;
         }
-        
-        if(round == 2)
+
+        if (round == 2)
         {
             Round_3.sprite = IconRoundDo;
         }
     }
+
+    public void ChangeTextCoin(int coin)
+    {
+        textCoin.text = coin.ToString();
+    }
+    
+
 
 
 

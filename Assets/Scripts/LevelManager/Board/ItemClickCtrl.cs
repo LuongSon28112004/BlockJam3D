@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ItemClickCtrl : MonoBehaviour
 {
@@ -41,7 +42,15 @@ public class ItemClickCtrl : MonoBehaviour
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
+        {
+             // ⚠️ CHẶN CLICK UI
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                // Debug.Log("Click UI -> bỏ qua");
+                return;
+            }
             StartCoroutine(OnClickItem());
+        }
     }
 
     private IEnumerator OnClickItem()

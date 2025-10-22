@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public enum GameState
 {
     None,
+    Loading,
     Menu,
     GamePlay,
     Pause,
@@ -25,7 +26,7 @@ public class GameManager : SingletonDDOL<GameManager>
     private void Start()
     {
         // Khi bắt đầu game, luôn vào menu
-        StartCoroutine(ChangeState(GameState.Menu));
+        StartCoroutine(ChangeState(GameState.Loading));
     }
 
     public IEnumerator ChangeState(GameState newState)
@@ -42,8 +43,14 @@ public class GameManager : SingletonDDOL<GameManager>
 
         switch (gameState)
         {
+            case GameState.Loading:
+                UIManager.Instance.ShowPopup<PopupLoading>(null);
+                break;
             case GameState.Menu:
-                UIManager.Instance.ShowScreen<ScreenMainMenu>();
+                yield return LoadSceneAndWait("UIMain", () =>
+                {
+                    UIManager.Instance.ShowScreen<ScreenMainMenu>();
+                });
                 break;
             case GameState.GamePlay:
                 yield return LoadSceneAndWait("GamePlay", () =>

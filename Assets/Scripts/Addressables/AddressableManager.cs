@@ -23,8 +23,12 @@ public class AddressableManager : SingletonDDOL<AddressableManager>
     {
         await PreloadAllPrefabsAsync();
         await PreloadAllLevelsAsync();
-        await PreloadAllGridSpotsAsync(); 
+        await PreloadAllGridSpotsAsync();
         _isPreloaded = true;
+        await Task.Delay(2000);
+        CustomeEventSystem.Instance.ShowLoading();
+        await Task.Delay(2000);
+        GameManager.Instance.BackToMenu();
         Debug.Log("All Addressable prefabs, levels & grid spots loaded!");
     }
 
