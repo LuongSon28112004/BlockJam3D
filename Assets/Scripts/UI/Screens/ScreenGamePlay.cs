@@ -10,6 +10,7 @@ public class ScreenGamePlay : ScreenUI
     [SerializeField] private Button AddButton;
     [SerializeField] private Button ShuffleButton;
     [SerializeField] private Button MagnetButton;
+    [SerializeField] private Button SettingButton;
 
     [SerializeField] private Image iconUndo;
     [SerializeField] private Image iconAdd;
@@ -23,6 +24,7 @@ public class ScreenGamePlay : ScreenUI
         AddButton.onClick.AddListener(OnClickAdd);
         ShuffleButton.onClick.AddListener(OnClickShuffle);
         MagnetButton.onClick.AddListener(OnClickMagnet);
+        SettingButton.onClick.AddListener(OnClickSetting);
     }
 
     private void OnDisable()
@@ -79,6 +81,11 @@ public class ScreenGamePlay : ScreenUI
     private void OnClickUndo()
     {
         StartCoroutine(LevelManager.Instance.boosterCtrl.Undo());
+    }
+
+    private void OnClickSetting()
+    {
+        UIManager.Instance.ShowPopup<PopupSettings>(null);
     }
 
 

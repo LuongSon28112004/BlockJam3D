@@ -14656,7 +14656,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 0.9724138, b: 0, a: 1}
-      maxColor: {r: 1, g: 0.8727262, b: 0, a: 1}
+      maxColor: {r: 1, g: 0.4730826, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -17439,6 +17439,8 @@ MonoBehaviour:
   idType: 1
   typeItem: 0
   hasClick: 0
+  isBoosterAdd: 0
+  isInCellPlay: 0
   neighbors: []
   pos: {x: 0, y: 0, z: 0}
   boardCellAnimation: {fileID: 1914893369096470440}
@@ -17537,8 +17539,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 821d280205a287a4588b826e8c7bbe21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerPerCellMatrixSecond: 0.05
-  distancePerCell: 1.25
 --- !u!1001 &4247684349765287328
 PrefabInstance:
   m_ObjectHideFlags: 0

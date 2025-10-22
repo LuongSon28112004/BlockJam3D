@@ -44,8 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 821d280205a287a4588b826e8c7bbe21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerPerCellMatrixSecond: 0.05
-  distancePerCell: 1.25
 --- !u!1 &6660632423102888080
 GameObject:
   m_ObjectHideFlags: 0
@@ -143,6 +141,8 @@ MonoBehaviour:
   idType: 1
   typeItem: 0
   hasClick: 0
+  isBoosterAdd: 0
+  isInCellPlay: 0
   neighbors: []
   pos: {x: 0, y: 0, z: 0}
   boardCellAnimation: {fileID: 707055217398719887}
@@ -323,6 +323,14 @@ PrefabInstance:
     - target: {fileID: 4440870227671801, guid: bc534d4e1fcfa0e41a338e2d04a7f3a2, type: 3}
       propertyPath: m_LocalScale.z
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 198788819838664877, guid: bc534d4e1fcfa0e41a338e2d04a7f3a2, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198788819838664877, guid: bc534d4e1fcfa0e41a338e2d04a7f3a2, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.13549447
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114421960352034734, guid: bc534d4e1fcfa0e41a338e2d04a7f3a2, type: 3}

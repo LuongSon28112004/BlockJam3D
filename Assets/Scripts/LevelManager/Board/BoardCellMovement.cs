@@ -33,6 +33,24 @@ public class BoardCellMovement : MonoBehaviour
                 yield break;
             }
 
+
+            //rotate 
+            if (transform.parent.position.x > containers[i].x)
+            {
+                // Di chuyển sang trái → quay sang trái
+                transform.parent.localRotation = Quaternion.Euler(0, 90, 0);
+            }
+            else if (transform.parent.position.x < containers[i].x)
+            {
+                // Di chuyển sang phải → quay sang phải
+                transform.parent.localRotation = Quaternion.Euler(0, -90, 0);
+            }
+            else
+            {
+                // Không thay đổi trục x → quay về hướng mặc định
+                transform.parent.localRotation = Quaternion.Euler(0, 0, 0);
+            }
+
             Vector3 nextPos = containers[i];
 
             // Tạo tween di chuyển
@@ -43,7 +61,7 @@ public class BoardCellMovement : MonoBehaviour
             yield return moveTween.WaitForCompletion();
         }
 
-        Debug.Log("Đã hoàn thành di chuyển trên ma trận.");
+        // Debug.Log("Đã hoàn thành di chuyển trên ma trận.");
     }
 
     /// <summary>
@@ -61,11 +79,11 @@ public class BoardCellMovement : MonoBehaviour
         float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
 
         Tween moveTween = transform.parent.DOMove(pos, timer)
-            .SetEase(Ease.OutCubic);
+            .SetEase(Ease.InOutSine);
 
         yield return moveTween.WaitForCompletion();
 
-        Debug.Log("Đã di chuyển xuống CellPlay.");
+        // Debug.Log("Đã di chuyển xuống CellPlay.");
     }
 
     /// <summary>

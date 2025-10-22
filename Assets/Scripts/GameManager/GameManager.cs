@@ -45,7 +45,6 @@ public class GameManager : SingletonDDOL<GameManager>
             case GameState.Menu:
                 UIManager.Instance.ShowScreen<ScreenMainMenu>();
                 break;
-
             case GameState.GamePlay:
                 yield return LoadSceneAndWait("GamePlay", () =>
                 {
@@ -55,6 +54,7 @@ public class GameManager : SingletonDDOL<GameManager>
                 break;
             case GameState.Win:
                 UIManager.Instance.ShowPopup<PopupWinGame>(null);
+                yield return new WaitForSeconds(0.4f);
                 Time.timeScale = 0;
                 break;
 
