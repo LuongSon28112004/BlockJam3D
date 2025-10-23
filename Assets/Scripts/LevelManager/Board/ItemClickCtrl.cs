@@ -134,6 +134,9 @@ public class ItemClickCtrl : MonoBehaviour
                     boardCell.IsBoosterAdd = false;
                     boardCellAnimation.SetIdle();
                     boardCell.transform.localRotation *= Quaternion.Euler(0, 180, 0);
+                    //check match_3
+                    yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.CheckMatch_3Item());
+                    StartCoroutine(LevelManager.Instance.cellPlayCtrl.CheckStateGame());
                 }
                 
             }
