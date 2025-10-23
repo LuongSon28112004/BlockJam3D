@@ -46,10 +46,10 @@ public class ScreenGamePlay : ScreenUI
         ShuffleButton.onClick.AddListener(OnClickShuffle);
         MagnetButton.onClick.AddListener(OnClickMagnet);
         SettingButton.onClick.AddListener(OnClickSetting);
-        UndoButton.interactable = false;
-        AddButton.interactable = false;
-        ShuffleButton.interactable = false;
-        MagnetButton.interactable = false;
+        // UndoButton.interactable = false;
+        // AddButton.interactable = false;
+        // ShuffleButton.interactable = false;
+        // MagnetButton.interactable = false;
         CustomeEventSystem.Instance.ChangeRoundAction += ChangeRound;
         CustomeEventSystem.Instance.ChangeCoinAction += ChangeTextCoin;
     }

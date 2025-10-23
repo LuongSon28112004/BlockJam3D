@@ -8,9 +8,4 @@ public class BoosterData : ScriptableObject
 {
     public string nameBoosster;
     public int price;
-
-    public static explicit operator Undo(BoosterData v)
-    {
-        throw new NotImplementedException();
-    }
 }
