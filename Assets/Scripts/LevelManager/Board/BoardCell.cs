@@ -23,13 +23,16 @@ public enum DirectionNeighBor
 [Serializable]
 public class NeighBors
 {
+    // nó đang ở hướng nào so với gameobject hàng xóm của nó
     public DirectionNeighBor directionNeighBor;
     public BoardCell boardCell;
+    public bool isActivatedByNeighbor;
 
-    public NeighBors(BoardCell boardCell , DirectionNeighBor directionNeighBor)
+    public NeighBors(BoardCell boardCell , DirectionNeighBor directionNeighBor , bool isActivatedByNeighbor)
     {
         this.boardCell = boardCell;
         this.directionNeighBor = directionNeighBor;
+        this.isActivatedByNeighbor = isActivatedByNeighbor;
     }
 
 
@@ -127,9 +130,9 @@ public class BoardCell : MonoBehaviour
 
     public void AddNeighbor(BoardCell cell,DirectionNeighBor directionNeighBor)
     {
-        if (cell != null && ! neighbors.Contains(new NeighBors(cell,directionNeighBor)))
+        if (cell != null && ! neighbors.Contains(new NeighBors(cell,directionNeighBor,false)))
         {
-             neighbors.Add(new NeighBors(cell, directionNeighBor));
+             neighbors.Add(new NeighBors(cell, directionNeighBor,false));
         }
     }
 
@@ -148,7 +151,9 @@ public class BoardCell : MonoBehaviour
             {
                 StartCoroutine(neighbors[i].boardCell.PlayBarrelAnimation());
             }
+            if (neighbors[i].boardCell.HasClick == true) continue;
             neighbors[i].boardCell.HasClick = true;
+            neighbors[i].isActivatedByNeighbor = true;
             neighbors[i].boardCell.BoardCellAnimation.SetActive();
             //neighbors[i].boardCell.RemoveNeighbor(this);
             yield return new WaitForSeconds(0.25f);
@@ -161,7 +166,7 @@ public class BoardCell : MonoBehaviour
     {
         for(int i = 0; i < neighbors.Count; i++)
         {
-            if (neighbors[i].boardCell == null || neighbors[i].boardCell.IsInCellPlay) continue;
+            if (neighbors[i].boardCell == null || neighbors[i].boardCell.IsInCellPlay || !neighbors[i].isActivatedByNeighbor) continue;
             neighbors[i].boardCell.HasClick = false;
             neighbors[i].boardCell.BoardCellAnimation.SetInActive();
         }
