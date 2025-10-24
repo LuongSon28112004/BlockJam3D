@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System;
+using Unity.VisualScripting;
 
 public class BoardCellMovement : MonoBehaviour
 {
@@ -15,26 +16,29 @@ public class BoardCellMovement : MonoBehaviour
     /// <summary>
     /// Di chuyển qua các ô trên ma trận theo danh sách vị trí (Coroutine).
     /// </summary>
-    public IEnumerator MovementMatrix(List<Vector3> containers)
+    public IEnumerator MovementPath(List<Vector3> containers ,Action<bool> complete)
     {
+        transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         if (containers == null || containers.Count == 0)
         {
             Debug.LogWarning("containers rỗng, không thể di chuyển.");
+            complete.Invoke(false);
             yield break;
         }
 
         totalCell = containers.Count;
 
-        for (int i = 1; i < containers.Count; i++)
+        for (int i = 1; i < containers.Count - 1; i++)
         {
             if (transform.parent == null)
             {
                 Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
+                complete.Invoke(false);
                 yield break;
             }
 
 
-            //rotate 
+            // //rotate 
             if (transform.parent.position.x > containers[i].x)
             {
                 // Di chuyển sang trái → quay sang trái
@@ -59,7 +63,14 @@ public class BoardCellMovement : MonoBehaviour
 
             // Chờ tween hoàn thành
             yield return moveTween.WaitForCompletion();
+            //send event checkmatch_3
         }
+
+        yield return StartCoroutine(MovementToCellPlay(containers[containers.Count - 1]));
+        //setIdle Animation
+        transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
+        transform.parent.GetComponent<BoardCell>().IsInCellPlay = true;
+        complete.Invoke(true);
 
         // Debug.Log("Đã hoàn thành di chuyển trên ma trận.");
     }
@@ -97,12 +108,24 @@ public class BoardCellMovement : MonoBehaviour
             yield break;
         }
 
-        float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
-        float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
-        Tween moveTween = transform.parent.DOMove(pos, timer)
+        if (transform.parent.position.x > pos.x)
+            {
+                // Di chuyển sang trái → quay sang trái
+                transform.parent.localRotation = Quaternion.Euler(0, 90, 0);
+            }
+            else if (transform.parent.position.x < pos.x)
+            {
+                // Di chuyển sang phải → quay sang phải
+                transform.parent.localRotation = Quaternion.Euler(0, -90, 0);
+            }
+
+        // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
+        // float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
+        Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond )
             .SetEase(Ease.InOutSine);
 
         yield return moveTween.WaitForCompletion();
+        transform.parent.localRotation = Quaternion.Euler(0, 0, 0);
 
         Debug.Log("Đã hoàn thành MovementToPos.");
     }
@@ -120,6 +143,17 @@ public class BoardCellMovement : MonoBehaviour
 
         float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
+        
+        if (transform.parent.position.x > pos.x)
+            {
+                // Di chuyển sang trái → quay sang trái
+                transform.parent.localRotation = Quaternion.Euler(0, 90, 0);
+            }
+            else if (transform.parent.position.x < pos.x)
+            {
+                // Di chuyển sang phải → quay sang phải
+                transform.parent.localRotation = Quaternion.Euler(0, -90, 0);
+            }
 
         // Tạo và trả về Tween. Tốc độ tương đương với hàm Coroutine cũ.
         return transform.parent.DOMove(pos, timer)

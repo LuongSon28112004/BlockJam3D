@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,54 +16,48 @@ public class CellPlayCtrl : MonoBehaviour
     [SerializeField] private List<Container> cellPlays;    // danh sách container (vị trí)
     [SerializeField] private GameObject prefabCell;
     [SerializeField] private Transform spawnPoint;
-    [SerializeField] private Dictionary<TypeItem, int> countCellType;
+    [SerializeField] private Dictionary<TypeItem, List<BoardCell>> countCellType;
 
 
-    // luu lai cac trang thai phong chong click lien tuc
-    private Queue<int> listPos;
-    private Queue<BoardCell> listCell;
     public string prefabFolder = "Prefabs";
+
+    Queue<int> posCellPlays;
 
     public List<BoardCell> BoardCells { get => boardCells; set => boardCells = value; }
     public List<Container> CellPlays { get => cellPlays; set => cellPlays = value; }
-    public Dictionary<TypeItem, int> CountCellType { get => countCellType; set => countCellType = value; }
+    public Dictionary<TypeItem, List<BoardCell>> CountCellType { get => countCellType; set => countCellType = value; }
+
+    private void OnEnable()
+    {
+        CustomeEventSystem.Instance.CheckMatch_3_Action += Match_3;
+    }
+
+    private void OnDisable()
+    {
+        CustomeEventSystem.Instance.CheckMatch_3_Action -= Match_3;
+    }
 
     private void Start()
     {
-        if (LevelManager.Instance != null && LevelManager.Instance.BoardCtrl != null)
-        {
-            LevelManager.Instance.BoardCtrl.checkAndSavePosAction += CheckAndSavePos;
-            LevelManager.Instance.BoardCtrl.MoveToCellPlay += MoveToCell;
-        }
+        
 
         boardCells = new List<BoardCell>();
         cellPlays = new List<Container>();
-        listPos = new Queue<int>();
-        listCell = new Queue<BoardCell>();
+        posCellPlays = new Queue<int>();
         InitCountCellType();
         GenerateCell();
     }
 
     private void InitCountCellType()
     {
-        countCellType = new Dictionary<TypeItem, int>()
+        countCellType = new Dictionary<TypeItem, List<BoardCell>>()
         {
-            { TypeItem.BlueBase, 0 },
-            { TypeItem.BrownBase, 0 },
-            { TypeItem.GreenBase, 0 },
-            { TypeItem.MagentaBase, 0 }
+            { TypeItem.BlueBase, new List<BoardCell>() },
+            { TypeItem.BrownBase, new List<BoardCell>() },
+            { TypeItem.GreenBase, new List<BoardCell>() },
+            { TypeItem.MagentaBase, new List<BoardCell>() }
         };
     }
-
-    private void OnDisable()
-    {
-        if (LevelManager.Instance != null && LevelManager.Instance.BoardCtrl != null)
-        {
-            LevelManager.Instance.BoardCtrl.checkAndSavePosAction -= CheckAndSavePos;
-            LevelManager.Instance.BoardCtrl.MoveToCellPlay -= MoveToCell;
-        }
-    }
-
     private void GenerateCell()
     {
         if (prefabCell == null || spawnPoint == null)
@@ -94,53 +89,48 @@ public class CellPlayCtrl : MonoBehaviour
         }
     }
 
-    #region Logic Check Match_3 and sort cellplay
-    private IEnumerator CheckAndSavePos(BoardCell newCell, Action<int> onComplete)
+    public void CheckAndSaveBoardCell(BoardCell boardCell)
     {
-        if (boardCells.Count == MAX_ROW)
+        if (boardCells.Count >= MAX_ROW)
         {
-            onComplete?.Invoke(-1);
-            yield break;
+            Debug.Log("Max CellPlay");
+            return;
+        }
+        if (boardCell == null)
+        {
+            Debug.Log("Board Cell is Null not add List BoardCells");
+            return;
         }
 
-        int insertIndex = FindInsertIndex(newCell);
-        if (insertIndex >= MAX_ROW)
-        {
-            Debug.LogWarning("Không thể thêm ô mới - đã đạt giới hạn tối đa!");
-            onComplete?.Invoke(-1);
-            yield break;
-        }
+        int insertIndex = FindInsertIndex(boardCell);
 
-        if(!newCell.IsBoosterAdd)
-        {
-             listPos.Enqueue(insertIndex);
-            listCell.Enqueue(newCell);
-        }
-
+        //save data cell
         if (insertIndex < boardCells.Count)
         {
-            yield return StartCoroutine(ShiftCellsRight(insertIndex));
+            StartCoroutine(ShiftCellsRight(insertIndex));
         }
 
         if (insertIndex == boardCells.Count)
         {
-            boardCells.Add(newCell);
-            newCell.HasClick = false;
-            countCellType[newCell.TypeItem] += 1;
+            boardCells.Add(boardCell);
+            // delete component 
+            boardCell.HasClick = false;
+            // add count type boardcell
+            countCellType[boardCell.TypeItem].Add(boardCell);
         }
         else
         {
-            countCellType[newCell.TypeItem] += 1;
-            boardCells[insertIndex] = newCell;
-            newCell.HasClick = false;
+            boardCells[insertIndex] = boardCell;
+            //delete component
+            boardCell.HasClick = false;
+            // add count type boardcell
+            countCellType[boardCell.TypeItem].Add(boardCell);
         }
 
         cellPlays[insertIndex].IsContaining = true;
+        posCellPlays.Enqueue(insertIndex);
 
-        // Gọi callback khi hoàn tất
-        onComplete?.Invoke(insertIndex);
     }
-
 
     private int FindInsertIndex(BoardCell newCell)
     {
@@ -165,323 +155,203 @@ public class CellPlayCtrl : MonoBehaviour
         for (int i = boardCells.Count - 1; i >= startIndex + 1; i--)
         {
             BoardCellMovement bc = boardCells[i - 1].BoardCellMovement;
-            yield return StartCoroutine(bc.MovementToPos(cellPlays[i].Pos));
+            StartCoroutine(bc.MovementToPos(cellPlays[i].Pos));
             cellPlays[i].IsContaining = true;
             cellPlays[i - 1].IsContaining = false;
             boardCells[i] = boardCells[i - 1];
         }
     }
 
-    public bool Check3Item()
+    public Vector3 PosCell()
     {
-        foreach (var i in countCellType)
+        if (posCellPlays.Count == 0)
         {
-            if (i.Value >= 3)
-            {
-                LevelManager.Instance.boosterCtrl.IsMatch3 = true;
-                return true;
-
-            }
+            Debug.Log("Pos cell is null");
+            return Vector3.zero;
         }
-        LevelManager.Instance.boosterCtrl.IsMatch3 = false;
+        return cellPlays[posCellPlays.Dequeue()].Pos;
+    }
+
+    public void checkLose()
+    {
+         if (boardCells.Count == MAX_ROW)
+        {
+            GameManager.Instance.LoseGame();
+        }
+    }
+
+
+    public void checkWin()
+    {
+
+        if(boardCells.Count == 0 && LevelManager.Instance.Round == 3)
+        {
+            GameManager.Instance.WinGame();
+        }
+    }
+    
+    public void Match_3()
+    {
+        StartCoroutine(Match3Process());
+    }
+
+    private IEnumerator Match3Process()
+    {
+        foreach (var kvp in countCellType)
+        {
+            TypeItem type = kvp.Key;
+            List<BoardCell> list = kvp.Value;
+
+            if (list.Count < 3)
+                continue;
+            // for (int i = 0; i <= list.Count - 3; i++)
+            // {
+                BoardCell c1 = list[0];
+                BoardCell c2 = list[1];
+                BoardCell c3 = list[2];
+
+                if (c1 == null || c2 == null || c3 == null)
+                    continue;
+                RemoveCellData(new List<BoardCell> { c1, c2, c3 }, type);
+                StartCoroutine(RearrangeCellsAfterRemove());
+
+                StartCoroutine(SetAnimMerge(new List<BoardCell> { c1, c2, c3 }));
+            //}
+        }
+        yield break;
+    }
+
+    private IEnumerator SetAnimMerge(List<BoardCell> boardCells)
+    {
+        // Chạy animation raise + merge
+        boardCells[0].BoardCellAnimation.SetRaise();
+        boardCells[1].BoardCellAnimation.SetRaise();
+        boardCells[2].BoardCellAnimation.SetRaise();
+        yield return new WaitForSeconds(0.2f);
+        yield return StartCoroutine(MergeToCenter(boardCells[0], boardCells[1], boardCells[2]));
+        boardCells[0].BoardCellAnimation.SetPop();
+        boardCells[1].BoardCellAnimation.SetPop();
+        boardCells[2].BoardCellAnimation.SetPop();
+        yield return new WaitForSeconds(0.1f);
+
+        // Xóa gameobject sau khi animation xong
+        Destroy(boardCells[0].gameObject);
+        Destroy(boardCells[1].gameObject);
+        Destroy(boardCells[2].gameObject);
+    }
+
+    private IEnumerator MergeToCenter(BoardCell c1, BoardCell c2, BoardCell c3)
+    {
+        Vector3 centerPos = c2.transform.position;
+        float mergeTime = 0.3f;
+
+        // Chụm vào giữa
+        var t1 = c1.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
+        var t2 = c2.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
+        var t3 = c3.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
+
+        yield return new WaitForSeconds(mergeTime);
+
+        // Hiệu ứng scale nhẹ khi tụ lại
+        DG.Tweening.Sequence seq = DOTween.Sequence();
+        seq.Join(c1.transform.DOScale(1.2f, 0.15f));
+        seq.Join(c2.transform.DOScale(1.2f, 0.15f));
+        seq.Join(c3.transform.DOScale(1.2f, 0.15f));
+        seq.AppendInterval(0.1f);
+        seq.Join(c1.transform.DOScale(1f, 0.15f));
+        seq.Join(c2.transform.DOScale(1f, 0.15f));
+        seq.Join(c3.transform.DOScale(1f, 0.15f));
+
+        yield return seq.WaitForCompletion();
+        //yield return new WaitForSeconds(0.4f);
+        if (LevelManager.Instance.BoardCtrl.BoardCells.Count == 0)
+        {
+            StartCoroutine(LevelManager.Instance.NextRound.Invoke());
+        }
+        checkWin();
+    }
+
+
+
+    private void RemoveCellData(List<BoardCell> cells, TypeItem type)
+    {
+        foreach (var cell in cells)
+        {
+            if (cell == null) continue;
+
+            // Xóa khỏi danh sách logic
+            boardCells.Remove(cell);
+            LevelManager.Instance.BoardCtrl.UpdateBoardCell(cell);
+            countCellType[type].Remove(cell);
+
+            // Đánh dấu container rỗng
+            if (cell.Container != null)
+                cell.Container.IsContaining = false;
+        }
+    }
+
+
+    public IEnumerator RearrangeCellsAfterRemove()
+    {
+        // Tạo một Sequence
+        DG.Tweening.Sequence sc = DOTween.Sequence();
+
+        for (int i = 0; i < boardCells.Count; i++)
+        {
+            var cell = boardCells[i];
+            if (cell == null) continue;
+
+            Vector3 targetPos = cellPlays[i].Pos;
+            cell.Container = cellPlays[i];
+            cellPlays[i].IsContaining = true;
+
+            // Gộp tất cả tween để chạy song song
+            sc.Join(cell.BoardCellMovement.MovementToPosTween(targetPos));
+        }
+
+        // Bắt đầu chạy sequence và đợi hoàn thành
+        sc.Play();
+        yield return sc.WaitForCompletion();
+        for (int i = 0; i < boardCells.Count; i++)
+        {
+            var cell = boardCells[i];
+            if (cell == null) continue;
+
+            // Dùng DOTween để xoay mượt mà
+            cell.transform.DORotate(Vector3.zero, 0.25f)
+                .SetEase(Ease.OutBack);
+        }
+    }
+
+
+    public bool HasMatch3()
+    {
+        foreach (var kvp in countCellType)
+        {
+            var list = kvp.Value;
+
+            // Bỏ qua nếu chưa đủ 3 cell
+            if (list.Count < 3)
+                continue;
+
+            // Đếm số lượng cell đã xuống chỗ
+            int countInPlay = 0;
+            foreach (var cell in list)
+            {
+                if (cell != null && cell.IsInCellPlay)
+                    countInPlay++;
+            }
+
+            // Nếu có ít nhất 3 cell cùng loại đã xuống, thì match3
+            if (countInPlay >= 3)
+                return true;
+        }
+
         return false;
     }
 
 
 
-    private IEnumerator MoveToCell(Container container, List<Vector3> path)
-    {
-        if (listPos.Count > 0)
-        {
-            int index = listPos.Dequeue();
-            if (listCell.Count > 0)
-            {
-                BoardCell boardCell = listCell.Dequeue();
-                if (boardCell == null) yield break;
-                Debug.Log("okok move" + index + boardCell.TypeItem);
-
-                boardCell.Pos = cellPlays[index].Pos;
-                yield return StartCoroutine(LevelManager.Instance.BoardCtrl.MoveToPosAction(cellPlays[index].Pos));
-                // lưu lại các dữ liệu phục vụ cho Undo
-                boardCell.BoardCellAnimation.SetIdle();
-                LevelManager.Instance.boosterCtrl.LastMove = (boardCell, container, path);
-                LevelManager.Instance.boosterCtrl.ContainerLastMove = cellPlays[index];
-                LevelManager.Instance.boosterCtrl.UndoQueue.Clear();
-                for (int i = 0; i < boardCells.Count; i++)
-                {
-                    if (boardCells[i].TypeItem == boardCell.TypeItem && boardCells[i] != boardCell)
-                    {
-                        LevelManager.Instance.boosterCtrl.UndoQueue.Enqueue(new KeyValuePair<BoardCell, Container>(boardCells[i], cellPlays[i]));
-                    }
-                }
-
-
-                yield return StartCoroutine(CheckMatch_3Item());
-                StartCoroutine(CheckStateGame());
-
-            }
-        }
-    }
-
-    public IEnumerator CheckMatch_3Item()
-    {
-        // check match 3
-        if (Check3Item())
-            //StartCoroutine(CheckMatch3());
-            yield return StartCoroutine(CheckMatch3());
-    }
-
-    public IEnumerator CheckStateGame()
-    {
-        if (boardCells.Count == MAX_ROW)
-        {
-            GameManager.Instance.LoseGame();
-            yield break;
-        }
-
-        if(boardCells.Count == 0 && LevelManager.Instance.Round == 3)
-        {
-            GameManager.Instance.WinGame();
-            yield break;
-        }
-    }
-
-    // Đổi tên và thay đổi kiểu trả về thành Tween
-    // Đổi từ IEnumerator sang Tween
-    private Tween JumpCellTween(BoardCell boardCell)
-    {
-        // Tạo một Sequence: Lên, sau đó Xuống về y ban đầu
-        Vector3 startPos = boardCell.transform.position;
-        return DOTween.Sequence()
-            .Append(boardCell.transform.DOMoveY(startPos.y + 0.05f, 0.15f).SetEase(Ease.OutQuad));
-        // .Append(boardCell.transform.DOMoveY(startPos.y, 0.15f).SetEase(Ease.InQuad));
-    }
-
-    private IEnumerator CheckMatch3()
-    {
-        List<TypeItem> matchedTypes = new List<TypeItem>();
-        List<Tween> jumpTweens = new List<Tween>(); // Thay thế List<IEnumerator>
-
-        // 1. Thu thập các loại cần ghép và Tweens nhảy (Giới hạn 3 ô)
-        foreach (var x in countCellType)
-        {
-            if (x.Value >= 3)
-            {
-                matchedTypes.Add(x.Key);
-
-                int count = 0;
-                foreach (var cell in boardCells)
-                {
-                    if (cell != null && cell.TypeItem == x.Key)
-                    {
-                        jumpTweens.Add(JumpCellTween(cell));
-                        count++;
-                        if (count >= 3) break; // Giới hạn chỉ 3 ô cho hoạt ảnh nhảy
-                    }
-                }
-            }
-        }
-
-        // 2. Chạy tất cả các hoạt ảnh nhảy cùng lúc và đợi chúng hoàn thành
-        if (jumpTweens.Count > 0)
-        {
-            DG.Tweening.Sequence sequence = DOTween.Sequence();
-
-            // Thêm Tween đầu tiên bằng Append()
-            sequence.Append(jumpTweens[0]);
-
-            // Thêm các Tween còn lại bằng Join() để chạy song song
-            for (int i = 1; i < jumpTweens.Count; i++)
-            {
-                sequence.Join(jumpTweens[i]);
-            }
-
-            // Đợi toàn bộ Sequence chạy xong
-            yield return sequence.WaitForCompletion();
-        }
-
-        // 3. Xử lý logic ghép 3
-        foreach (var type in matchedTypes)
-            yield return StartCoroutine(CombineCell(type));
-    }
-
-    private IEnumerator CombineCell(TypeItem type)
-    {
-        List<BoardCell> sameTypeCells = new List<BoardCell>();
-        List<int> indexs = new List<int>();
-
-        // Lấy 3 ô ĐẦU TIÊN cùng loại (Giới hạn 3 ô)
-        for (int i = 0; i < boardCells.Count; i++)
-        {
-            if (boardCells[i] != null && boardCells[i].TypeItem == type)
-            {
-                sameTypeCells.Add(boardCells[i]);
-                indexs.Add(i);
-
-                if (sameTypeCells.Count >= 3) break;
-            }
-        }
-
-        if (sameTypeCells.Count < 3) yield break;
-
-        // Tính vị trí trung tâm để di chuyển đến
-        // Vị trí trung tâm (midIndex) là chỉ mục của ô thứ hai trong nhóm 3 ô (theo thứ tự xuất hiện)
-        int midIndex = indexs[1]; // Do indexs đã được thu thập theo thứ tự, index thứ 1 là ở giữa
-        Vector3 targetPos = cellPlays[midIndex].Pos;
-
-        List<Tween> moveTweens = new List<Tween>();
-        foreach (var cell in sameTypeCells) // sameTypeCells đã giới hạn ở 3
-        {
-            cell.BoardCellAnimation.SetRaise();
-            // Tạo Tween di chuyển
-            moveTweens.Add(cell.transform.DOMove(targetPos , 0.15f));
-        }
-
-        // Chạy tất cả các hoạt ảnh di chuyển cùng lúc và đợi chúng hoàn thành
-        DG.Tweening.Sequence sequence = DOTween.Sequence();
-
-        // Thêm Tween đầu tiên bằng Append()
-        sequence.Append(moveTweens[0]);
-
-        // Thêm các Tween còn lại bằng Join() để chạy song song
-        for (int i = 1; i < moveTweens.Count; i++)
-        {
-            sequence.Join(moveTweens[i]);
-        }
-
-        yield return new WaitForSeconds(1.25f);
-
-        // Đợi toàn bộ Sequence chạy xong
-        yield return sequence.WaitForCompletion();
-
-        // Xóa 3 ô đã chọn
-        yield return StartCoroutine(RemoveItem(sameTypeCells, indexs));
-    }
-
-    private IEnumerator RemoveItem(List<BoardCell> sameTypeCells, List<int> indexs)
-    {
-        foreach (var cell in sameTypeCells)
-        {
-            if (cell != null)
-                Destroy(cell.gameObject);
-        }
-
-        indexs.Sort();
-        indexs.Reverse();
-
-        foreach (int idx in indexs)
-        {
-            if (idx >= 0 && idx < boardCells.Count)
-            {
-                boardCells.RemoveAt(idx);
-                cellPlays[idx].IsContaining = false;
-            }
-        }
-
-        foreach (var cell in sameTypeCells)
-        {
-            countCellType[cell.TypeItem] -= 1;
-        }
-
-        Debug.Log("Đã xóa các cell cùng loại và cập nhật danh sách.");
-        yield return StartCoroutine(ShiftCellsLeft());
-    }
-
-    public IEnumerator ShiftCellsLeft()
-    {
-        int indexStartEmpty = -1;
-
-        for (int i = 0; i < cellPlays.Count; i++)
-        {
-            if (!cellPlays[i].IsContaining)
-            {
-                indexStartEmpty = i;
-                break;
-            }
-        }
-
-        if (indexStartEmpty == -1) yield break;
-
-        List<Tween> moveTweens = new List<Tween>();
-
-    for (int i = indexStartEmpty; i < boardCells.Count; i++)
-    {
-        var cell = boardCells[i];
-        BoardCellMovement bc = cell.BoardCellMovement;
-        BoardCellAnimation boardCellAnimation = cell.BoardCellAnimation;
-        cellPlays[indexStartEmpty].IsContaining = true;
-
-        // Lưu rotation ban đầu (local)
-        Quaternion startLocalRot = cell.transform.localRotation;
-
-        // Tính direction và rotation hướng tới pos (dùng world direction rồi chuyển sang local nếu cần)
-        Vector3 targetPos = cellPlays[indexStartEmpty].Pos;
-        Vector3 dir = (targetPos - cell.transform.position).normalized;
-        Quaternion lookRotation = Quaternion.identity;
-        if (dir != Vector3.zero)
-        {
-            lookRotation = Quaternion.LookRotation(dir); // world rotation hướng tới pos
-            // Nếu bạn muốn xoay theo local (VD: parent khác orientation), thử chuyển sang localEuler:
-            // Vector3 lookEuler = lookRotation.eulerAngles;
-            // hoặc dùng DOLocalRotate nếu cần euler local
-        }
-
-        // Tạo tween di chuyển (giả sử MovementToPosTween trả Tween và bắt đầu khi tạo)
-        Tween moveTween = bc.MovementToPosTween(targetPos);
-
-        // Capture local variables để tránh closure issue
-        var capturedCell = cell;
-        var capturedAnim = boardCellAnimation;
-        var capturedStartRot = startLocalRot;
-        var capturedLookRot = lookRotation;
-
-        // Khi tween bắt đầu: bật animation chạy + xoay về hướng di chuyển (tween xoay ngắn 0.15s)
-        moveTween.OnStart(() =>
-        {
-            capturedAnim.SetRunning();
-            // Tween xoay mượt về lookRotation (dùng DORotateQuaternion trên transform, hoặc DOLocalRotate nếu bạn dùng local)
-            // Mình dùng DORotateQuaternion (world). Nếu muốn local: DOLocalRotateQuaternion(...)
-            capturedCell.transform.DORotateQuaternion(capturedLookRot, 0.15f).SetUpdate(true);
-        });
-
-        // Khi tween hoàn tất: đặt lại animation idle + quay về rotation ban đầu (0.2s)
-        moveTween.OnComplete(() =>
-        {
-            capturedAnim.SetIdle();
-            capturedCell.transform.DORotateQuaternion(capturedStartRot, 0.2f).SetUpdate(true);
-        });
-
-        moveTweens.Add(moveTween);
-        indexStartEmpty += 1;
-        }
-
-        // Tạo sequence và join tất cả tween (đảm bảo include tween 0)
-        DG.Tweening.Sequence sequence = DOTween.Sequence();
-        if (moveTweens.Count > 0)
-        {
-            sequence.Append(moveTweens[0]);
-            for (int i = 1; i < moveTweens.Count; i++)
-            {
-                sequence.Join(moveTweens[i]);
-            }
-        }
-
-        // Đợi toàn bộ Sequence chạy xong
-        yield return sequence.WaitForCompletion();
-
-        // Reset các cellPlays còn lại
-        for (int i = indexStartEmpty; i < cellPlays.Count; i++)
-        {
-            cellPlays[i].IsContaining = false;
-        }
-
-        yield return new WaitForSeconds(0.1f);
-        LevelManager.Instance.BoardCtrl.UpdateBoardCell();
-
-    }
-
-    #endregion
-
-
     
-}
+
+}   

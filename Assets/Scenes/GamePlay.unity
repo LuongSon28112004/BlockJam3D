@@ -703,7 +703,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   findingPath: {fileID: 1957763974}
-  isProcessingClick: 0
 --- !u!1 &1124622414
 GameObject:
   m_ObjectHideFlags: 0
@@ -1252,6 +1251,7 @@ MonoBehaviour:
   levelData: {fileID: 0}
   prefabFolder: Prefabs
   gridParent: {fileID: 2040771915}
+  boardCells: []
   boardAlls: []
   gridSpotSpawns: []
 --- !u!4 &2015014350

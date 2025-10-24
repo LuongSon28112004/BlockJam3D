@@ -36,5 +36,10 @@ public class BoardCellAnimation : MonoBehaviour
         Debug.Log("RaiseTrigger is done");
     }
 
+    public void SetPop()
+    {
+        anim.SetTrigger("PopTrigger");
+    }
+
     
 }

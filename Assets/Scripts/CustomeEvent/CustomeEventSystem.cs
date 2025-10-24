@@ -34,4 +34,12 @@ public class CustomeEventSystem : SingletonDDOL<CustomeEventSystem>
         ShowLoadingAction?.Invoke();
     }
 
+
+    public Action CheckMatch_3_Action;
+
+    public void CheckMatch_3()
+    {
+        CheckMatch_3_Action?.Invoke();
+    }
+
 }

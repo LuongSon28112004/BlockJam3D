@@ -18,17 +18,13 @@ public class BoardCtrl : MonoBehaviour
 
     [Header("Parent Container")]
     public Transform gridParent;
-    private List<BoardCell> boardCells;
+    [SerializeField] private List<BoardCell> boardCells;
     public List<GameObject> boardAlls;
     public List<GridSpotSpawn> gridSpotSpawns;
     //public Dictionary<string, TypeItem> DictIdType;
 
     [Header("Action Event")]
-    [Header("Action Move maxtrix and move to cell play")]
-    public Func<BoardCell,Action<int>,IEnumerator> checkAndSavePosAction;
-    public Func<Container,List<Vector3>,IEnumerator> MoveToCellPlay;
-    // Thay đổi: MoveToPosAction nên trả về IEnumerator để được yield return
-    public Func<Vector3, IEnumerator> MoveToPosAction;
+   
     [Header("Action spawn Block to GridSpotSpawn")]
     public Func<Container, BoardCell, IEnumerator> SpawnBlockToGSPAction;
 
@@ -49,6 +45,7 @@ public class BoardCtrl : MonoBehaviour
 
     private IEnumerator CheckSpawnBlock(Container container, BoardCell boardCell = null)//neu sau nay muon truyen index thi them vao
     {
+        if (gridSpotSpawns.Count == 0) yield break;
         for (int i = 0; i < gridSpotSpawns.Count; i++)
         {
             if (gridSpotSpawns[i].CheckContainer(container))
@@ -444,21 +441,8 @@ public class BoardCtrl : MonoBehaviour
     }
 
 
-     public void UpdateBoardCell()
+     public void UpdateBoardCell(BoardCell boardCell)
     {
-        for (int i = 0; i < boardCells.Count; i++)
-        {
-            if (boardCells[i] == null)
-            {
-                Debug.Log($"Ô tại vị trí {i} bị missing");
-                // Xử lý nếu cần, ví dụ: xóa khỏi danh sách
-                boardCells.RemoveAt(i);
-                i--; // Giảm i để không bỏ qua phần tử kế tiếp
-            }
-        }
-        if(boardCells.Count == 0)
-        {
-            StartCoroutine(LevelManager.Instance.NextRound.Invoke());
-        }
+        boardCells.Remove(boardCell);
     }
 }

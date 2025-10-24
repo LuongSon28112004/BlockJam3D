@@ -14,6 +14,6 @@ public class PopupWinGame : PopupUI
     private void OnOkClicked()
     {
         Hide();
-        SceneManager.LoadSceneAsync("UIMain", LoadSceneMode.Single);
+         GameManager.Instance.BackToMenu();
     }
 }

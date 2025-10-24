@@ -51,7 +51,7 @@ public class BoosterCtrl : MonoBehaviour
         if (index != -1)
         {
             LevelManager.Instance.cellPlayCtrl.BoardCells.RemoveAt(index);
-            LevelManager.Instance.cellPlayCtrl.CountCellType[cell.TypeItem] -= 1;
+            LevelManager.Instance.cellPlayCtrl.CountCellType[cell.TypeItem].Remove(cell);
             LevelManager.Instance.cellPlayCtrl.CellPlays[index].IsContaining = false;
         }
 
@@ -59,12 +59,11 @@ public class BoosterCtrl : MonoBehaviour
         yield return StartCoroutine(MoveBackward(cell, path));
 
         // 3 Cập nhật trạng thái cuối cùng
-        yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.ShiftCellsLeft()); //tat tam
+        yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.RearrangeCellsAfterRemove()); //tat tam
         ResetCellAfterUndo(cell, container);
 
         // inactive lại các hàng xóm
         cell.SetInActiveNeighBor();
-        cell.IsInCellPlay = false;
         lastMove = (null, null, null);
     }
 
@@ -97,7 +96,7 @@ public class BoosterCtrl : MonoBehaviour
         var movement = cell.BoardCellMovement;
         var animation = cell.BoardCellAnimation;
 
-        cell.transform.localRotation *= Quaternion.Euler(0, 180, 0);
+        cell.transform.localRotation = Quaternion.Euler(0, 180, 0);
         animation.SetRunning();
         yield return StartCoroutine(movement.MovementToPos(path[^1]));
 
@@ -108,7 +107,7 @@ public class BoosterCtrl : MonoBehaviour
         }
 
         animation.SetIdle();
-        cell.transform.localRotation *= Quaternion.Euler(0, 180, 0);
+        cell.transform.localRotation = Quaternion.Euler(0, 0, 0);
     }
 
     // Reset trạng thái sau khi Undo thường
@@ -116,6 +115,7 @@ public class BoosterCtrl : MonoBehaviour
     {
         cell.HasClick = true;
         cell.Container = container;
+        cell.IsInCellPlay = false;
         container.IsContaining = true;
     }
 
@@ -141,6 +141,7 @@ public class BoosterCtrl : MonoBehaviour
         newCell.HasClick = false;
         newCell.Container = container;
         newCell.Pos = container.Pos;
+        newCell.IsInCellPlay = true;
         newCell.BoardCellAnimation = block.GetComponentInChildren<BoardCellAnimation>();
         newCell.BoardCellMovement = block.GetComponentInChildren<BoardCellMovement>();
         newCell.BoardCellAnimation.SetActive();
@@ -151,7 +152,7 @@ public class BoosterCtrl : MonoBehaviour
 
         LevelManager.Instance.cellPlayCtrl.BoardCells[posCell] = newCell;
         LevelManager.Instance.cellPlayCtrl.CellPlays[posCell].IsContaining = true;
-        LevelManager.Instance.cellPlayCtrl.CountCellType[newCell.TypeItem] += 1;
+        LevelManager.Instance.cellPlayCtrl.CountCellType[newCell.TypeItem].Add(newCell);
         newCell.transform.position = container.Pos;
     }
 
@@ -170,6 +171,7 @@ public class BoosterCtrl : MonoBehaviour
         recreatedCell.Neighbors = cellData.Neighbors;
         recreatedCell.Container = container;
         recreatedCell.Pos = container.Pos;
+        recreatedCell.IsInCellPlay = false;
         recreatedCell.BoardCellAnimation = block.GetComponentInChildren<BoardCellAnimation>();
         recreatedCell.BoardCellMovement = block.GetComponentInChildren<BoardCellMovement>();
         recreatedCell.BoardCellAnimation.SetActive();
@@ -181,7 +183,7 @@ public class BoosterCtrl : MonoBehaviour
         {
             LevelManager.Instance.cellPlayCtrl.BoardCells[index] = recreatedCell;
             LevelManager.Instance.cellPlayCtrl.CellPlays[index].IsContaining = true;
-            LevelManager.Instance.cellPlayCtrl.CountCellType[recreatedCell.TypeItem] += 1;
+            LevelManager.Instance.cellPlayCtrl.CountCellType[recreatedCell.TypeItem].Add(recreatedCell);
         }
 
         yield return StartCoroutine(MoveBackward(recreatedCell, path));
@@ -205,6 +207,7 @@ public class BoosterCtrl : MonoBehaviour
         {
             BoardCellMovement boardCellMovement = LevelManager.Instance.cellPlayCtrl.BoardCells[i].BoardCellMovement;
             BoardCellAnimation boardCellAnimation = LevelManager.Instance.cellPlayCtrl.BoardCells[i].BoardCellAnimation;
+            LevelManager.Instance.cellPlayCtrl.CountCellType[LevelManager.Instance.cellPlayCtrl.BoardCells[i].TypeItem].Remove(LevelManager.Instance.cellPlayCtrl.BoardCells[i]);
             if (boardCellMovement == null) yield break;
             if (boardCellAnimation == null) yield break;
             boardCellAnimation.SetRunning();

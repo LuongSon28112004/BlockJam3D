@@ -61,15 +61,6 @@ public class BoardCell : MonoBehaviour
     [SerializeField] private bool hasClick;
     [SerializeField] private bool isBoosterAdd;
     [SerializeField] private bool isInCellPlay;
-
-    // [Header("Visual References")]
-    // [SerializeField] private MeshFilter meshFilter;
-    // [SerializeField] private MeshRenderer meshRenderer;
-
-    // [Header("Variants")]
-    // [SerializeField] private List<Mesh> meshTypes;
-    // [SerializeField] private List<Material> materialTypes;
-
     [Header("Neighbors")]
     [SerializeField] private List<NeighBors> neighbors = new List<NeighBors>();
 
@@ -78,7 +69,7 @@ public class BoardCell : MonoBehaviour
     [SerializeField] private BoardCellAnimation boardCellAnimation;
     [SerializeField] private BoxCollider box;
     [SerializeField] private BoardCellMovement boardCellMovement;
-    [SerializeField] private Container container;// container init start contains it
+    [SerializeField] private Container container;
     [Header("Barrel")]
     [SerializeField] private GameObject barrel;
     [SerializeField] private BarrelCell barrelCell;
@@ -97,37 +88,6 @@ public class BoardCell : MonoBehaviour
     public List<NeighBors> Neighbors { get => neighbors; set => neighbors = value; }
     public bool IsInCellPlay { get => isInCellPlay; set => isInCellPlay = value; }
 
-
-
-    // public List<BoardCell> Neighbors => neighbors;
-    // public TypeItem TypeItem { get => typeItem; set => typeItem = value; }
-
-    // === Methods ===
-    // public void ChangItemFromId(Dictionary<string, TypeItem> idTypes)
-    // {
-    //     ChangeItem(idTypes[idType]);
-    // }
-    // public void ChangeItem(TypeItem newTypeItem)
-    // {
-    //     typeItem = newTypeItem;
-
-    //     int index = (int)newTypeItem;
-
-    //     // An toàn tránh lỗi out of range
-    //     if (index < 0 || index >= materialTypes.Count || index >= meshTypes.Count)
-    //     {
-    //         Debug.LogWarning($"Index {index} vượt quá giới hạn Mesh/Material trong {name}");
-    //         return;
-    //     }
-
-    //     // Gán lại mesh & material
-    //     if (meshFilter != null)
-    //         meshFilter.mesh = meshTypes[index];
-
-    //     if (meshRenderer != null)
-    //         meshRenderer.material = materialTypes[index];
-    // }
-
     public void AddNeighbor(BoardCell cell,DirectionNeighBor directionNeighBor)
     {
         if (cell != null && ! neighbors.Contains(new NeighBors(cell,directionNeighBor,false)))
@@ -135,11 +95,6 @@ public class BoardCell : MonoBehaviour
              neighbors.Add(new NeighBors(cell, directionNeighBor,false));
         }
     }
-
-    // public void RemoveNeighbor(NeighBors neighBors)
-    // {
-    //     neighbors.Remove(neighbors);
-    // }
 
     public IEnumerator SetActiveNeighBor()
     {
@@ -157,6 +112,7 @@ public class BoardCell : MonoBehaviour
             neighbors[i].boardCell.BoardCellAnimation.SetActive();
             //neighbors[i].boardCell.RemoveNeighbor(this);
             yield return new WaitForSeconds(0.25f);
+            if (neighbors[i].boardCell.barrel == null) yield break;
             neighbors[i].boardCell.Barrel.SetActive(false);
         }
         yield break;
