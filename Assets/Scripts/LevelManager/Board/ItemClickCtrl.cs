@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -31,7 +32,7 @@ public class ItemClickCtrl : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-             // ⚠️ CHẶN CLICK UI
+             // CHẶN CLICK UI
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             {
                 // Debug.Log("Click UI -> bỏ qua");
@@ -56,8 +57,24 @@ public class ItemClickCtrl : MonoBehaviour
                 yield break;
             }
             BoardCell boardCell = hit.transform.parent.GetComponent<BoardCell>();
-            if (boardCell == null || !boardCell.HasClick)
+            if (boardCell == null)
             {
+                yield break;
+            }
+            if(!boardCell.HasClick)
+            {
+                //xoay 90 rồi quay vê đối với obj đang không click được
+                Sequence seq = DOTween.Sequence();
+
+                // Xoay 90 độ theo trục Y trong 0.1s
+                seq.Append(boardCell.transform.DOLocalRotate(
+                    new Vector3(0, 90, 0), 0.1f, RotateMode.FastBeyond360
+                ).SetEase(Ease.OutQuad));
+
+                // Quay trở lại ban đầu trong 0.1s
+                seq.Append(boardCell.transform.DOLocalRotate(
+                    Vector3.zero, 0.1f, RotateMode.FastBeyond360
+                ).SetEase(Ease.InQuad));
                 yield break;
             }
 
@@ -84,7 +101,8 @@ public class ItemClickCtrl : MonoBehaviour
                 //spawn block
 
                 //start Run
-                path.Add(LevelManager.Instance.cellPlayCtrl.PosCell());
+                //path.Add(LevelManager.Instance.cellPlayCtrl.PosCell());
+                // path.Add(boardCell.Pos);
                 StartCoroutine(boardCell.BoardCellMovement.MovementPath(path, (check) =>
                 {
                     LevelManager.Instance.boosterCtrl.LastMove = (boardCell, container, path);
@@ -97,9 +115,9 @@ public class ItemClickCtrl : MonoBehaviour
                             LevelManager.Instance.boosterCtrl.UndoQueue.Enqueue(new KeyValuePair<BoardCell, Container>(LevelManager.Instance.cellPlayCtrl.BoardCells[i], LevelManager.Instance.cellPlayCtrl.CellPlays[i]));
                         }
                     }
-                    if (check && LevelManager.Instance.cellPlayCtrl.HasMatch3())
+                    if (check && LevelManager.Instance.cellPlayCtrl.HasMatch3(boardCell.TypeItem))
                     {
-                        CustomeEventSystem.Instance.CheckMatch_3();
+                        CustomeEventSystem.Instance.CheckMatch_3(boardCell.TypeItem);
                         LevelManager.Instance.boosterCtrl.IsMatch3 = true;
                     }
                     else
@@ -117,9 +135,9 @@ public class ItemClickCtrl : MonoBehaviour
                 boardCell.transform.localRotation = Quaternion.Euler(0, 180, 0);
                 yield return boardCell.BoardCellMovement.MovementToPos(pos);
                 boardCell.transform.localRotation = Quaternion.Euler(0, 0, 0);
-                if (LevelManager.Instance.cellPlayCtrl.HasMatch3())
+                if (LevelManager.Instance.cellPlayCtrl.HasMatch3(boardCell.TypeItem))
                 {
-                    CustomeEventSystem.Instance.CheckMatch_3();
+                    CustomeEventSystem.Instance.CheckMatch_3(boardCell.TypeItem);
                     LevelManager.Instance.boosterCtrl.IsMatch3 = true;
                 }
                 else

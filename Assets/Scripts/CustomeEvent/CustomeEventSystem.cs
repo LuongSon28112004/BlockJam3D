@@ -35,11 +35,11 @@ public class CustomeEventSystem : SingletonDDOL<CustomeEventSystem>
     }
 
 
-    public Action CheckMatch_3_Action;
+    public Action<TypeItem> CheckMatch_3_Action;
 
-    public void CheckMatch_3()
+    public void CheckMatch_3(TypeItem typeItem)
     {
-        CheckMatch_3_Action?.Invoke();
+        CheckMatch_3_Action?.Invoke(typeItem);
     }
 
 }

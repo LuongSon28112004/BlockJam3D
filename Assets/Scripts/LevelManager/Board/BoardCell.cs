@@ -88,11 +88,11 @@ public class BoardCell : MonoBehaviour
     public List<NeighBors> Neighbors { get => neighbors; set => neighbors = value; }
     public bool IsInCellPlay { get => isInCellPlay; set => isInCellPlay = value; }
 
-    public void AddNeighbor(BoardCell cell,DirectionNeighBor directionNeighBor)
+    public void AddNeighbor(BoardCell cell, DirectionNeighBor directionNeighBor)
     {
-        if (cell != null && ! neighbors.Contains(new NeighBors(cell,directionNeighBor,false)))
+        if (cell != null && !neighbors.Contains(new NeighBors(cell, directionNeighBor, false)))
         {
-             neighbors.Add(new NeighBors(cell, directionNeighBor,false));
+            neighbors.Add(new NeighBors(cell, directionNeighBor, false));
         }
     }
 
@@ -111,16 +111,16 @@ public class BoardCell : MonoBehaviour
             neighbors[i].isActivatedByNeighbor = true;
             neighbors[i].boardCell.BoardCellAnimation.SetActive();
             //neighbors[i].boardCell.RemoveNeighbor(this);
-            yield return new WaitForSeconds(0.25f);
+            //yield return new WaitForSeconds(0.25f);
             if (neighbors[i].boardCell.barrel == null) yield break;
             neighbors[i].boardCell.Barrel.SetActive(false);
         }
         yield break;
     }
-
+    
     public void SetInActiveNeighBor()
     {
-        for(int i = 0; i < neighbors.Count; i++)
+        for (int i = 0; i < neighbors.Count; i++)
         {
             if (neighbors[i].boardCell == null || neighbors[i].boardCell.IsInCellPlay || !neighbors[i].isActivatedByNeighbor) continue;
             neighbors[i].boardCell.HasClick = false;

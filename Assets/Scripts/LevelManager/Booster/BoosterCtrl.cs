@@ -186,6 +186,7 @@ public class BoosterCtrl : MonoBehaviour
             LevelManager.Instance.cellPlayCtrl.CountCellType[recreatedCell.TypeItem].Add(recreatedCell);
         }
 
+        
         yield return StartCoroutine(MoveBackward(recreatedCell, path));
         //reset lai cac hang xom
         recreatedCell.SetInActiveNeighBor();
