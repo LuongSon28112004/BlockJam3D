@@ -112,8 +112,8 @@ public class BoardCell : MonoBehaviour
             neighbors[i].boardCell.BoardCellAnimation.SetActive();
             //neighbors[i].boardCell.RemoveNeighbor(this);
             //yield return new WaitForSeconds(0.25f);
-            if (neighbors[i].boardCell.barrel == null) yield break;
-            neighbors[i].boardCell.Barrel.SetActive(false);
+            //if (neighbors[i].boardCell.barrel == null) yield break;
+            //neighbors[i].boardCell.Barrel.SetActive(false);
         }
         yield break;
     }

@@ -161,6 +161,71 @@ public class BoardCellMovement : MonoBehaviour
         // Tạo và trả về Tween. Tốc độ tương đương với hàm Coroutine cũ.
         return transform.parent.DOMove(pos, timer)
             .SetEase(Ease.InOutSine);
-        
+
+    }
+
+    public IEnumerator MovementToPosOwner()
+    {
+        Vector3 pos = transform.parent.GetComponent<BoardCell>().Pos;
+        if (transform.parent == null)
+        {
+            Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
+            yield break;
+        }
+
+        if (transform.parent.position.x > pos.x)
+        {
+            // Di chuyển sang trái → quay sang trái
+            transform.parent.localRotation = Quaternion.Euler(0, 90, 0);
+        }
+        else if (transform.parent.position.x < pos.x)
+        {
+            // Di chuyển sang phải → quay sang phải
+            transform.parent.localRotation = Quaternion.Euler(0, -90, 0);
+        }
+        transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
+        // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
+        // float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
+        Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond)
+            .SetEase(Ease.InOutSine);
+
+        yield return moveTween.WaitForCompletion();
+        yield return new WaitForSeconds(0.1f);
+        transform.parent.localRotation = Quaternion.Euler(0, 0, 0);
+        transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
+
+        Debug.Log("Đã hoàn thành MovementToPos.");
+    }
+    
+    public IEnumerator MovementToPosNormal(Vector3 pos)
+    {
+        if (transform.parent == null)
+        {
+            Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
+            yield break;
+        }
+
+        if (transform.parent.position.x > pos.x)
+            {
+                // Di chuyển sang trái → quay sang trái
+                transform.parent.localRotation = Quaternion.Euler(0, 90, 0);
+            }
+            else if (transform.parent.position.x < pos.x)
+            {
+                // Di chuyển sang phải → quay sang phải
+                transform.parent.localRotation = Quaternion.Euler(0, -90, 0);
+            }
+        transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
+        // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
+        // float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
+        transform.parent.DOMove(pos, timerPerCellMatrixSecond )
+            .SetEase(Ease.InOutSine);
+
+        // yield return moveTween.WaitForCompletion();
+        // yield return new WaitForSeconds(0.1f);
+        transform.parent.localRotation = Quaternion.Euler(0, 0, 0);
+        transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
+
+        Debug.Log("Đã hoàn thành MovementToPos.");
     }
 }

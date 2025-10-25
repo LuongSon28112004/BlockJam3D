@@ -108,6 +108,7 @@ public class ItemClickCtrl : MonoBehaviour
                     LevelManager.Instance.boosterCtrl.LastMove = (boardCell, container, path);
                     LevelManager.Instance.boosterCtrl.ContainerLastMove = container;
                     LevelManager.Instance.boosterCtrl.UndoQueue.Clear();
+                    //boardCell.BoardCellMovement.MovementToPosOwner();
                     for (int i = 0; i < LevelManager.Instance.cellPlayCtrl.BoardCells.Count; i++)
                     {
                         if (LevelManager.Instance.cellPlayCtrl.BoardCells[i].TypeItem == boardCell.TypeItem && LevelManager.Instance.cellPlayCtrl.BoardCells[i] != boardCell)
@@ -125,6 +126,7 @@ public class ItemClickCtrl : MonoBehaviour
                         LevelManager.Instance.boosterCtrl.IsMatch3 = false;
                         LevelManager.Instance.cellPlayCtrl.checkLose();
                     }
+                    
                 }));
                 StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container, null));
             }

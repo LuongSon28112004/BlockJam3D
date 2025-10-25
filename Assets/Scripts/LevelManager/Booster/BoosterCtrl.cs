@@ -98,12 +98,12 @@ public class BoosterCtrl : MonoBehaviour
 
         cell.transform.localRotation = Quaternion.Euler(0, 180, 0);
         animation.SetRunning();
-        yield return StartCoroutine(movement.MovementToPos(path[^1]));
+        yield return StartCoroutine(movement.MovementToPosNormal(path[^1]));
 
         path.RemoveAt(path.Count - 1);
         for (int i = path.Count - 1; i >= 0; i--)
         {
-            yield return StartCoroutine(movement.MovementToPos(path[i]));
+            yield return StartCoroutine(movement.MovementToPosNormal(path[i]));
         }
 
         animation.SetIdle();

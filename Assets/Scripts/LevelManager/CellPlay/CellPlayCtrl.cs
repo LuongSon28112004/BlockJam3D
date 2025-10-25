@@ -48,16 +48,13 @@ public class CellPlayCtrl : MonoBehaviour
         GenerateCell();
     }
 
-    private void InitCountCellType()
+   private void InitCountCellType()
     {
-        countCellType = new Dictionary<TypeItem, List<BoardCell>>()
-        {
-            { TypeItem.BlueBase, new List<BoardCell>() },
-            { TypeItem.BrownBase, new List<BoardCell>() },
-            { TypeItem.GreenBase, new List<BoardCell>() },
-            { TypeItem.MagentaBase, new List<BoardCell>() }
-        };
+        countCellType = new Dictionary<TypeItem, List<BoardCell>>();
+        foreach (TypeItem t in Enum.GetValues(typeof(TypeItem)))
+            countCellType[t] = new List<BoardCell>();
     }
+
     private void GenerateCell()
     {
         if (prefabCell == null || spawnPoint == null)
@@ -157,11 +154,15 @@ public class CellPlayCtrl : MonoBehaviour
 
         for (int i = boardCells.Count - 1; i >= startIndex + 1; i--)
         {   
-            //if (!boardCells[i - 1].IsInCellPlay) continue;
             cellPlays[i].IsContaining = true;
             cellPlays[i - 1].IsContaining = false;
             boardCells[i] = boardCells[i - 1];
             boardCells[i].Pos = cellPlays[i].Pos;
+            // if (!boardCells[i - 1].IsInCellPlay)
+            // {
+            //     Debug.Log("chua di song be oi");
+            //     continue;
+            // }
             BoardCellMovement bc = boardCells[i - 1].BoardCellMovement;
             StartCoroutine(bc.MovementToPos(cellPlays[i].Pos));
         }
@@ -206,174 +207,179 @@ public class CellPlayCtrl : MonoBehaviour
     }
 
     private IEnumerator Match3Process(TypeItem typeItem)
-{
-    foreach (var kvp in countCellType)
     {
-        TypeItem type = kvp.Key;
-        if (type != typeItem) continue;
-        List<BoardCell> list = kvp.Value;
-
-        if (list.Count < 3)
-            continue;
-
-        // Lặp để xử lý nhóm 3 đầu tiên
-        for (int i = 0; i <= list.Count - 3; i++)
+        foreach (var kvp in countCellType)
         {
-            BoardCell c1 = list[0];
-            BoardCell c2 = list[1];
-            BoardCell c3 = list[2];
+            TypeItem type = kvp.Key;
+            if (type != typeItem) continue;
+            List<BoardCell> list = kvp.Value;
 
-            if (c1 == null || c2 == null || c3 == null)
+            if (list.Count < 3)
                 continue;
 
-            // Xóa logic trước khi anim
-            RemoveCellData(new List<BoardCell> { c1, c2, c3 }, type);
+            // Lặp để xử lý nhóm 3 đầu tiên
+            for (int i = 0; i <= list.Count - 3; i++)
+            {
+                BoardCell c1 = list[0];
+                BoardCell c2 = list[1];
+                BoardCell c3 = list[2];
 
-            // Animation merge & pop
-            yield return StartCoroutine(SetAnimMerge(new List<BoardCell> { c1, c2, c3 }));
+                if (c1 == null || c2 == null || c3 == null)
+                    continue;
 
-            // Sau khi xóa, sắp xếp lại cell
-            yield return StartCoroutine(RearrangeCellsAfterRemove());
+                // Xóa logic trước khi anim
+                RemoveCellData(new List<BoardCell> { c1, c2, c3 }, type);
+
+                // Animation merge & pop
+                yield return StartCoroutine(SetAnimMerge(new List<BoardCell> { c1, c2, c3 }));
+
+                // Sau khi xóa, sắp xếp lại cell
+                yield return StartCoroutine(RearrangeCellsAfterRemove());
+            }
         }
     }
-}
 
 
     private IEnumerator SetAnimMerge(List<BoardCell> cells)
-{
-    // Kiểm tra null tránh lỗi
-    cells.RemoveAll(c => c == null || c.gameObject == null);
-    if (cells.Count < 3) yield break;
-
-    // Animation nâng lên
-    foreach (var c in cells)
     {
-        if (c == null || c.gameObject == null) continue;
-        c.BoardCellAnimation.SetRaise();
+        // Kiểm tra null tránh lỗi
+        for(int i = 0; i < cells.Count; i++)
+        {
+            cells[i].transform.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+        cells.RemoveAll(c => c == null || c.gameObject == null);
+        if (cells.Count < 3) yield break;
+
+        // Animation nâng lên
+        foreach (var c in cells)
+        {
+            if (c == null || c.gameObject == null) continue;
+            c.BoardCellAnimation.SetRaise();
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        // Gộp vào giữa
+        yield return StartCoroutine(MergeToCenter(cells[0], cells[1], cells[2]));
+
+        // Pop hiệu ứng
+        foreach (var c in cells)
+        {
+            if (c == null || c.gameObject == null) continue;
+            c.BoardCellAnimation.SetPop();
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        // Xoá object sau khi pop
+        foreach (var c in cells)
+        {
+            if (c == null) continue;
+            Destroy(c.gameObject);
+        }
     }
-
-    yield return new WaitForSeconds(0.2f);
-
-    // Gộp vào giữa
-    yield return StartCoroutine(MergeToCenter(cells[0], cells[1], cells[2]));
-
-    // Pop hiệu ứng
-    foreach (var c in cells)
-    {
-        if (c == null || c.gameObject == null) continue;
-        c.BoardCellAnimation.SetPop();
-    }
-
-    yield return new WaitForSeconds(0.1f);
-
-    // 🔥 Xoá object sau khi pop
-    foreach (var c in cells)
-    {
-        if (c == null) continue;
-        Destroy(c.gameObject);
-    }
-}
 
     private IEnumerator MergeToCenter(BoardCell c1, BoardCell c2, BoardCell c3)
-{
-    if (c1 == null || c2 == null || c3 == null) yield break;
-
-    Vector3 centerPos = c2.transform.position;
-    float mergeTime = 0.3f;
-
-    var t1 = c1.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
-    var t2 = c2.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
-    var t3 = c3.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
-
-    yield return new WaitForSeconds(mergeTime);
-
-    // Scale hiệu ứng
-    DG.Tweening.Sequence seq = DOTween.Sequence();
-    seq.Join(c1.transform.DOScale(1.2f, 0.15f));
-    seq.Join(c2.transform.DOScale(1.2f, 0.15f));
-    seq.Join(c3.transform.DOScale(1.2f, 0.15f));
-    seq.AppendInterval(0.1f);
-    seq.Join(c1.transform.DOScale(1f, 0.15f));
-    seq.Join(c2.transform.DOScale(1f, 0.15f));
-    seq.Join(c3.transform.DOScale(1f, 0.15f));
-
-    yield return seq.WaitForCompletion();
-
-    // Kiểm tra win sau khi merge xong
-    if (LevelManager.Instance.BoardCtrl.BoardCells.Count == 0)
     {
-        StartCoroutine(LevelManager.Instance.NextRound.Invoke());
-    }
+        if (c1 == null || c2 == null || c3 == null) yield break;
 
+        Vector3 centerPos = c2.transform.position;
+        float mergeTime = 0.3f;
+
+        var t1 = c1.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
+        var t2 = c2.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
+        var t3 = c3.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
+
+        yield return new WaitForSeconds(mergeTime);
+
+        // Scale hiệu ứng
+        DG.Tweening.Sequence seq = DOTween.Sequence();
+        seq.Join(c1.transform.DOScale(1.2f, 0.15f));
+        seq.Join(c2.transform.DOScale(1.2f, 0.15f));
+        seq.Join(c3.transform.DOScale(1.2f, 0.15f));
+        seq.AppendInterval(0.1f);
+        seq.Join(c1.transform.DOScale(1f, 0.15f));
+        seq.Join(c2.transform.DOScale(1f, 0.15f));
+        seq.Join(c3.transform.DOScale(1f, 0.15f));
+
+        yield return seq.WaitForCompletion();
+
+        // Kiểm tra win sau khi merge xong
+        if (LevelManager.Instance.BoardCtrl.BoardCells.Count == 0)
+        {
+            StartCoroutine(LevelManager.Instance.NextRound.Invoke());
+        }
+        //check win
         StartCoroutine(checkWin());
-}
+
+    }
 
 
 
 
     private void RemoveCellData(List<BoardCell> cells, TypeItem type)
-{
-    foreach (var cell in cells)
     {
-        if (cell == null || cell.gameObject == null) continue;
+        foreach (var cell in cells)
+        {
+            if (cell == null || cell.gameObject == null) continue;
 
-        // Xoá khỏi danh sách logic
-        boardCells.Remove(cell);
+            // Xoá khỏi danh sách logic
+            boardCells.Remove(cell);
 
-        if (countCellType.ContainsKey(type))
-            countCellType[type].Remove(cell);
+            if (countCellType.ContainsKey(type))
+                countCellType[type].Remove(cell);
 
-        // Dọn Container
-        if (cell.Container != null)
-            cell.Container.IsContaining = false;
+            // Dọn Container
+            if (cell.Container != null)
+                cell.Container.IsContaining = false;
 
-        // Xoá khỏi board chính
-        LevelManager.Instance.BoardCtrl.UpdateBoardCell(cell);
+            // Xoá khỏi board chính
+            LevelManager.Instance.BoardCtrl.UpdateBoardCell(cell);
+        }
     }
-}
 
 
     public IEnumerator RearrangeCellsAfterRemove()
-{
-    DG.Tweening.Sequence sc = DOTween.Sequence();
-
-    for (int i = 0; i < boardCells.Count; i++)
     {
-        var cell = boardCells[i];
-        if (cell == null || cell.gameObject == null) continue;
+        DG.Tweening.Sequence sc = DOTween.Sequence();
 
-        Vector3 targetPos = cellPlays[i].Pos;
-        cell.Container = cellPlays[i];
-        cell.Pos = targetPos;
-        cellPlays[i].IsContaining = true;
+        for (int i = 0; i < boardCells.Count; i++)
+        {
+            var cell = boardCells[i];
+            if (cell == null || cell.gameObject == null) continue;
 
-        // Join tween nếu hợp lệ
-        var moveTween = cell.BoardCellMovement?.MovementToPosTween(targetPos);
-        if (moveTween != null)
-            sc.Join(moveTween);
+            Vector3 targetPos = cellPlays[i].Pos;
+            cell.Container = cellPlays[i];
+            cell.Pos = targetPos;
+            cellPlays[i].IsContaining = true;
+
+            // Join tween nếu hợp lệ
+            var moveTween = cell.BoardCellMovement?.MovementToPosTween(targetPos);
+            if (moveTween != null)
+                sc.Join(moveTween);
+        }
+
+        sc.Play();
+            yield return sc.WaitForCompletion();
+        // Khi tất cả đã di chuyển xong → SetIdle cho từng cell
+        for (int i = 0; i < boardCells.Count; i++)
+        {
+            var cell = boardCells[i];
+            if (cell == null || cell.gameObject == null) continue;
+
+            cell.BoardCellAnimation.SetIdle();
+        }
+
+        // Sau khi sắp xếp xong, đảm bảo các cell chưa bị Destroy
+        for (int i = 0; i < boardCells.Count; i++)
+        {
+            var cell = boardCells[i];
+            if (cell == null || cell.gameObject == null) continue;
+
+            // Xoay lại góc ban đầu
+            cell.transform.DOLocalRotate(Vector3.zero, 0.25f).SetEase(Ease.OutBack);
+        }
     }
-
-    sc.Play();
-        yield return sc.WaitForCompletion();
-     // Khi tất cả đã di chuyển xong → SetIdle cho từng cell
-    for (int i = 0; i < boardCells.Count; i++)
-    {
-        var cell = boardCells[i];
-        if (cell == null || cell.gameObject == null) continue;
-
-        cell.BoardCellAnimation.SetIdle();
-    }
-
-    // Sau khi sắp xếp xong, đảm bảo các cell chưa bị Destroy
-    for (int i = 0; i < boardCells.Count; i++)
-    {
-        var cell = boardCells[i];
-        if (cell == null || cell.gameObject == null) continue;
-
-        // Xoay lại góc ban đầu
-        cell.transform.DOLocalRotate(Vector3.zero, 0.25f).SetEase(Ease.OutBack);
-    }
-}
 
 
 
@@ -403,9 +409,4 @@ public class CellPlayCtrl : MonoBehaviour
 
         return false;
     }
-
-
-
-    
-
 }   
