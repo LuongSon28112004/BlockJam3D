@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9bc019076cfcc641982c773112644bb, type: 3}
-  m_Name: Level_1(board_1)
+  m_Name: Level_2(board_2)
   m_EditorClassIdentifier: 
   width: 15
   height: 20
@@ -276,9 +276,9 @@ MonoBehaviour:
   - Wall
   - Wall
   - Container
-  - 3
-  - 3
-  - 3
+  - Container
+  - GSPDown
+  - Container
   - Container
   - Wall
   - Wall
@@ -290,11 +290,11 @@ MonoBehaviour:
   - Wall
   - Wall
   - Wall
-  - Container
+  - 1
+  - 4
   - 2
-  - 2
-  - 2
-  - Container
+  - 1
+  - 4
   - Wall
   - Wall
   - Wall
@@ -316,5 +316,9 @@ MonoBehaviour:
   - Wall
   - Wall
   alignment: 0
-  totalUnits: 6
-  gsp: []
+  totalUnits: 9
+  gsp:
+  - x: 17
+    y: 7
+    spawnCount: 4
+    type: GSPDown

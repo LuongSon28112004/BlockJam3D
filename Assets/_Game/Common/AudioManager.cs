@@ -65,6 +65,7 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         listAudioSources.Clear();
         listAudioSources.Add(soundSource);

@@ -45,9 +45,9 @@ public class LevelManager : Singleton<LevelManager>
 
     private IEnumerator NextRoundLevel()
     {
+        yield return new WaitForSeconds(0.2f);
         Round += 1;
         if (Round > 2) yield break;
-        yield return new WaitForSeconds(0.1f);
         CustomeEventSystem.Instance.ChangeRound(Round);
         yield return BoardCtrl.LoadLevel(levelDatas[Round]);
     }

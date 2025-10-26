@@ -92,7 +92,7 @@ public class GridSpotSpawn : MonoBehaviour
         return containers.ContainsValue(container);
     }
 
-    public IEnumerator SpawnBlock(GameObject blockPrefab, Container containerr, TypeItem typeItem)
+    public IEnumerator SpawnBlock(GameObject blockPrefab, Container containerr, TypeItem typeItem, Action<BoardCell> onSpawned)
     {
         if (MaxPointSpawn <= 0)
         {
@@ -171,6 +171,7 @@ public class GridSpotSpawn : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         StartCoroutine(bc.MovementToPos(container.Pos));
         obj.transform.DOScale(Vector3.one, 0.1f);
+        onSpawned?.Invoke(boardCell);
     }
 
 }

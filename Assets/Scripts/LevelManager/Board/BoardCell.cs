@@ -8,7 +8,10 @@ public enum TypeItem
     BlueBase,
     BrownBase,
     GreenBase,
-    MagentaBase
+    MagentaBase,
+    RedBase,
+    PurpleBase,
+    YellowBase,
 
 } //=> for override
 

@@ -21,7 +21,6 @@ public class BoardCtrl : MonoBehaviour
     [SerializeField] private List<BoardCell> boardCells;
     public List<GameObject> boardAlls;
     public List<GridSpotSpawn> gridSpotSpawns;
-    //public Dictionary<string, TypeItem> DictIdType;
 
     [Header("Action Event")]
    
@@ -43,6 +42,24 @@ public class BoardCtrl : MonoBehaviour
         SpawnBlockToGSPAction -= CheckSpawnBlock;
     }
 
+    [Header("random")]
+    private Dictionary<TypeItem, int> initialTypeCounts = new Dictionary<TypeItem, int>();
+
+    private void InitTypeCounts()
+    {
+        initialTypeCounts.Clear();
+        foreach (TypeItem type in Enum.GetValues(typeof(TypeItem)))
+        {
+            initialTypeCounts[type] = boardCells.Count(c => c.TypeItem == type);
+        }
+
+        Debug.Log("Initial type counts:");
+        foreach (var kv in initialTypeCounts)
+        {
+            Debug.Log($" - {kv.Key}: {kv.Value}");
+        }
+    }
+
     private IEnumerator CheckSpawnBlock(Container container, BoardCell boardCell = null)//neu sau nay muon truyen index thi them vao
     {
         if (gridSpotSpawns.Count == 0) yield break;
@@ -52,9 +69,12 @@ public class BoardCtrl : MonoBehaviour
             {
                 TypeItem typeItem = GetNextRandomType(levelData.totalUnits);
                 GameObject obj = AddressableManager.Instance.GetPrefab(Enum.GetName(typeof(TypeItem), typeItem));
-                StartCoroutine(gridSpotSpawns[i].SpawnBlock(obj, container,typeItem));
+                StartCoroutine(gridSpotSpawns[i].SpawnBlock(obj, container,typeItem, (boardCell) =>
+                {
+                    boardCells.Add(boardCell);
+                    
+                }));
                 //int index = boardCells.IndexOf(boardCell);
-                boardCells.Add(obj.GetComponent<BoardCell>());
                 break;
             }
         }
@@ -65,59 +85,66 @@ public class BoardCtrl : MonoBehaviour
     /// Random TypeItem tiếp theo theo trọng số, đảm bảo mỗi loại có ít nhất 3 quân khi đạt totalCount.
     /// </summary>
     public TypeItem GetNextRandomType(int totalCount)
-{
-    // Gộp quân ban đầu và quân mới sinh ra
-    Dictionary<TypeItem, int> typeCounts = new Dictionary<TypeItem, int>();
-
-    foreach (TypeItem type in Enum.GetValues(typeof(TypeItem)))
     {
-        int initialCount = initialTypeCounts.ContainsKey(type) ? initialTypeCounts[type] : 0;
-        int currentExtra = boardCells.Count(c => c.TypeItem == type) - initialCount;
-        typeCounts[type] = initialCount + Mathf.Max(0, currentExtra);
+        // Nếu chưa có thống kê thì khởi tạo
+        if (initialTypeCounts == null || initialTypeCounts.Count == 0)
+        {
+            InitTypeCounts();
+        }
+
+        // Tổng số quân hiện tại
+        int currentTotal = initialTypeCounts.Values.Sum();
+
+        // Nếu đã đạt giới hạn tổng, reset lại vòng (nếu muốn)
+        if (currentTotal >= totalCount)
+        {
+            Debug.Log("Đã đạt tổng quân tối đa, reset bộ đếm!");
+            InitTypeCounts(); // reset nếu cần tạo batch mới
+        }
+
+        // B1: Lấy danh sách các loại chưa đạt bội 3
+        List<TypeItem> notMultipleOfThree = new List<TypeItem>();
+        foreach (var kv in initialTypeCounts)
+        {
+            int remainder = kv.Value % 3;
+            if (remainder != 0) notMultipleOfThree.Add(kv.Key);
+        }
+
+        TypeItem chosenType;
+
+        // B2: Nếu có loại chưa đủ bội 3 → ưu tiên chọn từ đó
+        if (notMultipleOfThree.Count > 0)
+        {
+            chosenType = notMultipleOfThree[UnityEngine.Random.Range(0, notMultipleOfThree.Count)];
+        }
+        else
+        {
+            // Nếu tất cả đều đủ bội 3 → chọn ngẫu nhiên đều giữa tất cả
+            Array values = Enum.GetValues(typeof(TypeItem));
+            chosenType = (TypeItem)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+        }
+
+        // B3: Cập nhật bộ đếm
+        initialTypeCounts[chosenType]++;
+
+        Debug.Log($"[RandomType] Chọn {chosenType}, hiện có {initialTypeCounts[chosenType]} quân.");
+
+        return chosenType;
     }
 
-    int remainingSlots = totalCount - boardCells.Count;
 
-    // Loại nào chưa đủ 3 quân tổng thì ưu tiên random
-    List<TypeItem> mustFillTypes = typeCounts
-        .Where(kv => kv.Value < 3)
-        .Select(kv => kv.Key)
-        .ToList();
 
-    if (remainingSlots <= mustFillTypes.Count * 3 && mustFillTypes.Count > 0)
+    private void ResetList()
     {
-        return mustFillTypes[UnityEngine.Random.Range(0, mustFillTypes.Count)];
+        boardAlls.Clear();
+        boardCells.Clear();
+        gridSpotSpawns.Clear();
     }
-
-    // Random theo trọng số để cân bằng số lượng giữa các loại
-    int maxCount = typeCounts.Values.Max();
-    Dictionary<TypeItem, float> weights = new Dictionary<TypeItem, float>();
-
-    foreach (var kv in typeCounts)
-    {
-        weights[kv.Key] = (maxCount - kv.Value + 1);
-    }
-
-    float totalWeight = weights.Values.Sum();
-    float rand = UnityEngine.Random.Range(0, totalWeight);
-    float cumulative = 0;
-
-    foreach (var kv in weights)
-    {
-        cumulative += kv.Value;
-        if (rand <= cumulative)
-            return kv.Key;
-    }
-
-    return TypeItem.BlueBase; // fallback
-}
-
-
-
     public IEnumerator LoadLevel(LevelData levelData)
     {
         // random ngẫu nhiên để các level không trùng type
         //SetIdTypeRandom();
+        ResetList();
 
         this.levelData = levelData;
         if (levelData == null)
@@ -423,22 +450,6 @@ public class BoardCtrl : MonoBehaviour
         Debug.Log($"Level '{levelData.name}' loaded successfully under {gridParent.name}!");
     }
     
-    private Dictionary<TypeItem, int> initialTypeCounts = new Dictionary<TypeItem, int>();
-
-    private void InitTypeCounts()
-    {
-        initialTypeCounts.Clear();
-        foreach (TypeItem type in Enum.GetValues(typeof(TypeItem)))
-        {
-            initialTypeCounts[type] = boardCells.Count(c => c.TypeItem == type);
-        }
-
-        Debug.Log("Initial type counts:");
-        foreach (var kv in initialTypeCounts)
-        {
-            Debug.Log($" - {kv.Key}: {kv.Value}");
-        }
-    }
 
 
      public void UpdateBoardCell(BoardCell boardCell)

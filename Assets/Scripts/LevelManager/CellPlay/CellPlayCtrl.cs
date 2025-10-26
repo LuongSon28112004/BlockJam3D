@@ -194,9 +194,11 @@ public class CellPlayCtrl : MonoBehaviour
     public IEnumerator checkWin()
     {
 
-        if(boardCells.Count == 0 && LevelManager.Instance.Round == 3)
+        if(LevelManager.Instance.BoardCtrl.BoardCells.Count == 0 && LevelManager.Instance.Round >= 2)
         {
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.5f);
+            UserData.level += 1;
+            SaveDataManager.Save();
             GameManager.Instance.WinGame();
         }
     }
@@ -277,6 +279,7 @@ public class CellPlayCtrl : MonoBehaviour
             if (c == null) continue;
             Destroy(c.gameObject);
         }
+        Handheld.Vibrate();
     }
 
     private IEnumerator MergeToCenter(BoardCell c1, BoardCell c2, BoardCell c3)

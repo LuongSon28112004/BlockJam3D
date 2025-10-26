@@ -27,6 +27,8 @@ public class GameManager : SingletonDDOL<GameManager>
     {
         // Khi bắt đầu game, luôn vào menu
         StartCoroutine(ChangeState(GameState.Loading));
+        Level = UserData.level;
+        SaveDataManager.Load();
     }
 
     public IEnumerator ChangeState(GameState newState)

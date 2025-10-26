@@ -30,6 +30,7 @@ public class ScreenMainMenu : ScreenUI
 
     private void OnPlayClicked()
     {
+        GameManager.Instance.Level = UserData.level;
         GameManager.Instance.StartGame();
     }
 }
