@@ -7,6 +7,7 @@ public class CustomeEventSystem : SingletonDDOL<CustomeEventSystem>
 
     //Change Round
     public Action<int> ChangeRoundAction;
+    public Action ResetStartAction;
     public void ChangeRound(int Round)
     {
         ChangeRoundAction?.Invoke(Round);
@@ -40,6 +41,18 @@ public class CustomeEventSystem : SingletonDDOL<CustomeEventSystem>
     public void CheckMatch_3(TypeItem typeItem)
     {
         CheckMatch_3_Action?.Invoke(typeItem);
+    }
+
+    public Action ActiveBoosterAction;
+    public void ActiveBooster()
+    {
+        ActiveBoosterAction?.Invoke();
+    }
+
+    public Action InactiveBoosterAction;
+    public void InactiveBooster()
+    {
+        InactiveBoosterAction?.Invoke();
     }
 
 }

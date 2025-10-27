@@ -20,7 +20,8 @@ public class BoosterCtrl : MonoBehaviour
     public (BoardCell cell, Container container, List<Vector3> path) LastMove { get => lastMove; set => lastMove = value; }
     public Container ContainerLastMove { get => containerLastMove; set => containerLastMove = value; }
 
-    //[Header("Add Booster")]
+    [Header("Busy")]
+    public bool IsBusy = false;
 
     void Start()
     {
@@ -32,9 +33,17 @@ public class BoosterCtrl : MonoBehaviour
     public IEnumerator Undo()
     {
         if (!isMatch3)
+        {
+            IsBusy = true;
             yield return StartCoroutine(UndoNormalMove());
+
+        }
         else
+        {
+            IsBusy = true;
             yield return StartCoroutine(UndoMatch3Move());
+        }
+        IsBusy = false;
     }
 
     #region --- Undo Logic Helpers ---
@@ -55,12 +64,24 @@ public class BoosterCtrl : MonoBehaviour
             LevelManager.Instance.cellPlayCtrl.CellPlays[index].IsContaining = false;
         }
 
+        // xoa block justSpawn
+        List<GridSpotSpawn> gridSpotSpawns = LevelManager.Instance.BoardCtrl.gridSpotSpawns;
+        for (int i = 0; i < gridSpotSpawns.Count; i++)
+        {
+            if(gridSpotSpawns[i].CheckContainer(container))
+            {
+                gridSpotSpawns[i].DestroyBoardCellJustSpawn();
+                break;
+            }
+        }
         // 2 Di chuyển ngược lại đường đi
         yield return StartCoroutine(MoveBackward(cell, path));
 
         // 3 Cập nhật trạng thái cuối cùng
         yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.RearrangeCellsAfterRemove()); //tat tam
         ResetCellAfterUndo(cell, container);
+
+        //convert BoardCell
 
         // inactive lại các hàng xóm
         cell.SetInActiveNeighBor();
@@ -186,6 +207,16 @@ public class BoosterCtrl : MonoBehaviour
             LevelManager.Instance.cellPlayCtrl.CountCellType[recreatedCell.TypeItem].Add(recreatedCell);
         }
 
+        // xoa block justSpawn
+        List<GridSpotSpawn> gridSpotSpawns = LevelManager.Instance.BoardCtrl.gridSpotSpawns;
+        for (int i = 0; i < gridSpotSpawns.Count; i++)
+        {
+            if(gridSpotSpawns[i].CheckContainer(container))
+            {
+                gridSpotSpawns[i].DestroyBoardCellJustSpawn();
+                break;
+            }
+        }
         
         yield return StartCoroutine(MoveBackward(recreatedCell, path));
         //reset lai cac hang xom
@@ -227,7 +258,28 @@ public class BoosterCtrl : MonoBehaviour
 
         boardCells.RemoveRange(startIndex, boardCells.Count - startIndex);
 
-        
+
     }
+    #endregion
+    
+    #region Shuffle
+    public IEnumerator Shuffle()
+    {
+        IsBusy = true;
+        // Lấy reference gốc
+        LevelData original = LevelManager.Instance.BoardCtrl.levelData;
+
+        // Tạo bản sao runtime (không ảnh hưởng file gốc)
+        LevelData levelData = ScriptableObject.CreateInstance<LevelData>();
+        levelData.CopyFrom(original); // bạn sẽ cần tạo hàm CopyFrom
+
+        // Shuffle và load lại
+        string[] prefabNames = levelData.ShufflePrefabs();
+        levelData.prefabNames = prefabNames;
+        LevelManager.Instance.cellPlayCtrl.ResetCellPlay();
+        yield return StartCoroutine(LevelManager.Instance.BoardCtrl.LoadLevel(levelData, false));
+        IsBusy = false;
+    }
+
     #endregion
 }

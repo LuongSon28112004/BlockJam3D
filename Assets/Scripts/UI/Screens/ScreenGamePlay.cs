@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using NUnit.Framework;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -36,6 +37,8 @@ public class ScreenGamePlay : ScreenUI
     [SerializeField] private TextMeshProUGUI textShuffle;
     [SerializeField] private TextMeshProUGUI textMagnet;
 
+    [SerializeField] List<BoosterConfig> listBoosterConfigs;
+
     [SerializeField] private List<BoosterData> boosterDatas;
 
 
@@ -46,12 +49,12 @@ public class ScreenGamePlay : ScreenUI
         ShuffleButton.onClick.AddListener(OnClickShuffle);
         MagnetButton.onClick.AddListener(OnClickMagnet);
         SettingButton.onClick.AddListener(OnClickSetting);
-        // UndoButton.interactable = false;
-        // AddButton.interactable = false;
-        // ShuffleButton.interactable = false;
-        // MagnetButton.interactable = false;
+        listBoosterConfigs[0].Inactive();
+        listBoosterConfigs[1].Inactive();
         CustomeEventSystem.Instance.ChangeRoundAction += ChangeRound;
         CustomeEventSystem.Instance.ChangeCoinAction += ChangeTextCoin;
+        CustomeEventSystem.Instance.ActiveBoosterAction += ActiveBooster;
+        CustomeEventSystem.Instance.InactiveBoosterAction += InActiveBooster;
     }
 
     private void OnDisable()
@@ -62,6 +65,20 @@ public class ScreenGamePlay : ScreenUI
         MagnetButton.onClick.RemoveListener(OnClickMagnet);
         CustomeEventSystem.Instance.ChangeRoundAction -= ChangeRound;
         CustomeEventSystem.Instance.ChangeCoinAction -= ChangeTextCoin;
+        CustomeEventSystem.Instance.ActiveBoosterAction -= ActiveBooster;
+        CustomeEventSystem.Instance.InactiveBoosterAction -= InActiveBooster;
+    }
+
+    public void ActiveBooster()
+    {
+        listBoosterConfigs[0].Active();
+        listBoosterConfigs[1].Active();
+    }
+
+    public void InActiveBooster()
+    {
+        listBoosterConfigs[0].Inactive();
+        listBoosterConfigs[1].Inactive();
     }
 
 
@@ -115,6 +132,7 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickMagnet()
     {
+        if (UserData.coin <= 0) return;
         Debug.Log("Magnet Clicked");
         UserData.coin -= boosterDatas[3].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
@@ -122,13 +140,16 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickShuffle()
     {
+        if (UserData.coin <= 0) return;
         Debug.Log("Shuffle Clicked");
+        StartCoroutine(LevelManager.Instance.boosterCtrl.Shuffle());
         UserData.coin -= boosterDatas[2].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
     }
 
     private void OnClickAdd()
     {
+        if (UserData.coin <= 0) return;
         StartCoroutine(LevelManager.Instance.boosterCtrl.Add());
         UserData.coin -= boosterDatas[1].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
@@ -136,6 +157,7 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickUndo()
     {
+        if (UserData.coin <= 0) return;
         StartCoroutine(LevelManager.Instance.boosterCtrl.Undo());
         UserData.coin -= boosterDatas[0].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
@@ -159,15 +181,13 @@ public class ScreenGamePlay : ScreenUI
         {
             Round_3.sprite = IconRoundDo;
         }
+        listBoosterConfigs[0].Inactive();
+        listBoosterConfigs[1].Inactive();
+        LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
     }
 
     public void ChangeTextCoin(int coin)
     {
         textCoin.text = coin.ToString();
     }
-    
-
-
-
-
 }

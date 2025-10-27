@@ -104,6 +104,7 @@ public class BoardCell : MonoBehaviour
         for (int i = 0; i < neighbors.Count; i++)
         {
             if (neighbors[i] == null) continue;
+            if (neighbors[i].boardCell.IsInCellPlay) continue;
             if (neighbors[i].boardCell.Barrel == null) continue;
             if (neighbors[i].boardCell.Barrel.activeSelf)
             {

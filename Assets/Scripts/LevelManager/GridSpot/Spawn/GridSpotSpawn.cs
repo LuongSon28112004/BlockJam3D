@@ -35,6 +35,7 @@ public class GridSpotSpawn : MonoBehaviour
     public List<Direction> Directions { get => directions; set => directions = value; }
     public BaseGridSpotAnimation BaseGridSpotAnimation { get => baseGridSpotAnimation; set => baseGridSpotAnimation = value; }
     public Dictionary<Direction, Container> Containers { get => containers; set => containers = value; }
+    [SerializeField] public BoardCell JustSpawn;
     public int MaxPointSpawn
     {
         get => maxPointSpawn;
@@ -46,6 +47,16 @@ public class GridSpotSpawn : MonoBehaviour
                 textCount.text = maxPointSpawn.ToString();
             }
         }
+    }
+
+    public void DestroyBoardCellJustSpawn()
+    {
+        JustSpawn.transform.DOScale(Vector3.zero, 0.15f);
+        maxPointSpawn += 1;
+        LevelManager.Instance.BoardCtrl.initialTypeCounts[JustSpawn.TypeItem] -= 1;
+        LevelManager.Instance.BoardCtrl.UpdateBoardCell(JustSpawn);
+        Destroy(JustSpawn.transform.gameObject);
+        textCount.text = maxPointSpawn.ToString();
     }
 
 
@@ -107,6 +118,7 @@ public class GridSpotSpawn : MonoBehaviour
 
         GameObject obj = Instantiate(blockPrefab, transform.position, Quaternion.identity, GridParent.transform);
         BoardCell boardCell = obj.GetComponent<BoardCell>();
+        JustSpawn = boardCell;
 
         if (boardCell == null)
         {

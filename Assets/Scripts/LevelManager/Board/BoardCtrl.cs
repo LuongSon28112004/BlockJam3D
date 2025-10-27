@@ -1,17 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BoardCtrl : MonoBehaviour
 {
 
     [Header("Level Configuration")]
-    [SerializeField] private ItemClickCtrl itemClickCtrl;
+    [SerializeField] public ItemClickCtrl itemClickCtrl;
     private const int MAXTYPE = 4;
     public LevelData levelData;
     public string prefabFolder = "Prefabs";
@@ -43,7 +45,7 @@ public class BoardCtrl : MonoBehaviour
     }
 
     [Header("random")]
-    private Dictionary<TypeItem, int> initialTypeCounts = new Dictionary<TypeItem, int>();
+    public Dictionary<TypeItem, int> initialTypeCounts = new Dictionary<TypeItem, int>();
 
     private void InitTypeCounts()
     {
@@ -140,7 +142,7 @@ public class BoardCtrl : MonoBehaviour
         boardCells.Clear();
         gridSpotSpawns.Clear();
     }
-    public IEnumerator LoadLevel(LevelData levelData)
+    public IEnumerator LoadLevel(LevelData levelData , bool isSlide = true)
     {
         // random ngẫu nhiên để các level không trùng type
         //SetIdTypeRandom();
@@ -206,7 +208,7 @@ public class BoardCtrl : MonoBehaviour
 
                 // Chọn prefab
                 GameObject prefab = null;
-                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight")
+                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight")
                 {
                     // Sửa lỗi tham chiếu: Sử dụng Enum.GetName(typeof(TypeItem), int.Parse(prefabName))
                     string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
@@ -234,7 +236,7 @@ public class BoardCtrl : MonoBehaviour
 
                 GameObject obj = Instantiate(prefab, new Vector3(posX, 0f, posZ), Quaternion.identity, gridParent);
                 obj.name = prefabName;
-                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight")
+                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight")
                 {
                     GameObject prefabTemp = AddressableManager.Instance.GetPrefab("Container");
                     GameObject objj = Instantiate(prefabTemp, new Vector3(posX, 0f, posZ), Quaternion.identity, gridParent);
@@ -261,7 +263,7 @@ public class BoardCtrl : MonoBehaviour
                         grid[row, col] = boardCell;
                     }
                 }
-                if (prefabName == "GSPDown" || prefabName == "GSPBottomRight")
+                if (prefabName == "GSPDown" || prefabName == "GSPBottomRight" || prefabName == "GSPRight")
                 {
                     if (obj.TryGetComponent(out GridSpotSpawn gridSpotSpawn))
                     {
@@ -286,7 +288,7 @@ public class BoardCtrl : MonoBehaviour
                 // Container
                 Container containerToAdd = null;
 
-                if (prefabName == "Wall" || prefabName == "GSPDown" || prefabName == "GSPBottomRight")
+                if (prefabName == "Wall" || prefabName == "GSPDown" || prefabName == "GSPBottomRight" || prefabName == "GSPRight")
                     containerToAdd = null;
                 else if (prefabName == "Container")
                     containerToAdd = obj.GetComponent<Container>();
@@ -296,7 +298,7 @@ public class BoardCtrl : MonoBehaviour
                     containerToAdd.Pos = new Vector3(posX, 0f, posZ);
                 }
 
-                if (prefabName == "Wall" || prefabName == "Container" || prefabName == "GSPDown" || prefabName == "GSPBottomRight")
+                if (prefabName == "Wall" || prefabName == "Container" || prefabName == "GSPDown" || prefabName == "GSPBottomRight" || prefabName == "GSPRight")
                     itemClickCtrl.FindingPath.containers.Add(containerToAdd);
             }
         }
@@ -311,13 +313,13 @@ public class BoardCtrl : MonoBehaviour
 
                 current.ClearNeighbors();
 
-                // Chỉ 4 hướng: Trên, Dưới, Trái, Phải
+                // 4 hướng: trên, dưới, trái, phải
                 int[,] directions = new int[,]
                 {
-                    { 0, 1 },   // trên (col, row + 1)
-                    { 0, -1 },  // dưới (col, row - 1)
-                    { -1, 0 },  // trái (col - 1, row)
-                    { 1, 0 }    // phải (col + 1, row)
+                    { 0, 1 },   // trên
+                    { 0, -1 },  // dưới
+                    { -1, 0 },  // trái
+                    { 1, 0 }    // phải
                 };
 
                 for (int d = 0; d < directions.GetLength(0); d++)
@@ -334,19 +336,51 @@ public class BoardCtrl : MonoBehaviour
                         if (neighbor != null)
                         {
                             DirectionNeighBor directionNeighBor = DirectionNeighBor.Top;
-                            if (d == 0) directionNeighBor = DirectionNeighBor.Bottom;
-                            if (d == 1) directionNeighBor = DirectionNeighBor.Top;
+                            if (d == 0) directionNeighBor = DirectionNeighBor.Top;
+                            if (d == 1) directionNeighBor = DirectionNeighBor.Bottom;
                             if (d == 2) directionNeighBor = DirectionNeighBor.Left;
                             if (d == 3) directionNeighBor = DirectionNeighBor.Right;
+
                             current.AddNeighbor(neighbor, directionNeighBor);
                         }
                     }
                 }
 
-                // Kiểm tra hàng xóm phía dưới (row + 1)
-                int belowRow = row + 1;
-                // Nếu dưới cùng hoặc ô dưới là null (không có item) và không phải là Wall
-                if (belowRow >= levelData.height || (grid[belowRow, col] == null && !IsWall[belowRow, col]))
+                // --- Kiểm tra 4 hướng để quyết định SetActive ---
+                string parentName = current.transform.name;
+                if (parentName != "1" && parentName != "2" && parentName != "3" &&
+                    parentName != "4" && parentName != "5" && parentName != "6" &&
+                    parentName != "7")
+                {
+                    continue;
+                }
+                bool canActivate = false;
+
+                // 4 hướng tương tự
+                for (int d = 0; d < directions.GetLength(0); d++)
+                {
+                    int dx = directions[d, 0];
+                    int dy = directions[d, 1];
+
+                    int nx = col + dx;
+                    int ny = row + dy;
+
+                    // Nếu vượt ra ngoài biên => coi như trống (được phép)
+                    if (nx < 0 || nx >= levelData.width || ny < 0 || ny >= levelData.height)
+                    {
+                        canActivate = true;
+                        break;
+                    }
+
+                    // Nếu ô kế bên là null hoặc không phải Wall => có thể kích hoạt
+                    if (grid[ny, nx] == null && !IsWall[ny, nx])
+                    {
+                        canActivate = true;
+                        break;
+                    }
+                }
+
+                if (canActivate)
                 {
                     current.BoardCellAnimation.SetActive();
                     current.HasClick = true;
@@ -357,6 +391,7 @@ public class BoardCtrl : MonoBehaviour
                 }
             }
         }
+
 
         //============assign container to Spot=================
         for (int row = 0; row < levelData.height; row++)
@@ -431,14 +466,17 @@ public class BoardCtrl : MonoBehaviour
         }
 
 
-        // Đặt vị trí ban đầu
-        transform.position = new Vector3(4f, transform.position.y, transform.position.z);
+        if(isSlide)
+        {
+            // Đặt vị trí ban đầu
+            transform.position = new Vector3(4f, transform.position.y, transform.position.z);
 
-        // Di chuyển từ x = 4f đến x = 0 trong 0.25 giây
-        Tween tween = transform.DOMoveX(0f, 0.25f).SetEase(Ease.Linear);
+            // Di chuyển từ x = 4f đến x = 0 trong 0.25 giây
+            Tween tween = transform.DOMoveX(0f, 0.25f).SetEase(Ease.Linear);
 
-        // Đợi tween chạy xong
-        yield return tween.WaitForCompletion();
+            // Đợi tween chạy xong
+            yield return tween.WaitForCompletion();
+        }
 
         Debug.Log("Hoàn tất di chuyển!");
         //=============================

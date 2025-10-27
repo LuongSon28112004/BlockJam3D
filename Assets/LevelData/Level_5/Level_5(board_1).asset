@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9bc019076cfcc641982c773112644bb, type: 3}
-  m_Name: Level_4(board_2)
+  m_Name: Level_5(board_1)
   m_EditorClassIdentifier: 
   width: 15
   height: 20
@@ -259,44 +259,44 @@ MonoBehaviour:
   - Wall
   - Wall
   - Wall
-  - Container
-  - 2
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - GSPDown
+  - GSPDown
+  - GSPDown
+  - GSPDown
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - Wall
+  - 3
+  - 3
   - 3
   - 1
-  - 4
-  - 2
-  - 3
-  - Container
+  - 7
+  - 7
   - Wall
   - Wall
-  - Wall
-  - Wall
-  - Wall
-  - Wall
-  - Wall
-  - Container
-  - 1
-  - 2
-  - 3
-  - 4
-  - 1
-  - 4
-  - Container
-  - Wall
-  - Wall
-  - Wall
-  - Wall
-  - Wall
-  - Wall
-  - Wall
-  - Container
-  - Wall
-  - Wall
-  - Container
-  - Container
-  - Wall
-  - Wall
-  - Container
   - Wall
   - Wall
   - Wall
@@ -310,11 +310,27 @@ MonoBehaviour:
   - Container
   - Container
   - Container
-  - Container
-  - Container
+  - Wall
+  - Wall
   - Wall
   - Wall
   - Wall
   alignment: 0
-  totalUnits: 12
-  gsp: []
+  totalUnits: 18
+  gsp:
+  - x: 17
+    y: 8
+    spawnCount: 3
+    type: GSPDown
+  - x: 17
+    y: 7
+    spawnCount: 3
+    type: GSPDown
+  - x: 17
+    y: 5
+    spawnCount: 3
+    type: GSPDown
+  - x: 17
+    y: 6
+    spawnCount: 3
+    type: GSPDown

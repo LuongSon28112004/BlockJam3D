@@ -42,24 +42,24 @@ public class BoardCellMovement : MonoBehaviour
             if (transform.parent.position.x > containers[i].x)
             {
                 // Di chuyển sang trái → quay sang trái
-                transform.parent.localRotation = Quaternion.Euler(0, 90, 0);
+                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.OutSine);
             }
             else if (transform.parent.position.x < containers[i].x)
             {
                 // Di chuyển sang phải → quay sang phải
-                transform.parent.localRotation = Quaternion.Euler(0, -90, 0);
+               transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.OutSine);
             }
             else
             {
                 // Không thay đổi trục x → quay về hướng mặc định
-                transform.parent.localRotation = Quaternion.Euler(0, 0, 0);
+               transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.OutSine);
             }
 
             Vector3 nextPos = containers[i];
 
             // Tạo tween di chuyển
             Tween moveTween = transform.parent.DOMove(nextPos, timerPerCellMatrixSecond)
-                .SetEase(Ease.InOutSine);
+                .SetEase(Ease.InSine);
 
             // Chờ tween hoàn thành
             yield return moveTween.WaitForCompletion();
@@ -89,7 +89,7 @@ public class BoardCellMovement : MonoBehaviour
         float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
 
         Tween moveTween = transform.parent.DOMove(pos, timer)
-            .SetEase(Ease.InOutSine);
+            .SetEase(Ease.InSine);
 
         yield return moveTween.WaitForCompletion();
 
@@ -110,22 +110,22 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
             {
                 // Di chuyển sang trái → quay sang trái
-                transform.parent.localRotation = Quaternion.Euler(0, 90, 0);
+                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.OutSine);
             }
             else if (transform.parent.position.x < pos.x)
             {
                 // Di chuyển sang phải → quay sang phải
-                transform.parent.localRotation = Quaternion.Euler(0, -90, 0);
+                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.OutSine);
             }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         // float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
         Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond )
-            .SetEase(Ease.InOutSine);
+            .SetEase(Ease.InSine);
 
         yield return moveTween.WaitForCompletion();
         yield return new WaitForSeconds(0.1f);
-        transform.parent.localRotation = Quaternion.Euler(0, 0, 0);
+        transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.OutSine);
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
 
         Debug.Log("Đã hoàn thành MovementToPos.");
@@ -148,12 +148,12 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
         {
             // Di chuyển sang trái → quay sang trái
-            transform.parent.localRotation = Quaternion.Euler(0, 90, 0);
+            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.OutSine);
         }
         else if (transform.parent.position.x < pos.x)
         {
             // Di chuyển sang phải → quay sang phải
-            transform.parent.localRotation = Quaternion.Euler(0, -90, 0);
+            transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
         }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
 
@@ -176,22 +176,22 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
         {
             // Di chuyển sang trái → quay sang trái
-            transform.parent.localRotation = Quaternion.Euler(0, 90, 0);
+            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.OutSine);
         }
         else if (transform.parent.position.x < pos.x)
         {
             // Di chuyển sang phải → quay sang phải
-            transform.parent.localRotation = Quaternion.Euler(0, -90, 0);
+            transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.OutSine);
         }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         // float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
         Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond)
-            .SetEase(Ease.InOutSine);
+            .SetEase(Ease.InSine);
 
         yield return moveTween.WaitForCompletion();
         yield return new WaitForSeconds(0.1f);
-        transform.parent.localRotation = Quaternion.Euler(0, 0, 0);
+        transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.OutSine);
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
 
         Debug.Log("Đã hoàn thành MovementToPos.");
@@ -208,22 +208,22 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
             {
                 // Di chuyển sang trái → quay sang trái
-                transform.parent.localRotation = Quaternion.Euler(0, 90, 0);
+                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.OutSine);
             }
             else if (transform.parent.position.x < pos.x)
             {
                 // Di chuyển sang phải → quay sang phải
-                transform.parent.localRotation = Quaternion.Euler(0, -90, 0);
+                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.OutSine);
             }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         // float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
         transform.parent.DOMove(pos, timerPerCellMatrixSecond )
-            .SetEase(Ease.InOutSine);
+            .SetEase(Ease.InSine);
 
         // yield return moveTween.WaitForCompletion();
         // yield return new WaitForSeconds(0.1f);
-        transform.parent.localRotation = Quaternion.Euler(0, 0, 0);
+        transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.OutSine);
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
 
         Debug.Log("Đã hoàn thành MovementToPos.");

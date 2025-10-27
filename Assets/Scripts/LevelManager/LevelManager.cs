@@ -16,6 +16,7 @@ public class LevelManager : Singleton<LevelManager>
     public BoosterCtrl boosterCtrl;
     [Header("Action")]
     public Func<IEnumerator> NextRound;
+    public bool isNextRound = false;
     //public Action NextLevel;
     
     public void Init()
@@ -34,7 +35,7 @@ public class LevelManager : Singleton<LevelManager>
         string levelGroupKey = "Level_" + GameManager.Instance.Level;
         List<LevelData> levelBoards = AddressableManager.Instance.GetLevelGroup(levelGroupKey);
         levelDatas = levelBoards;
-        yield return BoardCtrl.LoadLevel(levelDatas[Round]);
+        yield return BoardCtrl.LoadLevel(levelDatas[Round],false);
     }
 
     // public void NextLevel()
@@ -45,10 +46,13 @@ public class LevelManager : Singleton<LevelManager>
 
     private IEnumerator NextRoundLevel()
     {
-        yield return new WaitForSeconds(0.2f);
+        if (isNextRound) yield break;
+        isNextRound = true;
+        yield return new WaitForSeconds(1f);
         Round += 1;
         if (Round > 2) yield break;
         CustomeEventSystem.Instance.ChangeRound(Round);
+        isNextRound = false;
         yield return BoardCtrl.LoadLevel(levelDatas[Round]);
     }
 

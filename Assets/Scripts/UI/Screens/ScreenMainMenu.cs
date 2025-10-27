@@ -30,7 +30,8 @@ public class ScreenMainMenu : ScreenUI
 
     private void OnPlayClicked()
     {
-        GameManager.Instance.Level = UserData.level;
+        if (UserData.level >= 7) GameManager.Instance.Level = 6;
+        else GameManager.Instance.Level = UserData.level;
         GameManager.Instance.StartGame();
     }
 }

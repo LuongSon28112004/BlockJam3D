@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using DG.Tweening;
 using Unity.VisualScripting;
+
 using UnityEngine;
 
 public class CellPlayCtrl : MonoBehaviour
@@ -17,6 +18,9 @@ public class CellPlayCtrl : MonoBehaviour
     [SerializeField] private GameObject prefabCell;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Dictionary<TypeItem, List<BoardCell>> countCellType;
+
+    private bool isCheckWin = false;
+
 
 
     public string prefabFolder = "Prefabs";
@@ -35,6 +39,16 @@ public class CellPlayCtrl : MonoBehaviour
     private void OnDisable()
     {
         CustomeEventSystem.Instance.CheckMatch_3_Action -= Match_3;
+    }
+
+    public void ResetCellPlay()
+    {
+        boardCells.Clear();
+        for (int i = 0; i < cellPlays.Count; i++)
+        {
+            cellPlays[i].IsContaining = false;
+        }
+        InitCountCellType();
     }
 
     private void Start()
@@ -100,7 +114,7 @@ public class CellPlayCtrl : MonoBehaviour
         }
 
         int insertIndex = FindInsertIndex(boardCell);
-        Debug.Log("yes"+ insertIndex);
+        // Debug.Log("yes"+ insertIndex);
 
         //save data cell
         if (insertIndex < boardCells.Count)
@@ -128,7 +142,6 @@ public class CellPlayCtrl : MonoBehaviour
         cellPlays[insertIndex].IsContaining = true;
         boardCell.Pos = cellPlays[insertIndex].Pos;
         posCellPlays.Enqueue(insertIndex);
-
     }
 
     private int FindInsertIndex(BoardCell newCell)
@@ -148,23 +161,37 @@ public class CellPlayCtrl : MonoBehaviour
 
     public IEnumerator ShiftCellsRight(int startIndex)
     {
+        List<BoardCell> tempBoard = new List<BoardCell>();
         if (boardCells.Count >= MAX_ROW) yield break;
 
         boardCells.Add(null);
 
         for (int i = boardCells.Count - 1; i >= startIndex + 1; i--)
-        {   
+        {
             cellPlays[i].IsContaining = true;
             cellPlays[i - 1].IsContaining = false;
             boardCells[i] = boardCells[i - 1];
             boardCells[i].Pos = cellPlays[i].Pos;
-            // if (!boardCells[i - 1].IsInCellPlay)
-            // {
-            //     Debug.Log("chua di song be oi");
-            //     continue;
-            // }
+            if (!boardCells[i].IsInCellPlay)
+            {
+                Debug.Log("chua di song be oi");
+                tempBoard.Add(boardCells[i]);
+                continue;
+            }
             BoardCellMovement bc = boardCells[i - 1].BoardCellMovement;
             StartCoroutine(bc.MovementToPos(cellPlays[i].Pos));
+        }
+
+        StartCoroutine(MoveSuccessPos(tempBoard));
+
+    }
+    
+    private IEnumerator MoveSuccessPos(List<BoardCell> boardCells)
+    {
+        for(int i = 0; i < boardCells.Count; i++)
+        {
+            yield return boardCells[i].IsInCellPlay;
+            boardCells[i].BoardCellMovement.MovementToPosOwner();
         }
     }
 
@@ -193,14 +220,16 @@ public class CellPlayCtrl : MonoBehaviour
 
     public IEnumerator checkWin()
     {
-
+        if (isCheckWin) yield break;
+        isCheckWin = true;
         if(LevelManager.Instance.BoardCtrl.BoardCells.Count == 0 && LevelManager.Instance.Round >= 2)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
             UserData.level += 1;
             SaveDataManager.Save();
             GameManager.Instance.WinGame();
         }
+        isCheckWin = false;
     }
     
     public void Match_3(TypeItem typeItem)
@@ -237,10 +266,22 @@ public class CellPlayCtrl : MonoBehaviour
 
                 // Sau khi xóa, sắp xếp lại cell
                 yield return StartCoroutine(RearrangeCellsAfterRemove());
+                StartCoroutine(ResetPosCellPlay());      
             }
         }
     }
 
+    private IEnumerator ResetPosCellPlay()
+    {
+        yield return new WaitForSeconds(1f);
+        for(int i = 0; i < boardCells.Count; i++)
+        {
+            if(boardCells[i].IsInCellPlay)
+            {
+                boardCells[i].BoardCellMovement.MovementToPosOwner();
+            }
+        }
+    }
 
     private IEnumerator SetAnimMerge(List<BoardCell> cells)
     {

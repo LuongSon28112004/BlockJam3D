@@ -18,7 +18,7 @@ public class LevelEditorWindow : EditorWindow
     private static readonly string[] TileOptions = new string[]
     {
         "Empty", "Wall", "Container",
-        "1","1B","2","2B","3","3B","4","4B",
+        "1","1B","2","2B","3","3B","4","4B", "5","5B","6", "6B","7","7B",
         "GSPDown","GSPUp","GSPLeft","GSPRight","GSPBottomRight"
     };
 

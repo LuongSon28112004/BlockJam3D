@@ -12,6 +12,7 @@ public class ItemClickCtrl : MonoBehaviour
     public FindingPath FindingPath { get => findingPath; set => findingPath = value; }
 
     private RaycastHit hit;
+    public bool isStart = false;
 
     private void Start()
     {
@@ -20,7 +21,6 @@ public class ItemClickCtrl : MonoBehaviour
             Debug.LogError("LevelManager hoặc BoardCtrl chưa được khởi tạo!");
             return;
         }
-        // Đăng ký event coroutine
     }
 
     private void OnDisable()
@@ -32,12 +32,13 @@ public class ItemClickCtrl : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-             // CHẶN CLICK UI
+            // CHẶN CLICK UI
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             {
                 // Debug.Log("Click UI -> bỏ qua");
                 return;
             }
+            if (LevelManager.Instance.boosterCtrl.IsBusy) return;
             StartCoroutine(OnClickItem());
         }
     }
@@ -57,11 +58,11 @@ public class ItemClickCtrl : MonoBehaviour
                 yield break;
             }
             BoardCell boardCell = hit.transform.parent.GetComponent<BoardCell>();
-            if (boardCell == null)
+            if (boardCell == null || LevelManager.Instance.boosterCtrl.IsBusy)
             {
                 yield break;
             }
-            if(!boardCell.HasClick)
+            if(!boardCell.HasClick && !boardCell.IsInCellPlay)
             {
                 //xoay 90 rồi quay vê đối với obj đang không click được
                 Sequence seq = DOTween.Sequence();
@@ -87,6 +88,12 @@ public class ItemClickCtrl : MonoBehaviour
                     yield break;
                 }
 
+                if(!isStart)
+                {
+                    isStart = true;
+                    CustomeEventSystem.Instance.ActiveBooster();
+                }
+
 
                 //check and save pos
                 if (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 7) yield break;
@@ -103,6 +110,7 @@ public class ItemClickCtrl : MonoBehaviour
                 //start Run
                 //path.Add(LevelManager.Instance.cellPlayCtrl.PosCell());
                 // path.Add(boardCell.Pos);
+                LevelManager.Instance.cellPlayCtrl.PosCell();
                 StartCoroutine(boardCell.BoardCellMovement.MovementPath(path, (check) =>
                 {
                     LevelManager.Instance.boosterCtrl.LastMove = (boardCell, container, path);
