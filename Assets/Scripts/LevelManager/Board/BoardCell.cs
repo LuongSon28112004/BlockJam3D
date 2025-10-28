@@ -109,15 +109,17 @@ public class BoardCell : MonoBehaviour
             if (neighbors[i].boardCell.Barrel.activeSelf)
             {
                 StartCoroutine(neighbors[i].boardCell.PlayBarrelAnimation());
+                AudioManager.Instance.PlayOneShot("BLJ_Game_Obstacles_Barrel_Break_01", 1f);
+
             }
             if (neighbors[i].boardCell.HasClick == true) continue;
             neighbors[i].boardCell.HasClick = true;
             neighbors[i].isActivatedByNeighbor = true;
             neighbors[i].boardCell.BoardCellAnimation.SetActive();
             //neighbors[i].boardCell.RemoveNeighbor(this);
-            //yield return new WaitForSeconds(0.25f);
-            //if (neighbors[i].boardCell.barrel == null) yield break;
-            //neighbors[i].boardCell.Barrel.SetActive(false);
+            yield return new WaitForSeconds(0.25f);
+            if (neighbors[i].boardCell.barrel == null) yield break;
+            neighbors[i].boardCell.Barrel.SetActive(false);
         }
         yield break;
     }

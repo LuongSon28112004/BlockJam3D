@@ -49,6 +49,7 @@ public class LevelManager : Singleton<LevelManager>
         if (isNextRound) yield break;
         isNextRound = true;
         yield return new WaitForSeconds(1f);
+        AudioManager.Instance.PlayOneShot("BLJ_League_LeaderBoard_Enter", 1f);
         Round += 1;
         if (Round > 2) yield break;
         CustomeEventSystem.Instance.ChangeRound(Round);

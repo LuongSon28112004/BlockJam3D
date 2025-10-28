@@ -18,6 +18,8 @@ public class ScreenMainMenu : ScreenUI
 
     private void OnSettingClicked()
     {
+        //Audio sound
+        AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
         UIManager.Instance.ShowPopup<PopupSettingsUIMain>(null);
     }
 

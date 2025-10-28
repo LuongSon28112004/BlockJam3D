@@ -53,7 +53,7 @@ public class CellPlayCtrl : MonoBehaviour
 
     private void Start()
     {
-        
+
 
         boardCells = new List<BoardCell>();
         cellPlays = new List<Container>();
@@ -61,7 +61,7 @@ public class CellPlayCtrl : MonoBehaviour
         InitCountCellType();
         GenerateCell();
     }
-
+    
    private void InitCountCellType()
     {
         countCellType = new Dictionary<TypeItem, List<BoardCell>>();
@@ -105,12 +105,10 @@ public class CellPlayCtrl : MonoBehaviour
         if (boardCells.Count >= MAX_ROW)
         {
             Debug.Log("Max CellPlay");
-            return;
         }
         if (boardCell == null)
         {
             Debug.Log("Board Cell is Null not add List BoardCells");
-            return;
         }
 
         int insertIndex = FindInsertIndex(boardCell);
@@ -142,6 +140,8 @@ public class CellPlayCtrl : MonoBehaviour
         cellPlays[insertIndex].IsContaining = true;
         boardCell.Pos = cellPlays[insertIndex].Pos;
         posCellPlays.Enqueue(insertIndex);
+        StartCoroutine(ResetPosCellPlay());
+        
     }
 
     private int FindInsertIndex(BoardCell newCell)
@@ -161,7 +161,6 @@ public class CellPlayCtrl : MonoBehaviour
 
     public IEnumerator ShiftCellsRight(int startIndex)
     {
-        List<BoardCell> tempBoard = new List<BoardCell>();
         if (boardCells.Count >= MAX_ROW) yield break;
 
         boardCells.Add(null);
@@ -172,28 +171,14 @@ public class CellPlayCtrl : MonoBehaviour
             cellPlays[i - 1].IsContaining = false;
             boardCells[i] = boardCells[i - 1];
             boardCells[i].Pos = cellPlays[i].Pos;
-            if (!boardCells[i].IsInCellPlay)
-            {
-                Debug.Log("chua di song be oi");
-                tempBoard.Add(boardCells[i]);
-                continue;
-            }
+            boardCells[i].Container = cellPlays[i];
+            if (!boardCells[i].IsInCellPlay) continue;
             BoardCellMovement bc = boardCells[i - 1].BoardCellMovement;
             StartCoroutine(bc.MovementToPos(cellPlays[i].Pos));
         }
-
-        StartCoroutine(MoveSuccessPos(tempBoard));
-
     }
     
-    private IEnumerator MoveSuccessPos(List<BoardCell> boardCells)
-    {
-        for(int i = 0; i < boardCells.Count; i++)
-        {
-            yield return boardCells[i].IsInCellPlay;
-            boardCells[i].BoardCellMovement.MovementToPosOwner();
-        }
-    }
+
 
     public Vector3 PosCell()
     {
@@ -271,14 +256,15 @@ public class CellPlayCtrl : MonoBehaviour
         }
     }
 
-    private IEnumerator ResetPosCellPlay()
+    public IEnumerator ResetPosCellPlay()
     {
         yield return new WaitForSeconds(1f);
-        for(int i = 0; i < boardCells.Count; i++)
+        for (int i = 0; i < boardCells.Count; i++)
         {
-            if(boardCells[i].IsInCellPlay)
+            if (boardCells[i].IsInCellPlay)
             {
-                boardCells[i].BoardCellMovement.MovementToPosOwner();
+                Debug.Log("yesyes" + boardCells[i].TypeItem + " " + boardCells[i].transform.position + " " + boardCells[i].Pos);
+                if(boardCells[i].transform.position != boardCells[i].Pos)StartCoroutine(boardCells[i].BoardCellMovement.MovementToPosOwner());
             }
         }
     }
@@ -288,7 +274,7 @@ public class CellPlayCtrl : MonoBehaviour
         // Kiểm tra null tránh lỗi
         for(int i = 0; i < cells.Count; i++)
         {
-            cells[i].transform.localRotation = Quaternion.Euler(0, 0, 0);
+            yield return cells[i].transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f).SetEase(Ease.InSine);
         }
         cells.RemoveAll(c => c == null || c.gameObject == null);
         if (cells.Count < 3) yield break;
@@ -328,7 +314,7 @@ public class CellPlayCtrl : MonoBehaviour
         if (c1 == null || c2 == null || c3 == null) yield break;
 
         Vector3 centerPos = c2.transform.position;
-        float mergeTime = 0.3f;
+        float mergeTime = 0.2f;
 
         var t1 = c1.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
         var t2 = c2.transform.DOMove(centerPos, mergeTime).SetEase(Ease.InOutQuad);
@@ -347,6 +333,8 @@ public class CellPlayCtrl : MonoBehaviour
         seq.Join(c3.transform.DOScale(1f, 0.15f));
 
         yield return seq.WaitForCompletion();
+        AudioManager.Instance.PlayOneShot("BLJ_Game_Merge_Default_01", 1f);
+
 
         // Kiểm tra win sau khi merge xong
         if (LevelManager.Instance.BoardCtrl.BoardCells.Count == 0)

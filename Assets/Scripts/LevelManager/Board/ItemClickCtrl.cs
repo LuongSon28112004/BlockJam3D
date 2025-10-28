@@ -58,26 +58,33 @@ public class ItemClickCtrl : MonoBehaviour
                 yield break;
             }
             BoardCell boardCell = hit.transform.parent.GetComponent<BoardCell>();
-            if (boardCell == null || LevelManager.Instance.boosterCtrl.IsBusy)
+            if (boardCell == null)
             {
                 yield break;
             }
-            if(!boardCell.HasClick && !boardCell.IsInCellPlay)
+            if(LevelManager.Instance.boosterCtrl.IsBusy)
             {
-                //xoay 90 rồi quay vê đối với obj đang không click được
-                Sequence seq = DOTween.Sequence();
-
-                // Xoay 90 độ theo trục Y trong 0.1s
-                seq.Append(boardCell.transform.DOLocalRotate(
-                    new Vector3(0, 90, 0), 0.1f, RotateMode.FastBeyond360
-                ).SetEase(Ease.OutQuad));
-
-                // Quay trở lại ban đầu trong 0.1s
-                seq.Append(boardCell.transform.DOLocalRotate(
-                    Vector3.zero, 0.1f, RotateMode.FastBeyond360
-                ).SetEase(Ease.InQuad));
                 yield break;
             }
+           if (!boardCell.HasClick)
+            {
+                // Nếu không thể click -> phản hồi (hiệu ứng xoay)
+                if (!boardCell.IsInCellPlay)
+                {
+                    Sequence seq = DOTween.Sequence();
+                    seq.Append(boardCell.transform.DOLocalRotate(new Vector3(0, 90, 0), 0.1f))
+                    .Append(boardCell.transform.DOLocalRotate(Vector3.zero, 0.1f));
+                }
+
+                yield break;
+            }
+
+            
+            if(!boardCell.HasClick)
+            {
+                yield break;
+            }
+            
 
             if (!boardCell.IsBoosterAdd)
             {
@@ -101,6 +108,7 @@ public class ItemClickCtrl : MonoBehaviour
                 Container container = boardCell.Container;
                 boardCell.Container.IsContaining = false;
                 boardCell.Container = null;
+                AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
                 LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);
 
                 StartCoroutine(boardCell.SetActiveNeighBor());
@@ -109,14 +117,13 @@ public class ItemClickCtrl : MonoBehaviour
 
                 //start Run
                 //path.Add(LevelManager.Instance.cellPlayCtrl.PosCell());
-                // path.Add(boardCell.Pos);
+                //path.Add(boardCell.Pos);
                 LevelManager.Instance.cellPlayCtrl.PosCell();
                 StartCoroutine(boardCell.BoardCellMovement.MovementPath(path, (check) =>
                 {
                     LevelManager.Instance.boosterCtrl.LastMove = (boardCell, container, path);
                     LevelManager.Instance.boosterCtrl.ContainerLastMove = container;
                     LevelManager.Instance.boosterCtrl.UndoQueue.Clear();
-                    //boardCell.BoardCellMovement.MovementToPosOwner();
                     for (int i = 0; i < LevelManager.Instance.cellPlayCtrl.BoardCells.Count; i++)
                     {
                         if (LevelManager.Instance.cellPlayCtrl.BoardCells[i].TypeItem == boardCell.TypeItem && LevelManager.Instance.cellPlayCtrl.BoardCells[i] != boardCell)
@@ -134,7 +141,8 @@ public class ItemClickCtrl : MonoBehaviour
                         LevelManager.Instance.boosterCtrl.IsMatch3 = false;
                         LevelManager.Instance.cellPlayCtrl.checkLose();
                     }
-                    
+                    //reset Pos
+                    //boardCell.BoardCellMovement.MovementToPosOwner();
                 }));
                 StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container, null));
             }

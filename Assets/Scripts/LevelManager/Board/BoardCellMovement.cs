@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 public class BoardCellMovement : MonoBehaviour
 {
     [Header("Timing Settings")]
-    private float timerPerCellMatrixSecond = 0.09f;
+    private float timerPerCellMatrixSecond = 0.1f;
     private float distancePerCell = 1.25f;
 
     private float totalCell;
@@ -42,17 +42,17 @@ public class BoardCellMovement : MonoBehaviour
             if (transform.parent.position.x > containers[i].x)
             {
                 // Di chuyển sang trái → quay sang trái
-                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.OutSine);
+                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
             }
             else if (transform.parent.position.x < containers[i].x)
             {
                 // Di chuyển sang phải → quay sang phải
-               transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.OutSine);
+               transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
             }
             else
             {
                 // Không thay đổi trục x → quay về hướng mặc định
-               transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.OutSine);
+               transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.InSine);
             }
 
             Vector3 nextPos = containers[i];
@@ -110,12 +110,12 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
             {
                 // Di chuyển sang trái → quay sang trái
-                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.OutSine);
+                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
             }
             else if (transform.parent.position.x < pos.x)
             {
                 // Di chuyển sang phải → quay sang phải
-                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.OutSine);
+                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
             }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
@@ -125,7 +125,7 @@ public class BoardCellMovement : MonoBehaviour
 
         yield return moveTween.WaitForCompletion();
         yield return new WaitForSeconds(0.1f);
-        transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.OutSine);
+        transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.InSine);
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
 
         Debug.Log("Đã hoàn thành MovementToPos.");
@@ -148,7 +148,7 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
         {
             // Di chuyển sang trái → quay sang trái
-            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.OutSine);
+            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
         }
         else if (transform.parent.position.x < pos.x)
         {
@@ -160,7 +160,7 @@ public class BoardCellMovement : MonoBehaviour
 
         // Tạo và trả về Tween. Tốc độ tương đương với hàm Coroutine cũ.
         return transform.parent.DOMove(pos, timer)
-            .SetEase(Ease.InOutSine);
+            .SetEase(Ease.InSine);
 
     }
 
@@ -176,12 +176,12 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
         {
             // Di chuyển sang trái → quay sang trái
-            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.OutSine);
+            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
         }
         else if (transform.parent.position.x < pos.x)
         {
             // Di chuyển sang phải → quay sang phải
-            transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.OutSine);
+            transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
         }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
@@ -191,7 +191,7 @@ public class BoardCellMovement : MonoBehaviour
 
         yield return moveTween.WaitForCompletion();
         yield return new WaitForSeconds(0.1f);
-        transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.OutSine);
+        transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.InSine);
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
 
         Debug.Log("Đã hoàn thành MovementToPos.");
@@ -208,12 +208,12 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
             {
                 // Di chuyển sang trái → quay sang trái
-                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.OutSine);
+                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
             }
             else if (transform.parent.position.x < pos.x)
             {
                 // Di chuyển sang phải → quay sang phải
-                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.OutSine);
+                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
             }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
@@ -223,7 +223,7 @@ public class BoardCellMovement : MonoBehaviour
 
         // yield return moveTween.WaitForCompletion();
         // yield return new WaitForSeconds(0.1f);
-        transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.OutSine);
+        transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.InSine);
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
 
         Debug.Log("Đã hoàn thành MovementToPos.");

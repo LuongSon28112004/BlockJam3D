@@ -81,6 +81,10 @@ public class BoosterCtrl : MonoBehaviour
         yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.RearrangeCellsAfterRemove()); //tat tam
         ResetCellAfterUndo(cell, container);
 
+        //Audio sound
+        AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
+
+
         //convert BoardCell
 
         // inactive lại các hàng xóm
@@ -98,6 +102,10 @@ public class BoosterCtrl : MonoBehaviour
 
         // 2 Tạo lại ô di chuyển cuối cùng
         yield return StartCoroutine(RecreateLastMovedCell());
+        
+        //Audio sound
+        AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
+
 
         // 3 Reset lại trạng thái
         isMatch3 = false;
@@ -162,7 +170,7 @@ public class BoosterCtrl : MonoBehaviour
         newCell.HasClick = false;
         newCell.Container = container;
         newCell.Pos = container.Pos;
-        newCell.IsInCellPlay = true;
+        newCell.IsInCellPlay = false;
         newCell.BoardCellAnimation = block.GetComponentInChildren<BoardCellAnimation>();
         newCell.BoardCellMovement = block.GetComponentInChildren<BoardCellMovement>();
         newCell.BoardCellAnimation.SetActive();

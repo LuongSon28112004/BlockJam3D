@@ -238,10 +238,10 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -367,7 +367,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 943e2e33fdffc974b8d648a9e05712c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundsFX: []
+  soundsFX:
+  - {fileID: 8300000, guid: 7d61d451911108b4980ad841483d5244, type: 3}
+  - {fileID: 8300000, guid: b1ce45d7a709a974d808f6bb9d46c943, type: 3}
+  - {fileID: 8300000, guid: f109bf0b96d1d7441ad89136bf5bd112, type: 3}
+  - {fileID: 8300000, guid: a02802c2827a17f458a1626abec35f98, type: 3}
+  - {fileID: 8300000, guid: 6a58c9802473246409a74aea1263b28c, type: 3}
+  - {fileID: 8300000, guid: 1c91526862c34864a8c695b1ab17e9c6, type: 3}
+  - {fileID: 8300000, guid: 37a054097ca656a4b8d37b4b577cbad5, type: 3}
+  - {fileID: 8300000, guid: 31f869ff6f0ddd34ab180f48b97bc1fb, type: 3}
+  - {fileID: 8300000, guid: 3c570a06fab061e409b1041182789883, type: 3}
+  - {fileID: 8300000, guid: cfcb47342b0619c48a383d6c7c83a112, type: 3}
+  - {fileID: 8300000, guid: 5d19194f27e40df418522c02d3afa2c6, type: 3}
+  - {fileID: 8300000, guid: 2b2c6623687dfd348a7d9487e2543676, type: 3}
+  - {fileID: 8300000, guid: 9c9aa1464d0bbdf41913ba5f7e479ecf, type: 3}
+  - {fileID: 8300000, guid: ffb6fa8cc6605124cbd7745d5bb94c07, type: 3}
   musics: []
   musicSource: {fileID: 535696846}
   soundSource: {fileID: 2126555019}
@@ -598,7 +612,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -871,8 +885,8 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
+  m_HDR: 0
+  m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
@@ -922,7 +936,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

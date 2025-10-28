@@ -160,13 +160,6 @@ public class BoardCtrl : MonoBehaviour
             Debug.LogError("Chưa gán Grid để chứa các ô!");
             yield break;
         }
-        // align ban co
-        if (levelData.alignment)
-        {
-            Vector3 parentPos = gridParent.parent.position;
-            parentPos.x = -0.6f;
-            gridParent.parent.position = parentPos;
-        }
 
         float offsetX = 1.25f;
         float offsetZ = 1.25f;
@@ -465,7 +458,6 @@ public class BoardCtrl : MonoBehaviour
             }
         }
 
-
         if(isSlide)
         {
             // Đặt vị trí ban đầu
@@ -477,6 +469,13 @@ public class BoardCtrl : MonoBehaviour
             // Đợi tween chạy xong
             yield return tween.WaitForCompletion();
         }
+
+        Camera camera = Camera.main;
+        if (levelData.alignment)
+        {
+            camera.transform.position = new Vector3(0.6f, camera.transform.position.y, camera.transform.position.z);
+        }
+        else camera.transform.position = new Vector3(0f, camera.transform.position.y, camera.transform.position.z);
 
         Debug.Log("Hoàn tất di chuyển!");
         //=============================

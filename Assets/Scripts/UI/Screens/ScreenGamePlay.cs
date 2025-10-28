@@ -132,7 +132,7 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickMagnet()
     {
-        if (UserData.coin <= 0) return;
+        if (UserData.coin < boosterDatas[3].price) return;
         Debug.Log("Magnet Clicked");
         UserData.coin -= boosterDatas[3].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
@@ -140,7 +140,7 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickShuffle()
     {
-        if (UserData.coin <= 0) return;
+        if (UserData.coin < boosterDatas[2].price) return;
         Debug.Log("Shuffle Clicked");
         StartCoroutine(LevelManager.Instance.boosterCtrl.Shuffle());
         UserData.coin -= boosterDatas[2].price;
@@ -149,7 +149,7 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickAdd()
     {
-        if (UserData.coin <= 0) return;
+        if (UserData.coin < boosterDatas[1].price) return;
         StartCoroutine(LevelManager.Instance.boosterCtrl.Add());
         UserData.coin -= boosterDatas[1].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
@@ -157,7 +157,7 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickUndo()
     {
-        if (UserData.coin <= 0) return;
+        if (UserData.coin < boosterDatas[0].price) return;
         StartCoroutine(LevelManager.Instance.boosterCtrl.Undo());
         UserData.coin -= boosterDatas[0].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
@@ -165,6 +165,8 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickSetting()
     {
+        //Audio sound
+        AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
         UIManager.Instance.ShowPopup<PopupSettings>(null);
     }
 

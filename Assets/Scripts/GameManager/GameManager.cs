@@ -26,6 +26,12 @@ public class GameManager : SingletonDDOL<GameManager>
     private void Start()
     {
         // Khi bắt đầu game, luôn vào menu
+        // Nếu đang chạy trên Android
+        #if UNITY_ANDROID
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 0; // tắt VSync để giới hạn FPS có hiệu lực
+        Debug.Log("Set FPS = 60 for Android");
+        #endif
         StartCoroutine(ChangeState(GameState.Loading));
         Level = UserData.level;
         SaveDataManager.Load();
@@ -62,6 +68,8 @@ public class GameManager : SingletonDDOL<GameManager>
                 });
                 break;
             case GameState.Win:
+            //Audio sound
+                AudioManager.Instance.PlayOneShot("BLJ_Game_Obstacles_DestructibleWall_Finish", 1f);
                 UIManager.Instance.ShowPopup<PopupWinGame>(null);
                 yield return new WaitForSeconds(0.4f);
                 Time.timeScale = 0;
