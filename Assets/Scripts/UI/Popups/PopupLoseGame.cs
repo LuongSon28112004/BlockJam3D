@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,6 +6,7 @@ using UnityEngine.UI;
 public class PopupLoseGame : PopupUI
 {
     [SerializeField] private Button buttonTryAgain;
+    [SerializeField] private Button buttonClose;
     [SerializeField] private GameObject HeartBeat;
     [SerializeField] private float beatScale = 1.2f;
     [SerializeField] private float beatDuration = 0.3f;
@@ -14,7 +16,9 @@ public class PopupLoseGame : PopupUI
 
     private void Awake()
     {
-        buttonTryAgain.onClick.AddListener(OnOkClicked);
+        buttonTryAgain.onClick.AddListener(OnTryAgainClicked);
+        buttonClose.onClick.AddListener(OnCloseClicked);
+
     }
 
     private void Start()
@@ -36,9 +40,15 @@ public class PopupLoseGame : PopupUI
             .SetUpdate(true); // chạy kể cả khi pause game
     }
 
-    private void OnOkClicked()
+    private void OnTryAgainClicked()
     {
         Hide();
         GameManager.Instance.StartGame();
+    }
+
+    private void OnCloseClicked()
+    {
+        Hide();
+        GameManager.Instance.BackToMenu();
     }
 }

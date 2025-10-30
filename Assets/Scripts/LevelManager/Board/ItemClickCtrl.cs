@@ -88,6 +88,8 @@ public class ItemClickCtrl : MonoBehaviour
 
             if (!boardCell.IsBoosterAdd)
             {
+                //xoa quan khoi board
+                LevelManager.Instance.BoardCtrl.boardAlls.Remove(boardCell.transform.gameObject);
                 var (path, hasPath) = findingPath.BFSFind(boardCell.Container);
                 if (!hasPath)
                 {
@@ -141,8 +143,6 @@ public class ItemClickCtrl : MonoBehaviour
                         LevelManager.Instance.boosterCtrl.IsMatch3 = false;
                         LevelManager.Instance.cellPlayCtrl.checkLose();
                     }
-                    //reset Pos
-                    //boardCell.BoardCellMovement.MovementToPosOwner();
                 }));
                 StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container, null));
             }

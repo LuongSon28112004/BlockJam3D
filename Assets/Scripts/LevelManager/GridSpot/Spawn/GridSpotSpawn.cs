@@ -181,10 +181,10 @@ public class GridSpotSpawn : MonoBehaviour
         }
         obj.transform.localScale = Vector3.zero;
         AudioManager.Instance.PlayOneShot("BLJ_Game_Obstacles_Pipe_Normal_04", 1f);
+        onSpawned?.Invoke(boardCell);
         yield return new WaitForSeconds(0.2f);
         StartCoroutine(bc.MovementToPos(container.Pos));
         obj.transform.DOScale(Vector3.one, 0.1f);
-        onSpawned?.Invoke(boardCell);
     }
 
 }

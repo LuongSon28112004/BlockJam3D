@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 public class BoardCellMovement : MonoBehaviour
 {
     [Header("Timing Settings")]
-    private float timerPerCellMatrixSecond = 0.1f;
+    private float timerPerCellMatrixSecond = 0.07f;
     private float distancePerCell = 1.25f;
 
     private float totalCell;

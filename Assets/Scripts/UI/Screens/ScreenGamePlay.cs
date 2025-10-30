@@ -130,37 +130,73 @@ public class ScreenGamePlay : ScreenUI
     }
 
 
+   private void FlashButtonRed(Button button)
+    {
+        // Image img = button.GetComponent<Image>();
+        // if (img == null) return;
+
+        // Color originalColor = img.color;
+        // img.DOColor(Color.red, 0.15f)
+        //     .SetLoops(2, LoopType.Yoyo)
+        //     .OnComplete(() => img.color = originalColor);
+    }
+
     private void OnClickMagnet()
     {
-        if (UserData.coin < boosterDatas[3].price) return;
+        if (UserData.coin < boosterDatas[3].price)
+        {
+            FlashButtonRed(MagnetButton);
+            return;
+        }
+
         Debug.Log("Magnet Clicked");
-        UserData.coin -= boosterDatas[3].price;
-        CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
+        StartCoroutine(LevelManager.Instance.boosterCtrl.Magnet());
+        // UserData.coin -= boosterDatas[3].price;
+        // CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
+        // SaveDataManager.Save();
     }
 
     private void OnClickShuffle()
     {
-        if (UserData.coin < boosterDatas[2].price) return;
+        if (UserData.coin < boosterDatas[2].price)
+        {
+            FlashButtonRed(ShuffleButton);
+            return;
+        }
+
         Debug.Log("Shuffle Clicked");
-        StartCoroutine(LevelManager.Instance.boosterCtrl.Shuffle());
+        StartCoroutine(LevelManager.Instance.boosterCtrl.Shuffle(LevelManager.Instance.BoardCtrl.boardAlls));
         UserData.coin -= boosterDatas[2].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
+        SaveDataManager.Save();
     }
 
     private void OnClickAdd()
     {
-        if (UserData.coin < boosterDatas[1].price) return;
+        if (UserData.coin < boosterDatas[1].price)
+        {
+            FlashButtonRed(AddButton);
+            return;
+        }
+
         StartCoroutine(LevelManager.Instance.boosterCtrl.Add());
         UserData.coin -= boosterDatas[1].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
+        SaveDataManager.Save();
     }
 
     private void OnClickUndo()
     {
-        if (UserData.coin < boosterDatas[0].price) return;
+        if (UserData.coin < boosterDatas[0].price)
+        {
+            FlashButtonRed(UndoButton);
+            return;
+        }
+
         StartCoroutine(LevelManager.Instance.boosterCtrl.Undo());
         UserData.coin -= boosterDatas[0].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
+        SaveDataManager.Save();
     }
 
     private void OnClickSetting()
@@ -193,3 +229,5 @@ public class ScreenGamePlay : ScreenUI
         textCoin.text = coin.ToString();
     }
 }
+
+

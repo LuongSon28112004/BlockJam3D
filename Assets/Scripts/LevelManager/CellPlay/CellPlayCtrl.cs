@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using DG.Tweening;
+using NUnit.Framework;
 using Unity.VisualScripting;
 
 using UnityEngine;
@@ -20,9 +21,6 @@ public class CellPlayCtrl : MonoBehaviour
     [SerializeField] private Dictionary<TypeItem, List<BoardCell>> countCellType;
 
     private bool isCheckWin = false;
-
-
-
     public string prefabFolder = "Prefabs";
 
     Queue<int> posCellPlays;
@@ -30,6 +28,7 @@ public class CellPlayCtrl : MonoBehaviour
     public List<BoardCell> BoardCells { get => boardCells; set => boardCells = value; }
     public List<Container> CellPlays { get => cellPlays; set => cellPlays = value; }
     public Dictionary<TypeItem, List<BoardCell>> CountCellType { get => countCellType; set => countCellType = value; }
+    public List<TypeItem> orderPlayInCellPlay;
 
     private void OnEnable()
     {
@@ -58,6 +57,7 @@ public class CellPlayCtrl : MonoBehaviour
         boardCells = new List<BoardCell>();
         cellPlays = new List<Container>();
         posCellPlays = new Queue<int>();
+        orderPlayInCellPlay = new List<TypeItem>();
         InitCountCellType();
         GenerateCell();
     }
@@ -140,6 +140,11 @@ public class CellPlayCtrl : MonoBehaviour
         cellPlays[insertIndex].IsContaining = true;
         boardCell.Pos = cellPlays[insertIndex].Pos;
         posCellPlays.Enqueue(insertIndex);
+        // lưu danh sách các quân vừa đánh mới nhất từ thấp tới cao
+        if (!orderPlayInCellPlay.Contains(boardCell.TypeItem))
+        {
+            orderPlayInCellPlay.Add(boardCell.TypeItem);
+        }
         StartCoroutine(ResetPosCellPlay());
         
     }
@@ -258,24 +263,29 @@ public class CellPlayCtrl : MonoBehaviour
 
     public IEnumerator ResetPosCellPlay()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < boardCells.Count; i++)
         {
-            if (boardCells[i].IsInCellPlay)
+            if (boardCells[i].IsInCellPlay && boardCells[i].transform.position != boardCells[i].Pos)
             {
                 Debug.Log("yesyes" + boardCells[i].TypeItem + " " + boardCells[i].transform.position + " " + boardCells[i].Pos);
-                if(boardCells[i].transform.position != boardCells[i].Pos)StartCoroutine(boardCells[i].BoardCellMovement.MovementToPosOwner());
+                if (boardCells[i].transform.position != boardCells[i].Pos) StartCoroutine(boardCells[i].BoardCellMovement.MovementToPosOwner());
             }
         }
     }
-
-    private IEnumerator SetAnimMerge(List<BoardCell> cells)
+    
+    private IEnumerator WaitRotaion(List<BoardCell> cells)
     {
         // Kiểm tra null tránh lỗi
         for(int i = 0; i < cells.Count; i++)
         {
             yield return cells[i].transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f).SetEase(Ease.InSine);
         }
+    }
+
+    private IEnumerator SetAnimMerge(List<BoardCell> cells)
+    {
+        yield return WaitRotaion(cells);
         cells.RemoveAll(c => c == null || c.gameObject == null);
         if (cells.Count < 3) yield break;
 
@@ -285,9 +295,8 @@ public class CellPlayCtrl : MonoBehaviour
             if (c == null || c.gameObject == null) continue;
             c.BoardCellAnimation.SetRaise();
         }
-
-        yield return new WaitForSeconds(0.2f);
-
+        cells.Sort((a, b) => a.transform.position.x.CompareTo(b.transform.position.x));
+        yield return new WaitForSeconds(0.3f);
         // Gộp vào giữa
         yield return StartCoroutine(MergeToCenter(cells[0], cells[1], cells[2]));
 
@@ -368,6 +377,24 @@ public class CellPlayCtrl : MonoBehaviour
             // Xoá khỏi board chính
             LevelManager.Instance.BoardCtrl.UpdateBoardCell(cell);
         }
+
+        bool flag = false;
+        foreach (var cell in boardCells)
+        {
+            if (cell == null || cell.gameObject == null) continue;
+            if (cell.TypeItem == type)
+            {
+                flag = true;
+                break;
+            }
+        }
+        if(!flag)
+        {
+            if(orderPlayInCellPlay.Contains(type))
+            {
+                orderPlayInCellPlay.Remove(type);
+            }
+        }
     }
 
 
@@ -384,6 +411,7 @@ public class CellPlayCtrl : MonoBehaviour
             cell.Container = cellPlays[i];
             cell.Pos = targetPos;
             cellPlays[i].IsContaining = true;
+            if (!boardCells[i].IsInCellPlay) continue;
 
             // Join tween nếu hợp lệ
             var moveTween = cell.BoardCellMovement?.MovementToPosTween(targetPos);

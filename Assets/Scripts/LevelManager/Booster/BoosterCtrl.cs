@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public class BoosterCtrl : MonoBehaviour
@@ -14,6 +16,7 @@ public class BoosterCtrl : MonoBehaviour
     [SerializeField] private Container containerLastMove;
     [Header("Add Booster")]
     [SerializeField] private BoosterAddPos boosterAddPos;
+    [SerializeField] private BoosterMagnetPos boosterMagnetPos;
 
     public bool IsMatch3 { get => isMatch3; set => isMatch3 = value; }
     public Queue<KeyValuePair<BoardCell, Container>> UndoQueue { get => undoQueue; set => undoQueue = value; }
@@ -269,9 +272,9 @@ public class BoosterCtrl : MonoBehaviour
 
     }
     #endregion
-    
+
     #region Shuffle
-    public IEnumerator Shuffle()
+    public IEnumerator Shuffle(List<GameObject> LeaderBoards)
     {
         IsBusy = true;
         // Lấy reference gốc
@@ -279,7 +282,7 @@ public class BoosterCtrl : MonoBehaviour
 
         // Tạo bản sao runtime (không ảnh hưởng file gốc)
         LevelData levelData = ScriptableObject.CreateInstance<LevelData>();
-        levelData.CopyFrom(original); // bạn sẽ cần tạo hàm CopyFrom
+        levelData.CopyFrom(original);
 
         // Shuffle và load lại
         string[] prefabNames = levelData.ShufflePrefabs();
@@ -290,4 +293,106 @@ public class BoosterCtrl : MonoBehaviour
     }
 
     #endregion
+
+    #region 
+    Dictionary<TypeItem, int> countDict = new Dictionary<TypeItem, int>();
+    public IEnumerator Magnet()
+    {
+
+        TypeItem type = FindTypeFirstAppearMany();
+        int maxMagnet = 3 - countDict[type];
+        List<BoardCell> boardCells = LevelManager.Instance.BoardCtrl.BoardCells;
+        List<BoardCell> ListChoices = new List<BoardCell>();
+        int count = 0;
+        for (int i = 0; i < boardCells.Count; i++)
+        {
+            if (boardCells[i].TypeItem == type)
+            {
+                count++;
+                ListChoices.Add(boardCells[i]);
+
+            }
+            if (count == maxMagnet) break;
+        }
+
+        count = 1;
+
+        for (int i = 0; i < ListChoices.Count; i++)
+        {
+            BoardCellMovement bc = ListChoices[i].BoardCellMovement;
+            BoardCellAnimation boardCellAnimation = ListChoices[i].BoardCellAnimation;
+            StartCoroutine(ListChoices[i].SetActiveNeighBor());
+            boardCellAnimation.SetActive();
+            Vector3 pos = ListChoices[i].Pos;
+            yield return ListChoices[i].transform.DOMoveY(4f, 0.2f);
+            StartCoroutine(bc.MovementToPos(boosterMagnetPos.ListPosBoosterMagnet[3 - count]));
+            yield return ListChoices[i].transform.DOMoveY(pos.y, 0.2f);
+            count += 1;
+        }
+        
+        List<BoardCell> boardCellss = LevelManager.Instance.cellPlayCtrl.BoardCells;
+        for(int i = 0; i < boardCellss.Count; i++)
+        {
+            if(boardCellss[i].TypeItem == type)
+            {
+                BoardCellMovement bc = boardCellss[i].BoardCellMovement;
+                StartCoroutine(bc.MovementToPos(boosterMagnetPos.ListPosBoosterMagnet[3 - count]));
+            }
+        }
+        yield break;
+    }
+
+    private TypeItem FindTypeFirstAppearMany()
+    {
+        List<TypeItem> orderTypeInCellPlay = LevelManager.Instance.cellPlayCtrl.orderPlayInCellPlay;
+        List<BoardCell> boardCells = LevelManager.Instance.cellPlayCtrl.BoardCells;
+
+        // Đếm số lần xuất hiện của mỗi TypeItem trong boardCells
+        foreach (var cell in boardCells)
+        {
+            if (cell == null || cell.TypeItem == null)
+                continue;
+
+            TypeItem type = cell.TypeItem;
+            if (countDict.ContainsKey(type))
+                countDict[type]++;
+            else
+                countDict[type] = 1;
+        }
+
+        // Nếu không có ô nào => trả về mặc định
+        if (countDict.Count == 0)
+            return default;
+
+        TypeItem bestType = default;
+        int maxCount = -1;
+        int earliestOrderIndex = int.MaxValue;
+
+        // Duyệt theo thứ tự orderTypeInCellPlay để ưu tiên loại nào có thứ tự sớm hơn
+        for (int i = 0; i < orderTypeInCellPlay.Count; i++)
+        {
+            var type = orderTypeInCellPlay[i];
+            if (!countDict.TryGetValue(type, out int count))
+                continue; // loại này không còn trên bàn
+
+            if (count > maxCount)
+            {
+                maxCount = count;
+                earliestOrderIndex = i;
+                bestType = type;
+            }
+            else if (count == maxCount && i < earliestOrderIndex)
+            {
+                // Cùng số lượng nhưng xuất hiện sớm hơn trong orderTypeInCellPlay
+                earliestOrderIndex = i;
+                bestType = type;
+            }
+        }
+
+        return bestType;
+    }
+
+    #endregion
+
+
 }
