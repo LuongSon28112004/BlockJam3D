@@ -53,6 +53,7 @@ public class LevelManager : Singleton<LevelManager>
         Round += 1;
         if (Round > 2) yield break;
         CustomeEventSystem.Instance.ChangeRound(Round);
+        CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, 1 });
         isNextRound = false;
         yield return BoardCtrl.LoadLevel(levelDatas[Round]);
     }

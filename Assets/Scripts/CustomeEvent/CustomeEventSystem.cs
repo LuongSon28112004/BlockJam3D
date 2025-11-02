@@ -50,10 +50,4 @@ public class CustomeEventSystem : SingletonDDOL<CustomeEventSystem>
         ActiveBoosterAction?.Invoke(lists);
     }
 
-    public Action InactiveBoosterAction;
-    public void InactiveBooster()
-    {
-        InactiveBoosterAction?.Invoke();
-    }
-
 }
