@@ -100,7 +100,7 @@ public class ItemClickCtrl : MonoBehaviour
                 if(!isStart)
                 {
                     isStart = true;
-                    CustomeEventSystem.Instance.ActiveBooster();
+                    CustomeEventSystem.Instance.ActiveBooster(new List<int> { 1, 1, 1, 1 });
                 }
 
 

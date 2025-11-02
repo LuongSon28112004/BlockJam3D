@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
@@ -71,7 +73,7 @@ public class BoosterCtrl : MonoBehaviour
         List<GridSpotSpawn> gridSpotSpawns = LevelManager.Instance.BoardCtrl.gridSpotSpawns;
         for (int i = 0; i < gridSpotSpawns.Count; i++)
         {
-            if(gridSpotSpawns[i].CheckContainer(container))
+            if (gridSpotSpawns[i].CheckContainer(container))
             {
                 gridSpotSpawns[i].DestroyBoardCellJustSpawn();
                 break;
@@ -96,6 +98,8 @@ public class BoosterCtrl : MonoBehaviour
     }
 
     // Undo khi CÓ Match-3
+
+    Vector3 posUndoLast;
     private IEnumerator UndoMatch3Move()
     {
         if (undoQueue.Count == 0) yield break;
@@ -158,6 +162,7 @@ public class BoosterCtrl : MonoBehaviour
         {
             var (undoCell, undoContainer) = (pair.Key, pair.Value);
             yield return StartCoroutine(RecreateCellAt(undoCell, undoContainer));
+            posUndoLast = undoContainer.Pos;
         }
     }
 
@@ -169,11 +174,12 @@ public class BoosterCtrl : MonoBehaviour
         GameObject block = Instantiate(prefab, Vector3.zero, Quaternion.identity, parentBoard);
 
         BoardCell newCell = block.GetComponent<BoardCell>();
+        //config data
         newCell.TypeItem = sourceCell.TypeItem;
         newCell.HasClick = false;
         newCell.Container = container;
         newCell.Pos = container.Pos;
-        newCell.IsInCellPlay = false;
+        newCell.IsInCellPlay = true;
         newCell.BoardCellAnimation = block.GetComponentInChildren<BoardCellAnimation>();
         newCell.BoardCellMovement = block.GetComponentInChildren<BoardCellMovement>();
         newCell.BoardCellAnimation.SetActive();
@@ -198,6 +204,7 @@ public class BoosterCtrl : MonoBehaviour
         GameObject block = Instantiate(prefab, Vector3.zero, Quaternion.identity, parentBoard);
 
         BoardCell recreatedCell = block.GetComponent<BoardCell>();
+        //config data
         recreatedCell.TypeItem = cellData.TypeItem;
         recreatedCell.HasClick = false;
         recreatedCell.Neighbors = cellData.Neighbors;
@@ -208,7 +215,7 @@ public class BoosterCtrl : MonoBehaviour
         recreatedCell.BoardCellMovement = block.GetComponentInChildren<BoardCellMovement>();
         recreatedCell.BoardCellAnimation.SetActive();
         recreatedCell.Barrel.SetActive(false);
-        recreatedCell.transform.localPosition = containerLastMove.Pos;
+        recreatedCell.transform.localPosition = posUndoLast;
 
         int index = LevelManager.Instance.cellPlayCtrl.CellPlays.IndexOf(container);
         if (index != -1)
@@ -222,13 +229,13 @@ public class BoosterCtrl : MonoBehaviour
         List<GridSpotSpawn> gridSpotSpawns = LevelManager.Instance.BoardCtrl.gridSpotSpawns;
         for (int i = 0; i < gridSpotSpawns.Count; i++)
         {
-            if(gridSpotSpawns[i].CheckContainer(container))
+            if (gridSpotSpawns[i].CheckContainer(container))
             {
                 gridSpotSpawns[i].DestroyBoardCellJustSpawn();
                 break;
             }
         }
-        
+
         yield return StartCoroutine(MoveBackward(recreatedCell, path));
         //reset lai cac hang xom
         recreatedCell.SetInActiveNeighBor();
@@ -277,6 +284,7 @@ public class BoosterCtrl : MonoBehaviour
     public IEnumerator Shuffle(List<GameObject> LeaderBoards)
     {
         IsBusy = true;
+        CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, -1 });
         // Lấy reference gốc
         LevelData original = LevelManager.Instance.BoardCtrl.levelData;
 
@@ -289,58 +297,207 @@ public class BoosterCtrl : MonoBehaviour
         levelData.prefabNames = prefabNames;
         LevelManager.Instance.cellPlayCtrl.ResetCellPlay();
         yield return StartCoroutine(LevelManager.Instance.BoardCtrl.LoadLevel(levelData, false));
+        if (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0)
+        {
+            CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, 1 });
+            LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+        }
+        else
+        {
+            CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, 1, 1, 1 });
+            LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+        }
         IsBusy = false;
     }
 
     #endregion
 
-    #region 
+    #region Magnet
     Dictionary<TypeItem, int> countDict = new Dictionary<TypeItem, int>();
     public IEnumerator Magnet()
     {
-
+        IsBusy = true;
+        CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, -1, 1 });
+        yield return new WaitForSeconds(0.3f);
         TypeItem type = FindTypeFirstAppearMany();
-        int maxMagnet = 3 - countDict[type];
+        int maxMagnet = 0;
+        if (countDict.TryGetValue(type, out int currentCount))
+        {
+            maxMagnet = 3 - currentCount;
+        }
+        else
+        {
+            maxMagnet = 3;
+            type = RandomTypeFromBoardCellLeaderBoard();
+        }
+
+
         List<BoardCell> boardCells = LevelManager.Instance.BoardCtrl.BoardCells;
         List<BoardCell> ListChoices = new List<BoardCell>();
+
+        List<BoardCell> allBoardCells = new List<BoardCell>();
+
         int count = 0;
         for (int i = 0; i < boardCells.Count; i++)
         {
-            if (boardCells[i].TypeItem == type)
+            // kiểm tra các ô cùng loại và nó phải đang không ở thanh bên dưới
+            if (boardCells[i].TypeItem == type && !boardCells[i].IsInCellPlay)
             {
                 count++;
                 ListChoices.Add(boardCells[i]);
-
+                allBoardCells.Add(boardCells[i]);
             }
             if (count == maxMagnet) break;
         }
 
-        count = 1;
+        // Nếu trên board không đủ quân thì phải sinh ra 1 quân từ các máy Pipe random
+            while(count < maxMagnet)
+            {
+                List<GridSpotSpawn> gridSpotSpawns = LevelManager.Instance.BoardCtrl.gridSpotSpawns;
+                BoardCell boardCell = null;
+                GameObject obj = AddressableManager.Instance.GetPrefab(Enum.GetName(typeof(TypeItem), type));
+                for(int i = 0; i < gridSpotSpawns.Count; i++)
+                {
+                    if(gridSpotSpawns[i].MaxPointSpawn > 0)
+                    {
+                        StartCoroutine(gridSpotSpawns[i].SpawnBlockMagnet(obj, gridSpotSpawns[i].transform, type, (result) =>
+                        {
+                            boardCell = result;
+                        }));
+                        yield return new WaitUntil(() => boardCell != null);
+                        ListChoices.Add(boardCell);
+                        allBoardCells.Add(boardCell);
+                        // cộng data 
+                        LevelManager.Instance.BoardCtrl.initialTypeCounts[type] += 1;
+                        count += 1;
+                        if (count >= maxMagnet) break;
+                    }
+                }
+            }
 
+        count = 1;
+        Sequence seqKnob = DOTween.Sequence();
+
+        // --- Giai đoạn Knob ---
         for (int i = 0; i < ListChoices.Count; i++)
         {
             BoardCellMovement bc = ListChoices[i].BoardCellMovement;
             BoardCellAnimation boardCellAnimation = ListChoices[i].BoardCellAnimation;
+            StartCoroutine(LevelManager.Instance.BoardCtrl.CheckSpawnBlock(ListChoices[i].Container));
             StartCoroutine(ListChoices[i].SetActiveNeighBor());
             boardCellAnimation.SetActive();
-            Vector3 pos = ListChoices[i].Pos;
-            yield return ListChoices[i].transform.DOMoveY(4f, 0.2f);
-            StartCoroutine(bc.MovementToPos(boosterMagnetPos.ListPosBoosterMagnet[3 - count]));
-            yield return ListChoices[i].transform.DOMoveY(pos.y, 0.2f);
-            count += 1;
+            seqKnob.Join(bc.Knob());
         }
-        
+
         List<BoardCell> boardCellss = LevelManager.Instance.cellPlayCtrl.BoardCells;
-        for(int i = 0; i < boardCellss.Count; i++)
+        for (int i = 0; i < boardCellss.Count; i++)
         {
-            if(boardCellss[i].TypeItem == type)
+            if (boardCellss[i].TypeItem == type)
             {
                 BoardCellMovement bc = boardCellss[i].BoardCellMovement;
-                StartCoroutine(bc.MovementToPos(boosterMagnetPos.ListPosBoosterMagnet[3 - count]));
+                allBoardCells.Add(boardCellss[i]);
+                seqKnob.Join(bc.Knob());
             }
         }
-        yield break;
+
+        // Chờ tất cả Knob xong
+        yield return seqKnob.WaitForCompletion();
+
+        // Giai đoạn Move
+        Sequence seqMove = DOTween.Sequence();
+        count = 1;
+
+        for (int i = 0; i < ListChoices.Count; i++)
+        {
+            if (count > 3) break;
+            BoardCellMovement bc = ListChoices[i].BoardCellMovement;
+            seqMove.Join(bc.MovementToPosTween(boosterMagnetPos.ListPosBoosterMagnet[3 - count]));
+            count++;
+        }
+
+        for (int i = 0; i < boardCellss.Count; i++)
+        {
+            if (boardCellss[i].TypeItem == type)
+            {
+                BoardCellMovement bc = boardCellss[i].BoardCellMovement;
+                seqMove.Join(bc.MovementToPosTween(boosterMagnetPos.ListPosBoosterMagnet[3 - count]));
+                count++;
+            }
+        }
+
+        //yield return new WaitForSeconds(0.8f);
+        yield return seqMove.WaitForCompletion();
+        for (int i = 0; i < ListChoices.Count; i++)
+        {
+            BoardCellAnimation bc = ListChoices[i].BoardCellAnimation;
+            if (bc == null) yield break;
+            bc.SetIdle();
+            ListChoices[i].transform.DOLocalRotate(Vector3.zero, 0.15f).SetEase(Ease.InSine);
+        }
+
+        for (int i = 0; i < boardCellss.Count; i++)
+        {
+            if (boardCellss[i].TypeItem == type)
+            {
+                BoardCellAnimation bc = boardCellss[i].BoardCellAnimation;
+                if (bc == null) yield break;
+                bc.SetIdle();
+                boardCellss[i].transform.DOLocalRotate(Vector3.zero, 0.15f).SetEase(Ease.InSine);
+            }
+        }
+
+        //yield return new WaitForSeconds(0.3f);
+        List<BoardCell> filteredCells = allBoardCells.Where(cell => !cell.IsInCellPlay).ToList();
+        for (int i = 0; i < boardCellss.Count; i++)
+        {
+            if (boardCellss[i].TypeItem == type)
+            {
+                filteredCells.Add(boardCellss[i]);
+            }
+        }
+        LevelManager.Instance.cellPlayCtrl.RemoveCellData(filteredCells, type);
+        StartCoroutine(LevelManager.Instance.cellPlayCtrl.RearrangeCellsAfterRemove());
+        yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.SetAnimMerge(allBoardCells));
+        countDict = new Dictionary<TypeItem, int>();
+        if (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0)
+        {
+            CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, 1 });
+            LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+        }
+        else
+        {
+            CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, 1, 1, 1 });
+            LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+        }
+        IsBusy = false;
     }
+
+    private TypeItem RandomTypeFromBoardCellLeaderBoard()
+    {
+        var boardCells = LevelManager.Instance.BoardCtrl.BoardCells;
+        List<TypeItem> typeItems = new List<TypeItem>();
+
+        // Lấy danh sách các TypeItem không trùng
+        foreach (var cell in boardCells)
+        {
+            if (cell != null && !typeItems.Contains(cell.TypeItem))
+            {
+                typeItems.Add(cell.TypeItem);
+            }
+        }
+
+        // Kiểm tra nếu không có TypeItem nào
+        if (typeItems.Count == 0)
+        {
+            Debug.LogWarning("Không có TypeItem nào trong BoardCells!");
+            return default;
+        }
+
+        // Chọn ngẫu nhiên 1 TypeItem
+        int randomIndex = UnityEngine.Random.Range(0, typeItems.Count);
+        return typeItems[randomIndex];
+    }
+
 
     private TypeItem FindTypeFirstAppearMany()
     {

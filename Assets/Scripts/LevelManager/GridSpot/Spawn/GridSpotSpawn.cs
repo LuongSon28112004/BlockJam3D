@@ -166,7 +166,7 @@ public class GridSpotSpawn : MonoBehaviour
             // {
             //     baseGridSpotAnimation.SetAnimationExit(1);
             // }
-            if(direction == Direction.Down)
+            if (direction == Direction.Down)
             {
                 baseGridSpotAnimation.SetAnimationExit(3);
             }
@@ -174,7 +174,7 @@ public class GridSpotSpawn : MonoBehaviour
             // {
             //     baseGridSpotAnimation.SetAnimationExit(3);
             // }
-            else if(direction == Direction.Right)
+            else if (direction == Direction.Right)
             {
                 baseGridSpotAnimation.SetAnimationExit(2);
             }
@@ -185,6 +185,52 @@ public class GridSpotSpawn : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         StartCoroutine(bc.MovementToPos(container.Pos));
         obj.transform.DOScale(Vector3.one, 0.1f);
+    }
+    
+    public IEnumerator SpawnBlockMagnet(GameObject blockPrefab, Transform Pos, TypeItem typeItem ,Action<BoardCell> onSpawned )
+    {
+        if (MaxPointSpawn <= 0)
+        {
+            Debug.LogWarning("MaxPointSpawn reached zero, cannot spawn more blocks.");
+            yield break;
+        }
+        if (blockPrefab == null)
+        {
+            Debug.LogError("Block prefab is null!");
+            yield break;
+        }
+
+        GameObject obj = Instantiate(blockPrefab, transform.position, Quaternion.identity, GridParent.transform);
+        BoardCell boardCell = obj.GetComponent<BoardCell>();
+
+        if (boardCell == null)
+        {
+            Debug.LogError("BoardCell component not found on the instantiated block!");
+            Destroy(obj);
+            yield break;
+        }
+
+
+
+        BoardCellMovement bc = obj.GetComponent<BoardCell>().BoardCellMovement;
+        if (bc == null)
+        {
+            Debug.LogError("BoardCellMovement component not found on the instantiated block!");
+            Destroy(obj);
+            yield break;
+        }
+
+        boardCell.IdType = Enum.GetName(typeof(TypeItem), typeItem);
+        boardCell.TypeItem = typeItem;
+        boardCell.Barrel.SetActive(false);
+        boardCell.BoardCellAnimation.SetActive();
+        maxPointSpawn--;
+        if (textCount != null)
+        {
+            textCount.text = maxPointSpawn.ToString();
+        }
+        onSpawned.Invoke(boardCell);
+        yield break;
     }
 
 }

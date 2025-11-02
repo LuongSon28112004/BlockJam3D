@@ -196,7 +196,7 @@ public class BoardCellMovement : MonoBehaviour
 
         Debug.Log("Đã hoàn thành MovementToPos.");
     }
-    
+
     public IEnumerator MovementToPosNormal(Vector3 pos)
     {
         if (transform.parent == null)
@@ -206,19 +206,19 @@ public class BoardCellMovement : MonoBehaviour
         }
 
         if (transform.parent.position.x > pos.x)
-            {
-                // Di chuyển sang trái → quay sang trái
-                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
-            }
-            else if (transform.parent.position.x < pos.x)
-            {
-                // Di chuyển sang phải → quay sang phải
-                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
-            }
+        {
+            // Di chuyển sang trái → quay sang trái
+            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
+        }
+        else if (transform.parent.position.x < pos.x)
+        {
+            // Di chuyển sang phải → quay sang phải
+            transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
+        }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         // float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
-        transform.parent.DOMove(pos, timerPerCellMatrixSecond )
+        transform.parent.DOMove(pos, timerPerCellMatrixSecond)
             .SetEase(Ease.InSine);
 
         // yield return moveTween.WaitForCompletion();
@@ -227,5 +227,16 @@ public class BoardCellMovement : MonoBehaviour
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
 
         Debug.Log("Đã hoàn thành MovementToPos.");
+    }
+    
+    public Tween Knob()
+    {
+        if (transform.parent == null)
+        {
+            Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
+            return null;
+        }
+
+        return transform.parent.DOMoveY(4f, 0.14f).SetEase(Ease.InSine);
     }
 }

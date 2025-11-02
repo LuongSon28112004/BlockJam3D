@@ -62,7 +62,7 @@ public class BoardCtrl : MonoBehaviour
         }
     }
 
-    private IEnumerator CheckSpawnBlock(Container container, BoardCell boardCell = null)//neu sau nay muon truyen index thi them vao
+    public IEnumerator CheckSpawnBlock(Container container, BoardCell boardCell = null)//neu sau nay muon truyen index thi them vao
     {
         if (gridSpotSpawns.Count == 0) yield break;
         for (int i = 0; i < gridSpotSpawns.Count; i++)
@@ -281,6 +281,7 @@ public class BoardCtrl : MonoBehaviour
                 // Container
                 Container containerToAdd = null;
 
+                // o đoạn này, nếu là Block thì không thêm vì container của block đã được thêm ở trên rồi
                 if (prefabName == "Wall" || prefabName == "GSPDown" || prefabName == "GSPBottomRight" || prefabName == "GSPRight")
                     containerToAdd = null;
                 else if (prefabName == "Container")

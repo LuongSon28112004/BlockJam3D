@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using NUnit.Framework;
@@ -54,7 +55,6 @@ public class ScreenGamePlay : ScreenUI
         CustomeEventSystem.Instance.ChangeRoundAction += ChangeRound;
         CustomeEventSystem.Instance.ChangeCoinAction += ChangeTextCoin;
         CustomeEventSystem.Instance.ActiveBoosterAction += ActiveBooster;
-        CustomeEventSystem.Instance.InactiveBoosterAction += InActiveBooster;
     }
 
     private void OnDisable()
@@ -66,21 +66,19 @@ public class ScreenGamePlay : ScreenUI
         CustomeEventSystem.Instance.ChangeRoundAction -= ChangeRound;
         CustomeEventSystem.Instance.ChangeCoinAction -= ChangeTextCoin;
         CustomeEventSystem.Instance.ActiveBoosterAction -= ActiveBooster;
-        CustomeEventSystem.Instance.InactiveBoosterAction -= InActiveBooster;
     }
 
-    public void ActiveBooster()
+    public void ActiveBooster(List<int> lists)
     {
-        listBoosterConfigs[0].Active();
-        listBoosterConfigs[1].Active();
+        for(int i = 0; i < lists.Count; i++)
+        {
+            if (lists[i] != -1)
+            {
+                listBoosterConfigs[i].Active();
+            }
+            else listBoosterConfigs[i].Inactive();
+        }
     }
-
-    public void InActiveBooster()
-    {
-        listBoosterConfigs[0].Inactive();
-        listBoosterConfigs[1].Inactive();
-    }
-
 
     void Start()
     {
@@ -130,7 +128,7 @@ public class ScreenGamePlay : ScreenUI
     }
 
 
-   private void FlashButtonRed(Button button)
+    private void FlashButtonRed(Button button)
     {
         // Image img = button.GetComponent<Image>();
         // if (img == null) return;
@@ -141,30 +139,80 @@ public class ScreenGamePlay : ScreenUI
         //     .OnComplete(() => img.color = originalColor);
     }
 
-    private void OnClickMagnet()
+    public void OnClickMagnet()
     {
-        if (UserData.coin < boosterDatas[3].price)
+        StartCoroutine(ClickMagnet());
+    }
+
+    private IEnumerator ClickMagnet()
+    {
+        if (UserData.coin < boosterDatas[3].price || LevelManager.Instance.boosterCtrl.IsBusy || LevelManager.Instance.BoardCtrl.BoardCells.Count == 0)
         {
             FlashButtonRed(MagnetButton);
-            return;
+            yield break;
         }
-
+        PlayMagnetEffect();
         Debug.Log("Magnet Clicked");
+        AudioManager.Instance.PlayOneShot("BLJ_Boosters_Magnet_01", 1f);
         StartCoroutine(LevelManager.Instance.boosterCtrl.Magnet());
-        // UserData.coin -= boosterDatas[3].price;
-        // CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
-        // SaveDataManager.Save();
+        UserData.coin -= boosterDatas[3].price;
+        CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
+        SaveDataManager.Save();
     }
+
+   private void PlayMagnetEffect()
+    {
+        // Hủy tween cũ để tránh chồng hiệu ứng
+        iconMagnet.rectTransform.DOKill();
+        iconMagnet.rectTransform.localScale = Vector3.one;
+        iconMagnet.rectTransform.rotation = Quaternion.identity;
+
+        Image magnetImage = iconMagnet.GetComponent<Image>();
+        Color originalColor = magnetImage.color;
+
+        // Lưu vị trí ban đầu
+        Vector2 originalPos = iconMagnet.rectTransform.anchoredPosition;
+
+        // Tạo sequence
+        DG.Tweening.Sequence magnetSeq = DOTween.Sequence();
+
+        // Nhảy lên cao hơn (tầm 40–50px)
+        magnetSeq.Append(iconMagnet.rectTransform.DOAnchorPosY(originalPos.y + 45f, 0.25f).SetEase(Ease.OutQuad));
+
+        // Xoay nhẹ về hướng 11h (nghiêng ngược chiều kim đồng hồ)
+        magnetSeq.Join(iconMagnet.rectTransform.DORotate(new Vector3(0, 0, 35f), 0.25f).SetEase(Ease.OutBack)); 
+        // 330° tương đương -30°, tức là xoay về phía "11h"
+
+        // Phóng to + sáng mạnh trong khi ở tư thế nghiêng
+        magnetSeq.Join(iconMagnet.rectTransform.DOScale(1.4f, 0.25f).SetEase(Ease.OutBack));
+        magnetSeq.Join(magnetImage.DOColor(Color.cyan, 0.25f));
+
+        // Thực hiện "hiệu ứng hút" — rung và giật nhẹ (giống phát lực)
+        magnetSeq.Append(iconMagnet.rectTransform.DOShakePosition(0.5f, 15f, 10, 100, false, true));
+
+        // Quay ngược lại tư thế thẳng + thu nhỏ + hạ xuống
+        magnetSeq.Append(iconMagnet.rectTransform.DORotate(Vector3.zero, 0.3f).SetEase(Ease.InOutBack));
+        magnetSeq.Join(iconMagnet.rectTransform.DOScale(1f, 0.3f).SetEase(Ease.InBack));
+        magnetSeq.Join(iconMagnet.rectTransform.DOAnchorPosY(originalPos.y, 0.3f).SetEase(Ease.InBack));
+        magnetSeq.Join(magnetImage.DOColor(originalColor, 0.3f));
+
+        magnetSeq.Play();
+    }
+
+
+
+
 
     private void OnClickShuffle()
     {
-        if (UserData.coin < boosterDatas[2].price)
+        if (UserData.coin < boosterDatas[2].price || LevelManager.Instance.boosterCtrl.IsBusy)
         {
             FlashButtonRed(ShuffleButton);
             return;
         }
 
         Debug.Log("Shuffle Clicked");
+        AudioManager.Instance.PlayOneShot("BLJ_Boosters_Shuffle_01", 1f);
         StartCoroutine(LevelManager.Instance.boosterCtrl.Shuffle(LevelManager.Instance.BoardCtrl.boardAlls));
         UserData.coin -= boosterDatas[2].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
@@ -173,7 +221,7 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickAdd()
     {
-        if (UserData.coin < boosterDatas[1].price)
+        if (UserData.coin < boosterDatas[1].price || LevelManager.Instance.boosterCtrl.IsBusy)
         {
             FlashButtonRed(AddButton);
             return;
@@ -187,7 +235,7 @@ public class ScreenGamePlay : ScreenUI
 
     private void OnClickUndo()
     {
-        if (UserData.coin < boosterDatas[0].price)
+        if (UserData.coin < boosterDatas[0].price || LevelManager.Instance.boosterCtrl.IsBusy)
         {
             FlashButtonRed(UndoButton);
             return;
@@ -219,8 +267,7 @@ public class ScreenGamePlay : ScreenUI
         {
             Round_3.sprite = IconRoundDo;
         }
-        listBoosterConfigs[0].Inactive();
-        listBoosterConfigs[1].Inactive();
+        ActiveBooster(new List<int> { 1, 1, 0, 0 });
         LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
     }
 

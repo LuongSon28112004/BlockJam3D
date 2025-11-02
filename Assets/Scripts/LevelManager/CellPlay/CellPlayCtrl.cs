@@ -252,13 +252,16 @@ public class CellPlayCtrl : MonoBehaviour
                 RemoveCellData(new List<BoardCell> { c1, c2, c3 }, type);
 
                 // Animation merge & pop
-                yield return StartCoroutine(SetAnimMerge(new List<BoardCell> { c1, c2, c3 }));
+                StartCoroutine(SetAnimMerge(new List<BoardCell> { c1, c2, c3 }));
 
                 // Sau khi xóa, sắp xếp lại cell
-                yield return StartCoroutine(RearrangeCellsAfterRemove());
-                StartCoroutine(ResetPosCellPlay());      
+                yield return new WaitForSeconds(0.2f);
+                StartCoroutine(RearrangeCellsAfterRemove());
+                StartCoroutine(ResetPosCellPlay());
             }
         }
+
+        yield break;
     }
 
     public IEnumerator ResetPosCellPlay()
@@ -283,7 +286,7 @@ public class CellPlayCtrl : MonoBehaviour
         }
     }
 
-    private IEnumerator SetAnimMerge(List<BoardCell> cells)
+    public IEnumerator SetAnimMerge(List<BoardCell> cells)
     {
         yield return WaitRotaion(cells);
         cells.RemoveAll(c => c == null || c.gameObject == null);
@@ -358,7 +361,7 @@ public class CellPlayCtrl : MonoBehaviour
 
 
 
-    private void RemoveCellData(List<BoardCell> cells, TypeItem type)
+    public void RemoveCellData(List<BoardCell> cells, TypeItem type)
     {
         foreach (var cell in cells)
         {

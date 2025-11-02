@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using master;
 using UnityEngine;
 
@@ -43,10 +44,10 @@ public class CustomeEventSystem : SingletonDDOL<CustomeEventSystem>
         CheckMatch_3_Action?.Invoke(typeItem);
     }
 
-    public Action ActiveBoosterAction;
-    public void ActiveBooster()
+    public Action<List<int>>ActiveBoosterAction;
+    public void ActiveBooster(List<int> lists)
     {
-        ActiveBoosterAction?.Invoke();
+        ActiveBoosterAction?.Invoke(lists);
     }
 
     public Action InactiveBoosterAction;
