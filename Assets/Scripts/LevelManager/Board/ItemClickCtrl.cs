@@ -23,11 +23,6 @@ public class ItemClickCtrl : MonoBehaviour
         }
     }
 
-    private void OnDisable()
-    {
-        
-    }
-
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -62,11 +57,11 @@ public class ItemClickCtrl : MonoBehaviour
             {
                 yield break;
             }
-            if(LevelManager.Instance.boosterCtrl.IsBusy)
+            if (LevelManager.Instance.boosterCtrl.IsBusy)
             {
                 yield break;
             }
-           if (!boardCell.HasClick)
+            if (!boardCell.HasClick)
             {
                 // Nếu không thể click -> phản hồi (hiệu ứng xoay)
                 if (!boardCell.IsInCellPlay)
@@ -79,91 +74,106 @@ public class ItemClickCtrl : MonoBehaviour
                 yield break;
             }
 
-            
-            if(!boardCell.HasClick)
+
+            if (!boardCell.HasClick)
             {
                 yield break;
             }
-            
+
 
             if (!boardCell.IsBoosterAdd)
             {
-                //xoa quan khoi board
-                LevelManager.Instance.BoardCtrl.boardAlls.Remove(boardCell.transform.gameObject);
-                var (path, hasPath) = findingPath.BFSFind(boardCell.Container);
-                if (!hasPath)
-                {
-                    Debug.Log("No path found to the bottom row.");
-                    yield break;
-                }
-
-                if(!isStart)
-                {
-                    isStart = true;
-                    CustomeEventSystem.Instance.ActiveBooster(new List<int> { 1, 1, 1, 1 });
-                }
-
-
-                //check and save pos
-                if (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 7) yield break;
-                //reset container
-                Container container = boardCell.Container;
-                boardCell.Container.IsContaining = false;
-                boardCell.Container = null;
-                AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
-                LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);
-
-                StartCoroutine(boardCell.SetActiveNeighBor());
-
-                //spawn block
-
-                //start Run
-                //path.Add(LevelManager.Instance.cellPlayCtrl.PosCell());
-                //path.Add(boardCell.Pos);
-                LevelManager.Instance.cellPlayCtrl.PosCell();
-                StartCoroutine(boardCell.BoardCellMovement.MovementPath(path, (check) =>
-                {
-                    LevelManager.Instance.boosterCtrl.LastMove = (boardCell, container, path);
-                    LevelManager.Instance.boosterCtrl.ContainerLastMove = container;
-                    LevelManager.Instance.boosterCtrl.UndoQueue.Clear();
-                    for (int i = 0; i < LevelManager.Instance.cellPlayCtrl.BoardCells.Count; i++)
-                    {
-                        if (LevelManager.Instance.cellPlayCtrl.BoardCells[i].TypeItem == boardCell.TypeItem && LevelManager.Instance.cellPlayCtrl.BoardCells[i] != boardCell)
-                        {
-                            LevelManager.Instance.boosterCtrl.UndoQueue.Enqueue(new KeyValuePair<BoardCell, Container>(LevelManager.Instance.cellPlayCtrl.BoardCells[i], LevelManager.Instance.cellPlayCtrl.CellPlays[i]));
-                        }
-                    }
-                    if (check && LevelManager.Instance.cellPlayCtrl.HasMatch3(boardCell.TypeItem))
-                    {
-                        CustomeEventSystem.Instance.CheckMatch_3(boardCell.TypeItem);
-                        LevelManager.Instance.boosterCtrl.IsMatch3 = true;
-                    }
-                    else
-                    {
-                        LevelManager.Instance.boosterCtrl.IsMatch3 = false;
-                        LevelManager.Instance.cellPlayCtrl.checkLose();
-                    }
-                }));
-                StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container, null));
+                StartCoroutine(LeaderBoardClick(boardCell));
             }
             else
             {
-                LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);
-                Vector3 pos = LevelManager.Instance.cellPlayCtrl.PosCell();
-                boardCell.transform.localRotation = Quaternion.Euler(0, 180, 0);
-                yield return boardCell.BoardCellMovement.MovementToPos(pos);
-                boardCell.transform.localRotation = Quaternion.Euler(0, 0, 0);
-                if (LevelManager.Instance.cellPlayCtrl.HasMatch3(boardCell.TypeItem))
+                StartCoroutine(BoosterAddClick(boardCell));
+            }
+        }
+    }
+
+    public IEnumerator LeaderBoardClick(BoardCell boardCell)
+    {
+        //xoa quan khoi board
+        LevelManager.Instance.BoardCtrl.boardAlls.Remove(boardCell.transform.gameObject);
+        var (path, hasPath) = findingPath.BFSFind(boardCell.Container);
+        if (!hasPath)
+        {
+            Debug.Log("No path found to the bottom row.");
+            yield break;
+        }
+
+        if (!isStart)
+        {
+            isStart = true;
+            CustomeEventSystem.Instance.ActiveBooster(new List<int> { 1, 1, 1, 1 });
+        }
+
+
+        //check and save pos
+        if (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 7) yield break;
+        //reset container
+        Container container = boardCell.Container;
+        boardCell.Container.IsContaining = false;
+        boardCell.Container = null;
+        AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
+        LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);
+
+        StartCoroutine(boardCell.SetActiveNeighBor());
+
+        //spawn block
+
+        //start Run
+        //path.Add(LevelManager.Instance.cellPlayCtrl.PosCell());
+        //path.Add(boardCell.Pos);
+        LevelManager.Instance.cellPlayCtrl.PosCell();
+        StartCoroutine(boardCell.BoardCellMovement.MovementPath(path, (check) =>
+        {
+            LevelManager.Instance.boosterCtrl.LastMove.Push((boardCell, container, path));
+            //LevelManager.Instance.boosterCtrl.ContainerLastMove.Push(container);
+            Queue<KeyValuePair<BoardCell, Container>> temp = new Queue<KeyValuePair<BoardCell, Container>>();
+            for (int i = 0; i < LevelManager.Instance.cellPlayCtrl.BoardCells.Count; i++)
+            {
+                if (LevelManager.Instance.cellPlayCtrl.BoardCells[i].TypeItem == boardCell.TypeItem && LevelManager.Instance.cellPlayCtrl.BoardCells[i] != boardCell)
                 {
-                    CustomeEventSystem.Instance.CheckMatch_3(boardCell.TypeItem);
-                    LevelManager.Instance.boosterCtrl.IsMatch3 = true;
-                }
-                else
-                {
-                    LevelManager.Instance.boosterCtrl.IsMatch3 = false;
-                    LevelManager.Instance.cellPlayCtrl.checkLose();
+                    temp.Enqueue(new KeyValuePair<BoardCell, Container>(LevelManager.Instance.cellPlayCtrl.BoardCells[i], LevelManager.Instance.cellPlayCtrl.CellPlays[i]));
                 }
             }
+            if (temp.Count != 0 && temp.Count == 2) LevelManager.Instance.boosterCtrl.UndoQueue.Push(temp);
+            if (check && LevelManager.Instance.cellPlayCtrl.HasMatch3(boardCell.TypeItem))
+            {
+                CustomeEventSystem.Instance.CheckMatch_3(boardCell.TypeItem);
+                LevelManager.Instance.boosterCtrl.IsMatch3 = true;
+            }
+            else
+            {
+                LevelManager.Instance.boosterCtrl.IsMatch3 = false;
+                LevelManager.Instance.cellPlayCtrl.checkLose();
+            }
+        }));
+        StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container, null));
+    }
+
+    public IEnumerator BoosterAddClick(BoardCell boardCell)
+    {
+        LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);
+        Vector3 pos = LevelManager.Instance.cellPlayCtrl.PosCell();
+        boardCell.transform.localRotation = Quaternion.Euler(0, 180, 0);
+        // xoa data khỏi hàng chờ add
+        LevelManager.Instance.boosterCtrl.BoosterAddPos.RemoveBoardCell(boardCell);
+        yield return boardCell.BoardCellMovement.MovementToPos(pos);
+        // xét boardcell này bằng true để phục vị cho việc match_3
+        boardCell.IsInCellPlay = true;
+        boardCell.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        if (LevelManager.Instance.cellPlayCtrl.HasMatch3(boardCell.TypeItem))
+        {
+            CustomeEventSystem.Instance.CheckMatch_3(boardCell.TypeItem);
+            LevelManager.Instance.boosterCtrl.IsMatch3 = true;
+        }
+        else
+        {
+            LevelManager.Instance.boosterCtrl.IsMatch3 = false;
+            LevelManager.Instance.cellPlayCtrl.checkLose();
         }
     }
 }

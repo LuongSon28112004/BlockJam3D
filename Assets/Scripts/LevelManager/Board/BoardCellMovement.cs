@@ -16,7 +16,7 @@ public class BoardCellMovement : MonoBehaviour
     /// <summary>
     /// Di chuyển qua các ô trên ma trận theo danh sách vị trí (Coroutine).
     /// </summary>
-    public IEnumerator MovementPath(List<Vector3> containers ,Action<bool> complete)
+    public IEnumerator MovementPath(List<Vector3> containers, Action<bool> complete)
     {
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         if (containers == null || containers.Count == 0)
@@ -47,12 +47,12 @@ public class BoardCellMovement : MonoBehaviour
             else if (transform.parent.position.x < containers[i].x)
             {
                 // Di chuyển sang phải → quay sang phải
-               transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
+                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
             }
             else
             {
                 // Không thay đổi trục x → quay về hướng mặc định
-               transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.InSine);
+                transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.InSine);
             }
 
             Vector3 nextPos = containers[i];
@@ -65,7 +65,7 @@ public class BoardCellMovement : MonoBehaviour
             yield return moveTween.WaitForCompletion();
             //send event checkmatch_3
         }
-        yield return StartCoroutine(MovementToCellPlay( transform.parent.GetComponent<BoardCell>().Pos));
+        yield return StartCoroutine(MovementToCellPlay(transform.parent.GetComponent<BoardCell>().Pos));
         //setIdle Animation
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
         transform.parent.GetComponent<BoardCell>().IsInCellPlay = true;
@@ -108,19 +108,19 @@ public class BoardCellMovement : MonoBehaviour
         }
 
         if (transform.parent.position.x > pos.x)
-            {
-                // Di chuyển sang trái → quay sang trái
-                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
-            }
-            else if (transform.parent.position.x < pos.x)
-            {
-                // Di chuyển sang phải → quay sang phải
-                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
-            }
+        {
+            // Di chuyển sang trái → quay sang trái
+            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
+        }
+        else if (transform.parent.position.x < pos.x)
+        {
+            // Di chuyển sang phải → quay sang phải
+            transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
+        }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         // float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
-        Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond )
+        Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond)
             .SetEase(Ease.InSine);
 
         yield return moveTween.WaitForCompletion();
@@ -134,7 +134,7 @@ public class BoardCellMovement : MonoBehaviour
     /// <summary>
     /// ⭐ HÀM MỚI: Trả về Tween để có thể chạy song song (dùng trong ShiftCellsLeft/Right).
     /// </summary>
-    public Tween MovementToPosTween(Vector3 pos)
+    public Tween MovementToPosTween(Vector3 pos, bool isRunning = true, float timerOffset = 0)
     {
         if (transform.parent == null)
         {
@@ -145,24 +145,39 @@ public class BoardCellMovement : MonoBehaviour
         float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
 
-        if (transform.parent.position.x > pos.x)
+        if (isRunning)
         {
-            // Di chuyển sang trái → quay sang trái
-            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
+            if (transform.parent.position.x > pos.x)
+            {
+                // Di chuyển sang trái → quay sang trái
+                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
+            }
+            else if (transform.parent.position.x < pos.x)
+            {
+                // Di chuyển sang phải → quay sang phải
+                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
+            }
         }
-        else if (transform.parent.position.x < pos.x)
+
+        if (isRunning)
+            transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
+
+        // Di chuyển và xoay lại sau khi di chuyển xong
+        Tween moveTween;
+        if (isRunning)
+            moveTween = transform.parent.DOMove(pos, timer).SetEase(Ease.InSine);
+        else
+            moveTween = transform.parent.DOMove(pos, timerOffset).SetEase(Ease.InSine);
+
+        // Xoay lại hướng 0° sau khi di chuyển xong
+        moveTween.OnComplete(() =>
         {
-            // Di chuyển sang phải → quay sang phải
-            transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
-        }
-        transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
+            transform.parent.DOLocalRotate(Vector3.zero, 0.15f).SetEase(Ease.OutSine);
+        });
 
-
-        // Tạo và trả về Tween. Tốc độ tương đương với hàm Coroutine cũ.
-        return transform.parent.DOMove(pos, timer)
-            .SetEase(Ease.InSine);
-
+        return moveTween;
     }
+
 
     public IEnumerator MovementToPosOwner()
     {
@@ -228,7 +243,7 @@ public class BoardCellMovement : MonoBehaviour
 
         Debug.Log("Đã hoàn thành MovementToPos.");
     }
-    
+
     public Tween Knob()
     {
         if (transform.parent == null)
@@ -237,6 +252,6 @@ public class BoardCellMovement : MonoBehaviour
             return null;
         }
 
-        return transform.parent.DOMoveY(4f, 0.14f).SetEase(Ease.InSine);
+        return transform.parent.DOMoveY(2f, 0.14f).SetEase(Ease.InSine);
     }
 }

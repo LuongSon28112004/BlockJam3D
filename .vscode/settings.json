@@ -66,5 +66,12 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true
+  },
+  "omnisharp.enableEditorConfigSupport": true,
+
     "dotnet.defaultSolution": "BlockJam3D.slnx"
 }
