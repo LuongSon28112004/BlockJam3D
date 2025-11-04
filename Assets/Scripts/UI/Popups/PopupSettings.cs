@@ -15,7 +15,7 @@ public class PopupSettings : PopupUI
     private void BackToMain()
     {
         //Audio sound
-        AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
         GameManager.Instance.BackToMenu();
     }
 }

@@ -109,6 +109,7 @@ public class PopupWinGame : PopupUI
 
     private void OnOkClicked()
     {
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
         GameManager.Instance.BackToMenu();
         //Hide();
     }

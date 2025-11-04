@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using Unity.Collections.LowLevel.Unsafe;
-using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
-
+using UnityEngine.SocialPlatforms.Impl;
 public class BoosterCtrl : MonoBehaviour
 {
     [Header("Booster Component")]
@@ -337,34 +335,89 @@ public class BoosterCtrl : MonoBehaviour
     #endregion
 
     #region Shuffle
-    public IEnumerator Shuffle(List<GameObject> LeaderBoards)
+    // IsBusy = true;
+    //     CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, -1 });
+    //     // Lấy reference gốc
+    //     LevelData original = LevelManager.Instance.BoardCtrl.levelData;
+
+    //     // Tạo bản sao runtime (không ảnh hưởng file gốc)
+    //     LevelData levelData = ScriptableObject.CreateInstance<LevelData>();
+    //     levelData.CopyFrom(original);
+
+    //     // Shuffle và load lại
+    //     string[] prefabNames = levelData.ShufflePrefabs();
+    //     levelData.prefabNames = prefabNames;
+    //     LevelManager.Instance.cellPlayCtrl.ResetCellPlay();
+    //     yield return StartCoroutine(LevelManager.Instance.BoardCtrl.LoadLevel(levelData, false));
+    //     if (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0)
+    //     {
+    //         CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, 1 });
+    //         LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+    //     }
+    //     else
+    //     {
+    //         CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, 1, 1, 1 });
+    //         LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+    //     }
+    //     IsBusy = false;
+    public IEnumerator Shuffle(List<GameObject> leaderBoards)
     {
+        if (leaderBoards == null || leaderBoards.Count == 0)
+            yield break;
+
         IsBusy = true;
         CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, -1 });
-        // Lấy reference gốc
-        LevelData original = LevelManager.Instance.BoardCtrl.levelData;
 
-        // Tạo bản sao runtime (không ảnh hưởng file gốc)
-        LevelData levelData = ScriptableObject.CreateInstance<LevelData>();
-        levelData.CopyFrom(original);
+        int n = leaderBoards.Count;
+        List<Vector3> startPositions = leaderBoards.Select(lb => lb?.transform.position ?? Vector3.zero).ToList();
 
-        // Shuffle và load lại
-        string[] prefabNames = levelData.ShufflePrefabs();
-        levelData.prefabNames = prefabNames;
-        LevelManager.Instance.cellPlayCtrl.ResetCellPlay();
-        yield return StartCoroutine(LevelManager.Instance.BoardCtrl.LoadLevel(levelData, false));
-        if (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0)
+        List<int> selectedIndices = new List<int>();
+        for (int i = 0; i < n; i++)
         {
+            if (int.TryParse(leaderBoards[i].name, out int val) && val >= 1 && val <= 7)
+                selectedIndices.Add(i);
+        }
+
+        if (selectedIndices.Count < 2)
+        {
+            IsBusy = false;
             CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, 1 });
-            LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+            yield break;
         }
-        else
+
+        System.Random rand = new System.Random();
+        for (int i = selectedIndices.Count - 1; i > 0; i--)
         {
-            CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, 1, 1, 1 });
-            LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+            int j = rand.Next(0, i + 1);
+            (selectedIndices[i], selectedIndices[j]) = (selectedIndices[j], selectedIndices[i]);
         }
+
+        List<Tween> tweens = new List<Tween>();
+        for (int i = 0; i < selectedIndices.Count - 1; i += 2)
+        {
+            int a = selectedIndices[i];
+            int b = selectedIndices[i + 1];
+            tweens.Add(leaderBoards[a].transform.DOMove(startPositions[b], 0.5f));
+            tweens.Add(leaderBoards[b].transform.DOMove(startPositions[a], 0.5f));
+            (leaderBoards[a], leaderBoards[b]) = (leaderBoards[b], leaderBoards[a]);
+        }
+
+        yield return DOTween.Sequence().AppendInterval(0.5f).WaitForCompletion();
+
+        LevelManager.Instance.BoardCtrl.RebuildGridFromBoardAlls();
+
+        var cellCount = LevelManager.Instance.cellPlayCtrl.BoardCells.Count;
+        CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, (cellCount == 0 ? -1 : 1), 1, 1 });
+        LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+
         IsBusy = false;
     }
+
+
+
+
+
+
 
     #endregion
 

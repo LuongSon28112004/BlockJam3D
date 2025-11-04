@@ -61,8 +61,8 @@ public class CellPlayCtrl : MonoBehaviour
         InitCountCellType();
         GenerateCell();
     }
-    
-   private void InitCountCellType()
+
+    private void InitCountCellType()
     {
         countCellType = new Dictionary<TypeItem, List<BoardCell>>();
         foreach (TypeItem t in Enum.GetValues(typeof(TypeItem)))
@@ -145,8 +145,7 @@ public class CellPlayCtrl : MonoBehaviour
         {
             orderPlayInCellPlay.Add(boardCell.TypeItem);
         }
-        StartCoroutine(ResetPosCellPlay());
-        
+        StartCoroutine(ResetPosCellPlay(0.1f));
     }
 
     private int FindInsertIndex(BoardCell newCell)
@@ -182,7 +181,7 @@ public class CellPlayCtrl : MonoBehaviour
             StartCoroutine(bc.MovementToPos(cellPlays[i].Pos));
         }
     }
-    
+
 
 
     public Vector3 PosCell()
@@ -197,9 +196,9 @@ public class CellPlayCtrl : MonoBehaviour
 
     public void checkLose()
     {
-         if (boardCells.Count == MAX_ROW)
+        if (boardCells.Count == MAX_ROW)
         {
-            for(int i = 0; i < boardCells.Count; i++)
+            for (int i = 0; i < boardCells.Count; i++)
             {
                 if (!boardCells[i].IsInCellPlay) return;
             }
@@ -212,7 +211,7 @@ public class CellPlayCtrl : MonoBehaviour
     {
         if (isCheckWin) yield break;
         isCheckWin = true;
-        if(LevelManager.Instance.BoardCtrl.BoardCells.Count == 0 && LevelManager.Instance.Round >= 2)
+        if (LevelManager.Instance.BoardCtrl.BoardCells.Count == 0 && LevelManager.Instance.Round >= 2)
         {
             yield return new WaitForSeconds(1f);
             UserData.level += 1;
@@ -221,7 +220,7 @@ public class CellPlayCtrl : MonoBehaviour
         }
         isCheckWin = false;
     }
-    
+
     public void Match_3(TypeItem typeItem)
     {
         StartCoroutine(Match3Process(typeItem));
@@ -257,16 +256,16 @@ public class CellPlayCtrl : MonoBehaviour
                 // Sau khi xóa, sắp xếp lại cell
                 yield return new WaitForSeconds(0.2f);
                 StartCoroutine(RearrangeCellsAfterRemove());
-                StartCoroutine(ResetPosCellPlay());
+                StartCoroutine(ResetPosCellPlay(0.1f));
             }
         }
 
         yield break;
     }
 
-    public IEnumerator ResetPosCellPlay()
+    public IEnumerator ResetPosCellPlay(float timer)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(timer);
         for (int i = 0; i < boardCells.Count; i++)
         {
             if (boardCells[i].IsInCellPlay && boardCells[i].transform.position != boardCells[i].Pos)
@@ -276,11 +275,11 @@ public class CellPlayCtrl : MonoBehaviour
             }
         }
     }
-    
+
     private IEnumerator WaitRotaion(List<BoardCell> cells)
     {
         // Kiểm tra null tránh lỗi
-        for(int i = 0; i < cells.Count; i++)
+        for (int i = 0; i < cells.Count; i++)
         {
             yield return cells[i].transform.DOLocalRotate(new Vector3(0, 0, 0), 0.1f).SetEase(Ease.InSine);
         }
@@ -391,9 +390,9 @@ public class CellPlayCtrl : MonoBehaviour
                 break;
             }
         }
-        if(!flag)
+        if (!flag)
         {
-            if(orderPlayInCellPlay.Contains(type))
+            if (orderPlayInCellPlay.Contains(type))
             {
                 orderPlayInCellPlay.Remove(type);
             }
@@ -423,7 +422,7 @@ public class CellPlayCtrl : MonoBehaviour
         }
 
         sc.Play();
-            yield return sc.WaitForCompletion();
+        yield return sc.WaitForCompletion();
         // Khi tất cả đã di chuyển xong → SetIdle cho từng cell
         for (int i = 0; i < boardCells.Count; i++)
         {
@@ -472,4 +471,4 @@ public class CellPlayCtrl : MonoBehaviour
 
         return false;
     }
-}   
+}

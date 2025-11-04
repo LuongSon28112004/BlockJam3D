@@ -63,6 +63,7 @@ public class ScreenGamePlay : ScreenUI
         AddButton.onClick.RemoveListener(OnClickAdd);
         ShuffleButton.onClick.RemoveListener(OnClickShuffle);
         MagnetButton.onClick.RemoveListener(OnClickMagnet);
+        SettingButton.onClick.RemoveListener(OnClickSetting);
         CustomeEventSystem.Instance.ChangeRoundAction -= ChangeRound;
         CustomeEventSystem.Instance.ChangeCoinAction -= ChangeTextCoin;
         CustomeEventSystem.Instance.ActiveBoosterAction -= ActiveBooster;
@@ -70,7 +71,7 @@ public class ScreenGamePlay : ScreenUI
 
     public void ActiveBooster(List<int> lists)
     {
-        for(int i = 0; i < lists.Count; i++)
+        for (int i = 0; i < lists.Count; i++)
         {
             if (lists[i] != -1)
             {
@@ -90,7 +91,7 @@ public class ScreenGamePlay : ScreenUI
 
     private void LoadTextLevel()
     {
-        textLevel.text = "Level "+  UserData.level.ToString();
+        textLevel.text = "Level " + UserData.level.ToString();
     }
 
     private void InitPriceBooster()
@@ -160,7 +161,7 @@ public class ScreenGamePlay : ScreenUI
         SaveDataManager.Save();
     }
 
-   private void PlayMagnetEffect()
+    private void PlayMagnetEffect()
     {
         // Hủy tween cũ để tránh chồng hiệu ứng
         iconMagnet.rectTransform.DOKill();
@@ -180,7 +181,7 @@ public class ScreenGamePlay : ScreenUI
         magnetSeq.Append(iconMagnet.rectTransform.DOAnchorPosY(originalPos.y + 45f, 0.25f).SetEase(Ease.OutQuad));
 
         // Xoay nhẹ về hướng 11h (nghiêng ngược chiều kim đồng hồ)
-        magnetSeq.Join(iconMagnet.rectTransform.DORotate(new Vector3(0, 0, 35f), 0.25f).SetEase(Ease.OutBack)); 
+        magnetSeq.Join(iconMagnet.rectTransform.DORotate(new Vector3(0, 0, 35f), 0.25f).SetEase(Ease.OutBack));
         // 330° tương đương -30°, tức là xoay về phía "11h"
 
         // Phóng to + sáng mạnh trong khi ở tư thế nghiêng
@@ -250,7 +251,7 @@ public class ScreenGamePlay : ScreenUI
     private void OnClickSetting()
     {
         //Audio sound
-        AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
         UIManager.Instance.ShowPopup<PopupSettings>(null);
     }
 

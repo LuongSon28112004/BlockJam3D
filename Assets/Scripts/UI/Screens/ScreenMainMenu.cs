@@ -19,7 +19,7 @@ public class ScreenMainMenu : ScreenUI
     private void OnSettingClicked()
     {
         //Audio sound
-        AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
         UIManager.Instance.ShowPopup<PopupSettingsUIMain>(null);
     }
 
@@ -34,6 +34,7 @@ public class ScreenMainMenu : ScreenUI
     {
         if (UserData.level >= 7) GameManager.Instance.Level = 6;
         else GameManager.Instance.Level = UserData.level;
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
         GameManager.Instance.StartGame();
     }
 }

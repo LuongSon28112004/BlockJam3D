@@ -150,10 +150,13 @@ public class GridSpotSpawn : MonoBehaviour
             textCount.text = maxPointSpawn.ToString();
         }
         boardCell.Pos = container.Pos;
-        boardCell.IdType = Enum.GetName(typeof(TypeItem), typeItem);
+        int value = (int)typeItem + 1;
+        boardCell.IdType = value.ToString();
         boardCell.TypeItem = typeItem;
+        boardCell.transform.name = value.ToString();
         boardCell.Barrel.SetActive(false);
         boardCell.HasClick = true;
+        boardCell.IsActive = true;
         boardCell.Container = containers[direction];
         boardCell.BoardCellAnimation.SetActive();
         if (tyoeSpot == TyoeSpot.OneSpawn)
@@ -181,13 +184,13 @@ public class GridSpotSpawn : MonoBehaviour
         }
         obj.transform.localScale = Vector3.zero;
         AudioManager.Instance.PlayOneShot("BLJ_Game_Obstacles_Pipe_Normal_04", 1f);
-        onSpawned?.Invoke(boardCell);
         yield return new WaitForSeconds(0.2f);
         StartCoroutine(bc.MovementToPos(container.Pos));
         obj.transform.DOScale(Vector3.one, 0.1f);
+        onSpawned?.Invoke(boardCell);
     }
-    
-    public IEnumerator SpawnBlockMagnet(GameObject blockPrefab, Transform Pos, TypeItem typeItem ,Action<BoardCell> onSpawned )
+
+    public IEnumerator SpawnBlockMagnet(GameObject blockPrefab, Transform Pos, TypeItem typeItem, Action<BoardCell> onSpawned)
     {
         if (MaxPointSpawn <= 0)
         {

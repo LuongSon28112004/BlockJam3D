@@ -95,7 +95,10 @@ public class ItemClickCtrl : MonoBehaviour
     public IEnumerator LeaderBoardClick(BoardCell boardCell)
     {
         //xoa quan khoi board
+        int index = LevelManager.Instance.BoardCtrl.boardAlls.IndexOf(boardCell.transform.gameObject);
         LevelManager.Instance.BoardCtrl.boardAlls.Remove(boardCell.transform.gameObject);
+        LevelManager.Instance.BoardCtrl.boardAlls.Insert(index, boardCell.Container.gameObject);
+        //LevelManager.Instance.BoardCtrl.RemoveContainer(index);
         var (path, hasPath) = findingPath.BFSFind(boardCell.Container);
         if (!hasPath)
         {
@@ -127,6 +130,7 @@ public class ItemClickCtrl : MonoBehaviour
         //path.Add(LevelManager.Instance.cellPlayCtrl.PosCell());
         //path.Add(boardCell.Pos);
         LevelManager.Instance.cellPlayCtrl.PosCell();
+        StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container, null));
         StartCoroutine(boardCell.BoardCellMovement.MovementPath(path, (check) =>
         {
             LevelManager.Instance.boosterCtrl.LastMove.Push((boardCell, container, path));
@@ -151,7 +155,6 @@ public class ItemClickCtrl : MonoBehaviour
                 LevelManager.Instance.cellPlayCtrl.checkLose();
             }
         }));
-        StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container, null));
     }
 
     public IEnumerator BoosterAddClick(BoardCell boardCell)

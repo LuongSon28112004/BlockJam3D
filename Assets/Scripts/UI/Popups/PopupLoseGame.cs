@@ -43,12 +43,14 @@ public class PopupLoseGame : PopupUI
     private void OnTryAgainClicked()
     {
         Hide();
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
         GameManager.Instance.StartGame();
     }
 
     private void OnCloseClicked()
     {
         Hide();
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
         GameManager.Instance.BackToMenu();
     }
 }

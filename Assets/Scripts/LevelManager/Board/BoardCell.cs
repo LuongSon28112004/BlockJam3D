@@ -64,6 +64,7 @@ public class BoardCell : MonoBehaviour
     [SerializeField] private bool hasClick;
     [SerializeField] private bool isBoosterAdd;
     [SerializeField] private bool isInCellPlay;
+    [SerializeField] private bool isActive;
     [Header("Neighbors")]
     [SerializeField] private List<NeighBors> neighbors = new List<NeighBors>();
 
@@ -90,6 +91,7 @@ public class BoardCell : MonoBehaviour
     public bool IsBoosterAdd { get => isBoosterAdd; set => isBoosterAdd = value; }
     public List<NeighBors> Neighbors { get => neighbors; set => neighbors = value; }
     public bool IsInCellPlay { get => isInCellPlay; set => isInCellPlay = value; }
+    public bool IsActive { get => isActive; set => isActive = value; }
 
     public void AddNeighbor(BoardCell cell, DirectionNeighBor directionNeighBor)
     {

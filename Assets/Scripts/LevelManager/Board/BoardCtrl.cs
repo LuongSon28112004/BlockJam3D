@@ -25,13 +25,16 @@ public class BoardCtrl : MonoBehaviour
     public List<GridSpotSpawn> gridSpotSpawns;
 
     [Header("Action Event")]
-   
+
     [Header("Action spawn Block to GridSpotSpawn")]
     public Func<Container, BoardCell, IEnumerator> SpawnBlockToGSPAction;
 
 
     //getter & setter
     public List<BoardCell> BoardCells { get => boardCells; set => boardCells = value; }
+    public BoardCell[,] grid;
+    public bool[,] IsWall;
+    public Container[,] gridContainerSpot;
 
     void Start()
     {
@@ -71,10 +74,23 @@ public class BoardCtrl : MonoBehaviour
             {
                 TypeItem typeItem = GetNextRandomType(levelData.totalUnits);
                 GameObject obj = AddressableManager.Instance.GetPrefab(Enum.GetName(typeof(TypeItem), typeItem));
-                StartCoroutine(gridSpotSpawns[i].SpawnBlock(obj, container,typeItem, (boardCell) =>
+                StartCoroutine(gridSpotSpawns[i].SpawnBlock(obj, container, typeItem, (boardCell) =>
                 {
                     boardCells.Add(boardCell);
-                    
+                    Vector2 index = FindContainer(container);
+                    int row = Mathf.FloorToInt(index.x);
+                    int col = Mathf.FloorToInt(index.y);
+                    if (row < 0 || col < 0)
+                    {
+                        // container not found — append at the end
+                        boardAlls.Add(boardCell.gameObject);
+                    }
+                    else
+                    {
+                        int linearIndex = row * (levelData != null ? levelData.width : 0) + col;
+                        linearIndex = Mathf.Clamp(linearIndex, 0, boardAlls.Count);
+                        boardAlls.Insert(linearIndex, boardCell.gameObject);
+                    }
                 }));
                 //int index = boardCells.IndexOf(boardCell);
                 break;
@@ -82,7 +98,50 @@ public class BoardCtrl : MonoBehaviour
         }
         yield break;
     }
-    
+
+    public void RemoveContainer(int index)
+    {
+
+        List<Container> temp = new List<Container>();
+        for (int i = 0; i < levelData.height; i++)
+        {
+            for (int j = 0; j < levelData.width; j++)
+            {
+                temp.Add(gridContainerSpot[i, j]);
+            }
+        }
+
+        if (index >= 0 && index < temp.Count)
+            temp.RemoveAt(index);
+
+        // Tạo lại grid mới nếu bạn muốn
+        Container[,] newGrid = new Container[levelData.height, levelData.width]; // hoặc tính lại kích thước mới
+        for (int i = 0; i < temp.Count; i++)
+        {
+            int row = i / levelData.width;
+            int col = i % levelData.width;
+            newGrid[row, col] = temp[i];
+        }
+
+        gridContainerSpot = newGrid;
+    }
+
+
+    private Vector2 FindContainer(Container container)
+    {
+        for (int x = 0; x < gridContainerSpot.GetLength(0); x++)
+        {
+            for (int y = 0; y < gridContainerSpot.GetLength(1); y++)
+            {
+                if (gridContainerSpot[x, y] == container)
+                {
+                    return new Vector2(x, y);
+                }
+            }
+        }
+        return new Vector2(-1, -1);
+    }
+
     /// <summary>
     /// Random TypeItem tiếp theo theo trọng số, đảm bảo mỗi loại có ít nhất 3 quân khi đạt totalCount.
     /// </summary>
@@ -142,7 +201,7 @@ public class BoardCtrl : MonoBehaviour
         boardCells.Clear();
         gridSpotSpawns.Clear();
     }
-    public IEnumerator LoadLevel(LevelData levelData , bool isSlide = true)
+    public IEnumerator LoadLevel(LevelData levelData, bool isSlide = true)
     {
         // random ngẫu nhiên để các level không trùng type
         //SetIdTypeRandom();
@@ -161,8 +220,6 @@ public class BoardCtrl : MonoBehaviour
             yield break;
         }
 
-        float offsetX = 1.25f;
-        float offsetZ = 1.25f;
 
         // Xóa grid cũ
         for (int i = gridParent.childCount - 1; i >= 0; i--)
@@ -171,20 +228,45 @@ public class BoardCtrl : MonoBehaviour
         }
 
         boardCells.Clear();
-
         // Khởi tạo lại danh sách container trong findPath
         itemClickCtrl.FindingPath.SetCapacity(levelData.height, levelData.width);
         itemClickCtrl.FindingPath.containers.Clear();
 
+        // khởi tạo các mảng phục vụ cho gán giá trị các block trong leaderBoard
+        grid = new BoardCell[levelData.height, levelData.width];
+        IsWall = new bool[levelData.height, levelData.width];
+        gridContainerSpot = new Container[levelData.height, levelData.width];
+        //tạo bàn cờ
+        SpawnLeaderBoard(grid, IsWall, gridContainerSpot);
+
+        //gán các hàng xóm của các khối block
+        AddNeighbor(grid, IsWall);
+
+        //gán các container cho các máy random pipe nếu có trên leaderboard
+        AlignContainer(gridContainerSpot);
+
+        //trượt leaderboard khi qua round tiếp theo
+        StartCoroutine(SlideLeaderBoard(isSlide));
+
+        // chỉnh camera để bàn cờ vào giữa trung tâm của màn hình
+        FolowCamera();
+
+        //khởi tạo để đếm các block được spawn ra trên leaderboard
+        InitTypeCounts();
+
+
+
+        Debug.Log($"Level '{levelData.name}' loaded successfully under {gridParent.name}!");
+    }
+
+    public void SpawnLeaderBoard(BoardCell[,] grid, bool[,] IsWall, Container[,] gridContainerSpot)
+    {
+        // ======== TẠO CÁC Ô ========
+        float offsetX = 1.25f;
+        float offsetZ = 1.25f;
         // Tính điểm bắt đầu sao cho bàn cờ nằm chính giữa
         float startX = gridParent.position.x - (levelData.width - 1) * offsetX / 2f;
         float startZ = gridParent.position.z + (levelData.height - 1) * offsetZ / 2f;
-
-        BoardCell[,] grid = new BoardCell[levelData.height, levelData.width];
-        bool[,] IsWall = new bool[levelData.height, levelData.width];
-        Container[,] gridContainerSpot = new Container[levelData.height, levelData.width];
-
-        // ======== TẠO CÁC Ô ========
         for (int row = 0; row < levelData.height; row++) // hàng (y)
         {
             for (int col = 0; col < levelData.width; col++) // cột (x)
@@ -297,6 +379,92 @@ public class BoardCtrl : MonoBehaviour
             }
         }
 
+    }
+
+    public void FolowCamera()
+    {
+        Camera camera = Camera.main;
+        if (levelData.alignment)
+        {
+            camera.transform.position = new Vector3(-0.6f, camera.transform.position.y, camera.transform.position.z);
+        }
+        else camera.transform.position = new Vector3(0f, camera.transform.position.y, camera.transform.position.z);
+
+        Debug.Log("Hoàn tất di chuyển!");
+    }
+
+    public IEnumerator SlideLeaderBoard(bool isSlide)
+    {
+        if (isSlide)
+        {
+            // Đặt vị trí ban đầu
+            transform.position = new Vector3(4f, transform.position.y, transform.position.z);
+
+            // Di chuyển từ x = 4f đến x = 0 trong 0.25 giây
+            Tween tween = transform.DOMoveX(0f, 0.25f).SetEase(Ease.Linear);
+
+            // Đợi tween chạy xong
+            yield return tween.WaitForCompletion();
+        }
+    }
+
+    // BoardCtrl.cs (thêm vào class BoardCtrl)
+    public void RebuildGridFromBoardAlls()
+    {
+        if (levelData == null)
+        {
+            Debug.LogWarning("RebuildGridFromBoardAlls: levelData là null.");
+            return;
+        }
+
+        // đảm bảo boardAlls chiều dài đúng (height * width) nếu có thể
+
+        // Tạo lại mảng grid và gridContainerSpot, IsWall
+        grid = new BoardCell[levelData.height, levelData.width];
+
+        for (int row = 0; row < levelData.height; row++)
+        {
+            for (int col = 0; col < levelData.width; col++)
+            {
+                int index = row * levelData.width + col;
+                if (index < 0 || index >= boardAlls.Count)
+                {
+                    // thiếu phần tử tại vị trí này — coi như null
+                    grid[row, col] = null;
+                    continue;
+                }
+
+                GameObject obj = boardAlls[index];
+                if (obj == null)
+                {
+                    grid[row, col] = null;
+                    continue;
+                }
+
+                // Nếu là BoardCell
+                if (obj.TryGetComponent(out BoardCell boardCell))
+                {
+                    // đảm bảo boardCell.Pos / Container / IdType / TypeItem là chính xác theo transform / tên
+                    boardCell.Pos = obj.transform.position;
+                    grid[row, col] = boardCell;
+
+                    // nếu có container đính kèm (trong SpawnLeaderBoard bạn gán Container riêng)
+                    boardCell.Container = gridContainerSpot[row, col];
+                }
+                else
+                {
+                    grid[row, col] = null;
+                }
+
+            }
+        }
+
+        // Sau khi rebuild grid[,] và boardCells, gọi AddNeighbor để cập nhật neighbors
+        AddNeighbor(grid, IsWall);
+    }
+
+    public void AddNeighbor(BoardCell[,] grid, bool[,] IsWall)
+    {
         // ======== GÁN NEIGHBOR ========
         for (int row = 0; row < levelData.height; row++)
         {
@@ -377,16 +545,21 @@ public class BoardCtrl : MonoBehaviour
                 if (canActivate)
                 {
                     current.BoardCellAnimation.SetActive();
+                    current.IsActive = true;
                     current.HasClick = true;
                 }
                 else
                 {
                     current.HasClick = false;
+                    // them 11/4/2025
+                    current.IsActive = true;
+                    current.BoardCellAnimation.SetInActive();
                 }
             }
         }
-
-
+    }
+    public void AlignContainer(Container[,] gridContainerSpot)
+    {
         //============assign container to Spot=================
         for (int row = 0; row < levelData.height; row++)
         {
@@ -458,39 +631,11 @@ public class BoardCtrl : MonoBehaviour
                 }
             }
         }
-
-        if(isSlide)
-        {
-            // Đặt vị trí ban đầu
-            transform.position = new Vector3(4f, transform.position.y, transform.position.z);
-
-            // Di chuyển từ x = 4f đến x = 0 trong 0.25 giây
-            Tween tween = transform.DOMoveX(0f, 0.25f).SetEase(Ease.Linear);
-
-            // Đợi tween chạy xong
-            yield return tween.WaitForCompletion();
-        }
-
-        Camera camera = Camera.main;
-        if (levelData.alignment)
-        {
-            camera.transform.position = new Vector3(0.6f, camera.transform.position.y, camera.transform.position.z);
-        }
-        else camera.transform.position = new Vector3(0f, camera.transform.position.y, camera.transform.position.z);
-
-        Debug.Log("Hoàn tất di chuyển!");
-        //=============================
-        // Sau khi hoàn tất spawn toàn bộ boardCells ban đầu
-        InitTypeCounts();
-
-
-
-        Debug.Log($"Level '{levelData.name}' loaded successfully under {gridParent.name}!");
     }
-    
 
 
-     public void UpdateBoardCell(BoardCell boardCell)
+
+    public void UpdateBoardCell(BoardCell boardCell)
     {
         boardCells.Remove(boardCell);
     }
