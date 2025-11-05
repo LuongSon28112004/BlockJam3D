@@ -97,7 +97,11 @@ public class ItemClickCtrl : MonoBehaviour
         //xoa quan khoi board
         int index = LevelManager.Instance.BoardCtrl.boardAlls.IndexOf(boardCell.transform.gameObject);
         LevelManager.Instance.BoardCtrl.boardAlls.Remove(boardCell.transform.gameObject);
-        LevelManager.Instance.BoardCtrl.boardAlls.Insert(index, boardCell.Container.gameObject);
+        if (!boardCell.HasSpawn)
+        {
+            Debug.Log("yesok" +index);
+            LevelManager.Instance.BoardCtrl.boardAlls.Insert(index, boardCell.Container.gameObject);
+        }
         //LevelManager.Instance.BoardCtrl.RemoveContainer(index);
         var (path, hasPath) = findingPath.BFSFind(boardCell.Container);
         if (!hasPath)

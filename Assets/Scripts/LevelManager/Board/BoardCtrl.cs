@@ -91,6 +91,10 @@ public class BoardCtrl : MonoBehaviour
                         linearIndex = Mathf.Clamp(linearIndex, 0, boardAlls.Count);
                         boardAlls.Insert(linearIndex, boardCell.gameObject);
                     }
+                    if (gridSpotSpawns[i].MaxPointSpawn > 0)
+                    {
+                        boardCell.HasSpawn = true;
+                    }
                 }));
                 //int index = boardCells.IndexOf(boardCell);
                 break;
@@ -583,6 +587,11 @@ public class BoardCtrl : MonoBehaviour
                         if (isBottom && bottom < levelData.height)
                         {
                             gridSpotSpawn.AddContainer(gridContainerSpot[row, col], Direction.Down);
+                            BoardCell boardCell = boardAlls[row * levelData.width + col].GetComponent<BoardCell>();
+                            if (boardCell != null)
+                            {
+                                boardCell.HasSpawn = true;
+                            }
                         }
                     }
 
@@ -598,6 +607,11 @@ public class BoardCtrl : MonoBehaviour
                         if (isTop && top >= 0)
                         {
                             gridSpotSpawn1.AddContainer(gridContainerSpot[row, col], Direction.Up);
+                            BoardCell boardCell = boardAlls[row * levelData.width + col].GetComponent<BoardCell>();
+                            if (boardCell != null)
+                            {
+                                boardCell.HasSpawn = true;
+                            }
                         }
                     }
                     index = row * levelData.width + left;
@@ -612,6 +626,11 @@ public class BoardCtrl : MonoBehaviour
                         if (isRight && right < levelData.width)
                         {
                             gridSpotSpawn2.AddContainer(gridContainerSpot[row, col], Direction.Right);
+                            BoardCell boardCell = boardAlls[row * levelData.width + col].GetComponent<BoardCell>();
+                            if (boardCell != null)
+                            {
+                                boardCell.HasSpawn = true;
+                            }
                         }
                     }
                     index = row * levelData.width + right;
@@ -626,6 +645,11 @@ public class BoardCtrl : MonoBehaviour
                         if (isLeft && left >= 0)
                         {
                             gridSpotSpawn3.AddContainer(gridContainerSpot[row, col], Direction.Left);
+                            BoardCell boardCell = boardAlls[row * levelData.width + col].GetComponent<BoardCell>();
+                            if (boardCell != null)
+                            {
+                                boardCell.HasSpawn = true;
+                            }
                         }
                     }
                 }

@@ -316,6 +316,12 @@ public class CellPlayCtrl : MonoBehaviour
         {
             if (c == null) continue;
             Destroy(c.gameObject);
+            // trước khi xóa phải bỏ lại container của nó trong BoardCellAlls
+            int index = LevelManager.Instance.BoardCtrl.boardAlls.IndexOf(c.gameObject);
+            if (index != -1)
+            {
+                LevelManager.Instance.BoardCtrl.boardAlls[index] = c.Container.gameObject;
+            }
         }
         Handheld.Vibrate();
     }
