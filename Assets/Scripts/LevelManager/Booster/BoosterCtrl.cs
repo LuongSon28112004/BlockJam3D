@@ -532,7 +532,7 @@ public class BoosterCtrl : MonoBehaviour
         {
             if (count > 3) break;
             BoardCellMovement bc = ListChoices[i].BoardCellMovement;
-            seqMove.Join(bc.MovementToPosTween(boosterMagnetPos.ListPosBoosterMagnet[3 - count], false, 0.1f));
+            seqMove.Join(bc.MovementToPosTween(boosterMagnetPos.ListPosBoosterMagnet[3 - count], false, 0.25f));
             count++;
         }
 
@@ -541,7 +541,7 @@ public class BoosterCtrl : MonoBehaviour
             if (boardCellss[i].TypeItem == type)
             {
                 BoardCellMovement bc = boardCellss[i].BoardCellMovement;
-                seqMove.Join(bc.MovementToPosTween(boosterMagnetPos.ListPosBoosterMagnet[3 - count], false, 0.1f));
+                seqMove.Join(bc.MovementToPosTween(boosterMagnetPos.ListPosBoosterMagnet[3 - count], false, 0.25f));
                 count++;
             }
         }
