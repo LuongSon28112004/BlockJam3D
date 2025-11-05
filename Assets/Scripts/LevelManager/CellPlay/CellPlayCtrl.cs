@@ -315,13 +315,16 @@ public class CellPlayCtrl : MonoBehaviour
         foreach (var c in cells)
         {
             if (c == null) continue;
-            Destroy(c.gameObject);
             // trước khi xóa phải bỏ lại container của nó trong BoardCellAlls
             int index = LevelManager.Instance.BoardCtrl.boardAlls.IndexOf(c.gameObject);
             if (index != -1)
             {
                 LevelManager.Instance.BoardCtrl.boardAlls[index] = c.Container.gameObject;
             }
+            //reset về trạng thái mặc định và đưa vào pool
+            c.Reinitialize();
+            c.gameObject.name = Enum.GetName(typeof(TypeItem), c.TypeItem);
+            BlockItemSpawner.Instance.Despawn(c.gameObject.transform);
         }
         Handheld.Vibrate();
     }

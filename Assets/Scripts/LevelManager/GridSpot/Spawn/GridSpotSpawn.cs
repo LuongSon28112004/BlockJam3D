@@ -116,7 +116,10 @@ public class GridSpotSpawn : MonoBehaviour
             yield break;
         }
 
-        GameObject obj = Instantiate(blockPrefab, transform.position, Quaternion.identity, GridParent.transform);
+        //Instantiate(blockPrefab, transform.position, Quaternion.identity, GridParent.transform);
+        string typeIndexSpawn = Enum.GetName(typeof(TypeItem), typeItem);
+        GameObject obj = BlockItemSpawner.Instance.spawnCellItem(typeIndexSpawn, transform.position, Quaternion.identity).gameObject;
+        obj.transform.SetParent(GridParent.transform);
         BoardCell boardCell = obj.GetComponent<BoardCell>();
         JustSpawn = boardCell;
 

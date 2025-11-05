@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using DG.Tweening;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -290,8 +291,8 @@ public class BoardCtrl : MonoBehaviour
                 if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight")
                 {
                     // Sửa lỗi tham chiếu: Sử dụng Enum.GetName(typeof(TypeItem), int.Parse(prefabName))
-                    string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
-                    prefab = AddressableManager.Instance.GetPrefab($"{name}");
+                    // string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
+                    //prefab = AddressableManager.Instance.GetPrefab($"{name}");
                 }
                 else
                 {
@@ -303,17 +304,27 @@ public class BoardCtrl : MonoBehaviour
                     }
                 }
 
-                if (prefab == null)
-                {
-                    Debug.LogWarning($"Không tìm thấy prefab: {prefabName}");
-                    continue;
-                }
+                // if (prefab == null)
+                // {
+                //     Debug.LogWarning($"Không tìm thấy prefab: {prefabName}");
+                //     continue;
+                // }
 
                 // Tính vị trí
                 float posX = startX + col * offsetX;
                 float posZ = startZ - row * offsetZ; // hàng 0 ở trên, hàng cuối ở dưới
 
-                GameObject obj = Instantiate(prefab, new Vector3(posX, 0f, posZ), Quaternion.identity, gridParent);
+                GameObject obj = null;
+                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight")
+                {
+                    string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
+                    obj = BlockItemSpawner.Instance.spawnCellItem(name, new Vector3(posX, 0f, posZ), Quaternion.identity).gameObject;
+                    obj.transform.SetParent(gridParent);
+                }
+                else
+                {
+                    obj = Instantiate(prefab, new Vector3(posX, 0f, posZ), Quaternion.identity, gridParent);
+                }
                 obj.name = prefabName;
                 if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight")
                 {

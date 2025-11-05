@@ -31,7 +31,7 @@ public class NeighBors
     public BoardCell boardCell;
     public bool isActivatedByNeighbor;
 
-    public NeighBors(BoardCell boardCell , DirectionNeighBor directionNeighBor , bool isActivatedByNeighbor)
+    public NeighBors(BoardCell boardCell, DirectionNeighBor directionNeighBor, bool isActivatedByNeighbor)
     {
         this.boardCell = boardCell;
         this.directionNeighBor = directionNeighBor;
@@ -128,7 +128,7 @@ public class BoardCell : MonoBehaviour
         }
         yield break;
     }
-    
+
     public void SetInActiveNeighBor()
     {
         for (int i = 0; i < neighbors.Count; i++)
@@ -155,5 +155,17 @@ public class BoardCell : MonoBehaviour
     public void PlayBarrelAnimationDefaut()
     {
         barrelCell.BarrelCelAnimation.PlayBarrelDefault();
+    }
+
+    public void Reinitialize()
+    {
+        hasClick = false;
+        isBoosterAdd = false;
+        isInCellPlay = false;
+        isActive = false;
+        IsInCellPlay = false;
+        neighbors.Clear();
+        pos = Vector3.zero;
+        container = null;
     }
 }
