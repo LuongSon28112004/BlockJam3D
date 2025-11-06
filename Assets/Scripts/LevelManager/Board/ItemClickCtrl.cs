@@ -95,13 +95,6 @@ public class ItemClickCtrl : MonoBehaviour
     public IEnumerator LeaderBoardClick(BoardCell boardCell)
     {
         //xoa quan khoi board
-        int index = LevelManager.Instance.BoardCtrl.boardAlls.IndexOf(boardCell.transform.gameObject);
-        LevelManager.Instance.BoardCtrl.boardAlls.Remove(boardCell.transform.gameObject);
-        if (!boardCell.HasSpawn)
-        {
-            Debug.Log("yesok" +index);
-            LevelManager.Instance.BoardCtrl.boardAlls.Insert(index, boardCell.Container.gameObject);
-        }
         //LevelManager.Instance.BoardCtrl.RemoveContainer(index);
         var (path, hasPath) = findingPath.BFSFind(boardCell.Container);
         if (!hasPath)
@@ -110,6 +103,12 @@ public class ItemClickCtrl : MonoBehaviour
             yield break;
         }
 
+        int index = LevelManager.Instance.BoardCtrl.boardAlls.IndexOf(boardCell.transform.gameObject);
+        LevelManager.Instance.BoardCtrl.boardAlls.Remove(boardCell.transform.gameObject);
+        if (!boardCell.HasSpawn && index != -1)
+        {
+            LevelManager.Instance.BoardCtrl.boardAlls.Insert(index, boardCell.Container.gameObject);
+        }
         if (!isStart)
         {
             isStart = true;
@@ -122,7 +121,7 @@ public class ItemClickCtrl : MonoBehaviour
         //reset container
         Container container = boardCell.Container;
         boardCell.Container.IsContaining = false;
-        boardCell.Container = null;
+        //boardCell.Container = null;
         AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
         LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);
 
@@ -151,11 +150,11 @@ public class ItemClickCtrl : MonoBehaviour
             if (check && LevelManager.Instance.cellPlayCtrl.HasMatch3(boardCell.TypeItem))
             {
                 CustomeEventSystem.Instance.CheckMatch_3(boardCell.TypeItem);
-                LevelManager.Instance.boosterCtrl.IsMatch3 = true;
+                LevelManager.Instance.boosterCtrl.IsMatch3s.Push(true);
             }
             else
             {
-                LevelManager.Instance.boosterCtrl.IsMatch3 = false;
+                LevelManager.Instance.boosterCtrl.IsMatch3s.Push(false);
                 LevelManager.Instance.cellPlayCtrl.checkLose();
             }
         }));
@@ -175,11 +174,11 @@ public class ItemClickCtrl : MonoBehaviour
         if (LevelManager.Instance.cellPlayCtrl.HasMatch3(boardCell.TypeItem))
         {
             CustomeEventSystem.Instance.CheckMatch_3(boardCell.TypeItem);
-            LevelManager.Instance.boosterCtrl.IsMatch3 = true;
+            LevelManager.Instance.boosterCtrl.IsMatch3s.Push(true);
         }
         else
         {
-            LevelManager.Instance.boosterCtrl.IsMatch3 = false;
+            LevelManager.Instance.boosterCtrl.IsMatch3s.Push(false);
             LevelManager.Instance.cellPlayCtrl.checkLose();
         }
     }

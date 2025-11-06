@@ -164,6 +164,7 @@ public class BoardCell : MonoBehaviour
         isInCellPlay = false;
         isActive = false;
         IsInCellPlay = false;
+        hasSpawn = false;
         neighbors.Clear();
         pos = Vector3.zero;
         container = null;

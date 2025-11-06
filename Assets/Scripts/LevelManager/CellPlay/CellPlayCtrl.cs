@@ -19,15 +19,15 @@ public class CellPlayCtrl : MonoBehaviour
     [SerializeField] private GameObject prefabCell;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Dictionary<TypeItem, List<BoardCell>> countCellType;
-
+    [SerializeField] private List<BoardCell> boardCellMatch_3;
     private bool isCheckWin = false;
     public string prefabFolder = "Prefabs";
-
     Queue<int> posCellPlays;
-
     public List<BoardCell> BoardCells { get => boardCells; set => boardCells = value; }
     public List<Container> CellPlays { get => cellPlays; set => cellPlays = value; }
     public Dictionary<TypeItem, List<BoardCell>> CountCellType { get => countCellType; set => countCellType = value; }
+    public List<BoardCell> BoardCellMatch_3 { get => boardCellMatch_3; set => boardCellMatch_3 = value; }
+
     public List<TypeItem> orderPlayInCellPlay;
 
     private void OnEnable()
@@ -58,6 +58,7 @@ public class CellPlayCtrl : MonoBehaviour
         cellPlays = new List<Container>();
         posCellPlays = new Queue<int>();
         orderPlayInCellPlay = new List<TypeItem>();
+        boardCellMatch_3 = new List<BoardCell>();
         InitCountCellType();
         GenerateCell();
     }
@@ -145,7 +146,7 @@ public class CellPlayCtrl : MonoBehaviour
         {
             orderPlayInCellPlay.Add(boardCell.TypeItem);
         }
-        StartCoroutine(ResetPosCellPlay(0.1f));
+        StartCoroutine(ResetPosCellPlay(0.3f));
     }
 
     private int FindInsertIndex(BoardCell newCell)
@@ -322,9 +323,11 @@ public class CellPlayCtrl : MonoBehaviour
                 LevelManager.Instance.BoardCtrl.boardAlls[index] = c.Container.gameObject;
             }
             //reset về trạng thái mặc định và đưa vào pool
-            c.Reinitialize();
-            c.gameObject.name = Enum.GetName(typeof(TypeItem), c.TypeItem);
-            BlockItemSpawner.Instance.Despawn(c.gameObject.transform);
+            // c.Reinitialize();
+            // c.gameObject.name = Enum.GetName(typeof(TypeItem), c.TypeItem);
+            // BlockItemSpawner.Instance.Despawn(c.gameObject.transform);
+            boardCellMatch_3.Add(c);
+            c.gameObject.SetActive(false);
         }
         Handheld.Vibrate();
     }

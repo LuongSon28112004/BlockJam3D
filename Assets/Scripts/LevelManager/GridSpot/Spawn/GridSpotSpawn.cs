@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using NUnit.Framework;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -25,7 +26,9 @@ public class GridSpotSpawn : MonoBehaviour
 {
     [SerializeField] TyoeSpot tyoeSpot;
     [Header("Config")]
-    [SerializeField] int maxPointSpawn = 1;
+    [SerializeField] int currentPointSpawn = 1;
+    [SerializeField] int maxPointSpawn;
+    //[SerializeField] 
     //[SerializeField] int maxContainer = 1;
     [SerializeField] List<Direction> directions;
     [SerializeField] GameObject GridParent;
@@ -35,28 +38,69 @@ public class GridSpotSpawn : MonoBehaviour
     public List<Direction> Directions { get => directions; set => directions = value; }
     public BaseGridSpotAnimation BaseGridSpotAnimation { get => baseGridSpotAnimation; set => baseGridSpotAnimation = value; }
     public Dictionary<Direction, Container> Containers { get => containers; set => containers = value; }
-    [SerializeField] public BoardCell JustSpawn;
-    public int MaxPointSpawn
+    [SerializeField] public Stack<BoardCell> JustSpawns;
+    public int CurrentPointSpawn
     {
-        get => maxPointSpawn;
+        get => currentPointSpawn;
         set
         {
-            maxPointSpawn = value;
+            currentPointSpawn = value;
             if (textCount != null)
             {
-                textCount.text = maxPointSpawn.ToString();
+                textCount.text = currentPointSpawn.ToString();
             }
         }
     }
 
+    public int MaxPointSpawn { get => maxPointSpawn; set => maxPointSpawn = value; }
+
     public void DestroyBoardCellJustSpawn()
     {
-        JustSpawn.transform.DOScale(Vector3.zero, 0.15f);
-        maxPointSpawn += 1;
-        LevelManager.Instance.BoardCtrl.initialTypeCounts[JustSpawn.TypeItem] -= 1;
-        LevelManager.Instance.BoardCtrl.UpdateBoardCell(JustSpawn);
-        Destroy(JustSpawn.transform.gameObject);
-        textCount.text = maxPointSpawn.ToString();
+        if (currentPointSpawn == 0)
+        {
+
+            BoardCell JustSpawn = JustSpawns.Peek();
+            if (JustSpawn == null) return;
+            if (JustSpawn.Pos == JustSpawn.Container.Pos)
+            {
+                JustSpawns.Pop();
+                JustSpawn.transform.DOScale(Vector3.zero, 0.15f);
+                if (currentPointSpawn < maxPointSpawn)
+                {
+                    currentPointSpawn += 1;
+                }
+                LevelManager.Instance.BoardCtrl.initialTypeCounts[JustSpawn.TypeItem] -= 1;
+                LevelManager.Instance.BoardCtrl.UpdateBoardCell(JustSpawn);
+                JustSpawn.Reinitialize();
+                BlockItemSpawner.Instance.Despawn(JustSpawn.transform);
+                textCount.text = currentPointSpawn.ToString();
+            }
+            else
+            {
+                if (currentPointSpawn < maxPointSpawn)
+                {
+                    currentPointSpawn += 1;
+                }
+                LevelManager.Instance.BoardCtrl.initialTypeCounts[JustSpawn.TypeItem] -= 1;
+                LevelManager.Instance.BoardCtrl.UpdateBoardCell(JustSpawn);
+                textCount.text = currentPointSpawn.ToString();
+            }
+        }
+        else
+        {
+            BoardCell JustSpawn = JustSpawns.Pop();
+            if (JustSpawn == null) return;
+            JustSpawn.transform.DOScale(Vector3.zero, 0.15f);
+            if (currentPointSpawn < maxPointSpawn)
+            {
+                currentPointSpawn += 1;
+            }
+            LevelManager.Instance.BoardCtrl.initialTypeCounts[JustSpawn.TypeItem] -= 1;
+            LevelManager.Instance.BoardCtrl.UpdateBoardCell(JustSpawn);
+            JustSpawn.Reinitialize();
+            BlockItemSpawner.Instance.Despawn(JustSpawn.transform);
+            textCount.text = currentPointSpawn.ToString();
+        }
     }
 
 
@@ -77,6 +121,7 @@ public class GridSpotSpawn : MonoBehaviour
             Debug.LogError("GridParent not found in the scene!");
         }
         containers = new Dictionary<Direction, Container>();
+        JustSpawns = new Stack<BoardCell>();
     }
 
     public bool CheckDirection(Direction direction)
@@ -98,6 +143,11 @@ public class GridSpotSpawn : MonoBehaviour
         containers.Add(direction, container);
     }
 
+    public void ClearContainer()
+    {
+        containers.Clear();
+    }
+
     public bool CheckContainer(Container container)
     {
         return containers.ContainsValue(container);
@@ -105,9 +155,9 @@ public class GridSpotSpawn : MonoBehaviour
 
     public IEnumerator SpawnBlock(GameObject blockPrefab, Container containerr, TypeItem typeItem, Action<BoardCell> onSpawned)
     {
-        if (MaxPointSpawn <= 0)
+        if (currentPointSpawn <= 0)
         {
-            Debug.LogWarning("MaxPointSpawn reached zero, cannot spawn more blocks.");
+            Debug.LogWarning("currentPointSpawn reached zero, cannot spawn more blocks.");
             yield break;
         }
         if (blockPrefab == null)
@@ -121,7 +171,7 @@ public class GridSpotSpawn : MonoBehaviour
         GameObject obj = BlockItemSpawner.Instance.spawnCellItem(typeIndexSpawn, transform.position, Quaternion.identity).gameObject;
         obj.transform.SetParent(GridParent.transform);
         BoardCell boardCell = obj.GetComponent<BoardCell>();
-        JustSpawn = boardCell;
+        JustSpawns.Push(boardCell);
 
         if (boardCell == null)
         {
@@ -147,10 +197,10 @@ public class GridSpotSpawn : MonoBehaviour
             yield break;
         }
         container.IsContaining = true;
-        maxPointSpawn--;
+        currentPointSpawn--;
         if (textCount != null)
         {
-            textCount.text = maxPointSpawn.ToString();
+            textCount.text = currentPointSpawn.ToString();
         }
         boardCell.Pos = container.Pos;
         int value = (int)typeItem + 1;
@@ -195,9 +245,9 @@ public class GridSpotSpawn : MonoBehaviour
 
     public IEnumerator SpawnBlockMagnet(GameObject blockPrefab, Transform Pos, TypeItem typeItem, Action<BoardCell> onSpawned)
     {
-        if (MaxPointSpawn <= 0)
+        if (currentPointSpawn <= 0)
         {
-            Debug.LogWarning("MaxPointSpawn reached zero, cannot spawn more blocks.");
+            Debug.LogWarning("currentPointSpawn reached zero, cannot spawn more blocks.");
             yield break;
         }
         if (blockPrefab == null)
@@ -230,10 +280,10 @@ public class GridSpotSpawn : MonoBehaviour
         boardCell.TypeItem = typeItem;
         boardCell.Barrel.SetActive(false);
         boardCell.BoardCellAnimation.SetActive();
-        maxPointSpawn--;
+        currentPointSpawn--;
         if (textCount != null)
         {
-            textCount.text = maxPointSpawn.ToString();
+            textCount.text = currentPointSpawn.ToString();
         }
         onSpawned.Invoke(boardCell);
         yield break;

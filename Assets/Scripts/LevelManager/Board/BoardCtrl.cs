@@ -83,7 +83,6 @@ public class BoardCtrl : MonoBehaviour
                     int col = Mathf.FloorToInt(index.y);
                     if (row < 0 || col < 0)
                     {
-                        // container not found — append at the end
                         boardAlls.Add(boardCell.gameObject);
                     }
                     else
@@ -92,12 +91,11 @@ public class BoardCtrl : MonoBehaviour
                         linearIndex = Mathf.Clamp(linearIndex, 0, boardAlls.Count);
                         boardAlls.Insert(linearIndex, boardCell.gameObject);
                     }
-                    if (gridSpotSpawns[i].MaxPointSpawn > 0)
+                    if (gridSpotSpawns[i].CurrentPointSpawn > 0)
                     {
                         boardCell.HasSpawn = true;
                     }
                 }));
-                //int index = boardCells.IndexOf(boardCell);
                 break;
             }
         }
@@ -290,13 +288,12 @@ public class BoardCtrl : MonoBehaviour
                 GameObject prefab = null;
                 if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight")
                 {
-                    // Sửa lỗi tham chiếu: Sử dụng Enum.GetName(typeof(TypeItem), int.Parse(prefabName))
-                    // string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
-                    //prefab = AddressableManager.Instance.GetPrefab($"{name}");
+                    //Sửa lỗi tham chiếu: Sử dụng Enum.GetName(typeof(TypeItem), int.Parse(prefabName))
+                    string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
+                    prefab = AddressableManager.Instance.GetPrefab($"{name}");
                 }
                 else
                 {
-
                     prefab = AddressableManager.Instance.GetPrefab($"{prefabName}");
                     if (prefabName == "Wall")
                     {
@@ -315,10 +312,16 @@ public class BoardCtrl : MonoBehaviour
                 float posZ = startZ - row * offsetZ; // hàng 0 ở trên, hàng cuối ở dưới
 
                 GameObject obj = null;
-                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight")
+                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight" && prefabName.Length < 2)
                 {
                     string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
                     obj = BlockItemSpawner.Instance.spawnCellItem(name, new Vector3(posX, 0f, posZ), Quaternion.identity).gameObject;
+                    // if (prefabName.Length > 1)
+                    // {
+                    //     BoardCell boardCell = obj.GetComponent<BoardCell>();
+                    //     boardCell.Barrel.gameObject.SetActive(true);
+                    //     boardCell.BarrelCell.BarrelCelAnimation.PlayBarrelDefault();
+                    // }
                     obj.transform.SetParent(gridParent);
                 }
                 else
@@ -361,12 +364,13 @@ public class BoardCtrl : MonoBehaviour
                         if (gspData != null)
                         {
                             gridSpotSpawns.Add(gridSpotSpawn);
+                            gridSpotSpawn.CurrentPointSpawn = gspData.spawnCount;
                             gridSpotSpawn.MaxPointSpawn = gspData.spawnCount;
                         }
                         else
                         {
                             Debug.LogWarning($"Không tìm thấy GSPDownData tại ({row}, {col}) trong LevelData!");
-                            gridSpotSpawn.MaxPointSpawn = 1; // hoặc gán giá trị mặc định nếu cần
+                            gridSpotSpawn.CurrentPointSpawn = 1; // hoặc gán giá trị mặc định nếu cần
                         }
                     }
                 }
@@ -465,6 +469,8 @@ public class BoardCtrl : MonoBehaviour
 
                     // nếu có container đính kèm (trong SpawnLeaderBoard bạn gán Container riêng)
                     boardCell.Container = gridContainerSpot[row, col];
+                    // mặc định không cho nó spawn
+                    boardCell.HasSpawn = false;
                 }
                 else
                 {
@@ -476,6 +482,8 @@ public class BoardCtrl : MonoBehaviour
 
         // Sau khi rebuild grid[,] và boardCells, gọi AddNeighbor để cập nhật neighbors
         AddNeighbor(grid, IsWall);
+        AlignContainer(gridContainerSpot);
+
     }
 
     public void AddNeighbor(BoardCell[,] grid, bool[,] IsWall)
@@ -567,7 +575,7 @@ public class BoardCtrl : MonoBehaviour
                 {
                     current.HasClick = false;
                     // them 11/4/2025
-                    current.IsActive = true;
+                    current.IsActive = false;
                     current.BoardCellAnimation.SetInActive();
                 }
             }
@@ -594,6 +602,7 @@ public class BoardCtrl : MonoBehaviour
                     }
                     if (obj != null && obj.TryGetComponent<GridSpotSpawn>(out GridSpotSpawn gridSpotSpawn))
                     {
+                        gridSpotSpawn.ClearContainer();
                         bool isBottom = gridSpotSpawn.CheckDirection(Direction.Down);
                         if (isBottom && bottom < levelData.height)
                         {
@@ -614,6 +623,7 @@ public class BoardCtrl : MonoBehaviour
                     }
                     if (obj != null && obj.TryGetComponent<GridSpotSpawn>(out GridSpotSpawn gridSpotSpawn1))
                     {
+                        gridSpotSpawn1.ClearContainer();
                         bool isTop = gridSpotSpawn1.CheckDirection(Direction.Up);
                         if (isTop && top >= 0)
                         {
@@ -633,6 +643,7 @@ public class BoardCtrl : MonoBehaviour
                     }
                     if (obj != null && obj.TryGetComponent<GridSpotSpawn>(out GridSpotSpawn gridSpotSpawn2))
                     {
+                        gridSpotSpawn2.ClearContainer();
                         bool isRight = gridSpotSpawn2.CheckDirection(Direction.Right);
                         if (isRight && right < levelData.width)
                         {
@@ -652,6 +663,7 @@ public class BoardCtrl : MonoBehaviour
                     }
                     if (obj != null && obj.TryGetComponent<GridSpotSpawn>(out GridSpotSpawn gridSpotSpawn3))
                     {
+                        gridSpotSpawn3.ClearContainer();
                         bool isLeft = gridSpotSpawn3.CheckDirection(Direction.Left);
                         if (isLeft && left >= 0)
                         {
@@ -668,10 +680,28 @@ public class BoardCtrl : MonoBehaviour
         }
     }
 
-
-
     public void UpdateBoardCell(BoardCell boardCell)
     {
         boardCells.Remove(boardCell);
+    }
+
+    public void AddBlockInLeaderBoard(Container container, BoardCell boardCell)
+    {
+        for (int i = 0; i < boardAlls.Count; i++)
+        {
+            if (boardAlls[i].TryGetComponent<Container>(out var c) && c == container)
+            {
+                // Insert the new boardCell's gameObject at this position and keep boardCells in sync
+                boardAlls[i] = boardCell.gameObject;
+                // if (!boardCells.Contains(boardCell))
+                //     boardCells.Add(boardCell);
+                return;
+            }
+            if (boardAlls[i].TryGetComponent<BoardCell>(out BoardCell cell) && cell.Container == container)
+            {
+                boardAlls[i] = boardCell.gameObject;
+                return;
+            }
+        }
     }
 }

@@ -1,13 +1,18 @@
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BlockItemSpawner : BaseobjectPool
 {
     private static BlockItemSpawner instance;
+    [SerializeField] private List<BoardCell> boardCellPools;
 
     public static BlockItemSpawner Instance
     {
         get => instance;
     }
+    public List<BoardCell> BoardCellPools { get => boardCellPools; set => boardCellPools = value; }
 
     // BlueBase,
     // BrownBase,
@@ -31,6 +36,8 @@ public class BlockItemSpawner : BaseobjectPool
         if (instance == null)
             instance = this;
         DontDestroyOnLoad(gameObject);
+        boardCellPools = new List<BoardCell>();
+
     }
 
     public Transform spawnCellItem(string prefabName, Vector3 spawnPos, Quaternion rotation)
@@ -38,5 +45,14 @@ public class BlockItemSpawner : BaseobjectPool
         Transform prefab = this.Spawn(prefabName, spawnPos, rotation);
         prefab.gameObject.SetActive(true);
         return prefab;
+    }
+
+    public override void Despawn(Transform obj)
+    {
+        base.Despawn(obj);
+        if (obj.TryGetComponent<BoardCell>(out BoardCell boardCell))
+        {
+            boardCellPools.Add(boardCell);
+        }
     }
 }

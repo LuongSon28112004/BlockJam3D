@@ -17,15 +17,10 @@ public class LevelManager : Singleton<LevelManager>
     [Header("Action")]
     public Func<IEnumerator> NextRound;
     public bool isNextRound = false;
-    //public Action NextLevel;
-    
+
     public void Init()
     {
-         StartCoroutine(LoadLevel()); // update last
-        // if (Instance != null)
-        // {
-        //     Debug.Log("ok");
-        // }
+        StartCoroutine(LoadLevel());
         NextRound += NextRoundLevel;
     }
 
@@ -35,14 +30,8 @@ public class LevelManager : Singleton<LevelManager>
         string levelGroupKey = "Level_" + GameManager.Instance.Level;
         List<LevelData> levelBoards = AddressableManager.Instance.GetLevelGroup(levelGroupKey);
         levelDatas = levelBoards;
-        yield return BoardCtrl.LoadLevel(levelDatas[Round],false);
+        yield return BoardCtrl.LoadLevel(levelDatas[Round], false);
     }
-
-    // public void NextLevel()
-    // {
-
-    // }
-
 
     private IEnumerator NextRoundLevel()
     {
