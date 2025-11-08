@@ -95,7 +95,6 @@ public class BoardCell : MonoBehaviour
     public bool IsInCellPlay { get => isInCellPlay; set => isInCellPlay = value; }
     public bool IsActive { get => isActive; set => isActive = value; }
     public bool HasSpawn { get => hasSpawn; set => hasSpawn = value; }
-
     public void AddNeighbor(BoardCell cell, DirectionNeighBor directionNeighBor)
     {
         if (cell != null && !neighbors.Contains(new NeighBors(cell, directionNeighBor, false)))
@@ -115,7 +114,6 @@ public class BoardCell : MonoBehaviour
             {
                 StartCoroutine(neighbors[i].boardCell.PlayBarrelAnimation());
                 AudioManager.Instance.PlayOneShot("BLJ_Game_Obstacles_Barrel_Break_01", 1f);
-
             }
             if (neighbors[i].boardCell.HasClick == true) continue;
             neighbors[i].boardCell.HasClick = true;

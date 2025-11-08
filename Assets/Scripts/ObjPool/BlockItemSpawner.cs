@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Unity.VisualScripting;
@@ -35,7 +36,6 @@ public class BlockItemSpawner : BaseobjectPool
         base.Awake();
         if (instance == null)
             instance = this;
-        DontDestroyOnLoad(gameObject);
         boardCellPools = new List<BoardCell>();
 
     }
@@ -52,7 +52,20 @@ public class BlockItemSpawner : BaseobjectPool
         base.Despawn(obj);
         if (obj.TryGetComponent<BoardCell>(out BoardCell boardCell))
         {
+            // hiện tại vẫn chưa có cái nào dùng đến boardCellPools tôi lưu lại để sau này cần nâng cấp hệ thống thì dùng
             boardCellPools.Add(boardCell);
         }
+    }
+
+    public void AddBlockInPool()
+    {
+        foreach (var cell in LevelManager.Instance.cellPlayCtrl.BoardCellMatch_3)
+        {
+            //reset về trạng thái mặc định và đưa vào pool
+            cell.Reinitialize();
+            cell.gameObject.name = Enum.GetName(typeof(TypeItem), cell.TypeItem);
+            BlockItemSpawner.Instance.Despawn(cell.gameObject.transform);
+        }
+        LevelManager.Instance.cellPlayCtrl.BoardCellMatch_3.Clear();
     }
 }

@@ -37,8 +37,10 @@ public class LevelManager : Singleton<LevelManager>
     {
         if (isNextRound) yield break;
         isNextRound = true;
+        // đưa các gameobject vào pool
         yield return new WaitForSeconds(1f);
         AudioManager.Instance.PlayOneShot("BLJ_League_LeaderBoard_Enter", 1f);
+        BlockItemSpawner.Instance.AddBlockInPool();
         Round += 1;
         if (Round > 2) yield break;
         CustomeEventSystem.Instance.ChangeRound(Round);

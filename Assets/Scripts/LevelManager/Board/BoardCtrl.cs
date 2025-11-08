@@ -225,10 +225,8 @@ public class BoardCtrl : MonoBehaviour
 
 
         // Xóa grid cũ
-        for (int i = gridParent.childCount - 1; i >= 0; i--)
-        {
-            DestroyImmediate(gridParent.GetChild(i).gameObject);
-        }
+        DeleteLeaderBoardOld();
+
 
         boardCells.Clear();
         // Khởi tạo lại danh sách container trong findPath
@@ -260,6 +258,35 @@ public class BoardCtrl : MonoBehaviour
 
 
         Debug.Log($"Level '{levelData.name}' loaded successfully under {gridParent.name}!");
+    }
+
+    public void DeleteLeaderBoardOld()
+    {
+        // Tạo danh sách tên hợp lệ (dễ đọc, dễ mở rộng sau này) // sau muốn tì update thêm các Block mới
+        HashSet<string> validNames = new HashSet<string>
+        {
+            "1", "1B",
+            "2", "2B",
+            "3", "3B",
+            "4", "4B",
+            "5", "5B",
+            "6", "6B",
+            "7", "7B"
+        };
+
+        for (int i = gridParent.childCount - 1; i >= 0; i--)
+        {
+            GameObject obj = gridParent.GetChild(i).gameObject;
+
+            if (!validNames.Contains(obj.name))
+            {
+                DestroyImmediate(gridParent.GetChild(i).gameObject);
+            }
+            else
+            {
+                obj.gameObject.SetActive(false);
+            }
+        }
     }
 
     public void SpawnLeaderBoard(BoardCell[,] grid, bool[,] IsWall, Container[,] gridContainerSpot)

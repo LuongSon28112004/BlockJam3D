@@ -50,10 +50,10 @@ public class CellPlayCtrl : MonoBehaviour
         InitCountCellType();
     }
 
+
+
     private void Start()
     {
-
-
         boardCells = new List<BoardCell>();
         cellPlays = new List<Container>();
         posCellPlays = new Queue<int>();
@@ -195,14 +195,16 @@ public class CellPlayCtrl : MonoBehaviour
         return cellPlays[posCellPlays.Dequeue()].Pos;
     }
 
-    public void checkLose()
+    public IEnumerator checkLose()
     {
         if (boardCells.Count == MAX_ROW)
         {
+            yield return new WaitForSeconds(0.2f);
             for (int i = 0; i < boardCells.Count; i++)
             {
-                if (!boardCells[i].IsInCellPlay) return;
+                if (!boardCells[i].IsInCellPlay) yield break;
             }
+            BlockItemSpawner.Instance.AddBlockInPool();
             GameManager.Instance.LoseGame();
         }
     }
@@ -322,10 +324,6 @@ public class CellPlayCtrl : MonoBehaviour
             {
                 LevelManager.Instance.BoardCtrl.boardAlls[index] = c.Container.gameObject;
             }
-            //reset về trạng thái mặc định và đưa vào pool
-            // c.Reinitialize();
-            // c.gameObject.name = Enum.GetName(typeof(TypeItem), c.TypeItem);
-            // BlockItemSpawner.Instance.Despawn(c.gameObject.transform);
             boardCellMatch_3.Add(c);
             c.gameObject.SetActive(false);
         }
