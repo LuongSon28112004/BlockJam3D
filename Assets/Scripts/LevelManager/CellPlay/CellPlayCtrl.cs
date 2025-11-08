@@ -19,15 +19,15 @@ public class CellPlayCtrl : MonoBehaviour
     [SerializeField] private GameObject prefabCell;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private Dictionary<TypeItem, List<BoardCell>> countCellType;
-
+    [SerializeField] private List<BoardCell> boardCellMatch_3;
     private bool isCheckWin = false;
     public string prefabFolder = "Prefabs";
-
     Queue<int> posCellPlays;
-
     public List<BoardCell> BoardCells { get => boardCells; set => boardCells = value; }
     public List<Container> CellPlays { get => cellPlays; set => cellPlays = value; }
     public Dictionary<TypeItem, List<BoardCell>> CountCellType { get => countCellType; set => countCellType = value; }
+    public List<BoardCell> BoardCellMatch_3 { get => boardCellMatch_3; set => boardCellMatch_3 = value; }
+
     public List<TypeItem> orderPlayInCellPlay;
 
     private void OnEnable()
@@ -50,14 +50,15 @@ public class CellPlayCtrl : MonoBehaviour
         InitCountCellType();
     }
 
+
+
     private void Start()
     {
-
-
         boardCells = new List<BoardCell>();
         cellPlays = new List<Container>();
         posCellPlays = new Queue<int>();
         orderPlayInCellPlay = new List<TypeItem>();
+        boardCellMatch_3 = new List<BoardCell>();
         InitCountCellType();
         GenerateCell();
     }
@@ -145,7 +146,7 @@ public class CellPlayCtrl : MonoBehaviour
         {
             orderPlayInCellPlay.Add(boardCell.TypeItem);
         }
-        StartCoroutine(ResetPosCellPlay(0.1f));
+        StartCoroutine(ResetPosCellPlay(0.3f));
     }
 
     private int FindInsertIndex(BoardCell newCell)
@@ -194,14 +195,16 @@ public class CellPlayCtrl : MonoBehaviour
         return cellPlays[posCellPlays.Dequeue()].Pos;
     }
 
-    public void checkLose()
+    public IEnumerator checkLose()
     {
         if (boardCells.Count == MAX_ROW)
         {
+            yield return new WaitForSeconds(0.2f);
             for (int i = 0; i < boardCells.Count; i++)
             {
-                if (!boardCells[i].IsInCellPlay) return;
+                if (!boardCells[i].IsInCellPlay) yield break;
             }
+            BlockItemSpawner.Instance.AddBlockInPool();
             GameManager.Instance.LoseGame();
         }
     }
@@ -315,13 +318,14 @@ public class CellPlayCtrl : MonoBehaviour
         foreach (var c in cells)
         {
             if (c == null) continue;
-            Destroy(c.gameObject);
             // trước khi xóa phải bỏ lại container của nó trong BoardCellAlls
             int index = LevelManager.Instance.BoardCtrl.boardAlls.IndexOf(c.gameObject);
             if (index != -1)
             {
                 LevelManager.Instance.BoardCtrl.boardAlls[index] = c.Container.gameObject;
             }
+            boardCellMatch_3.Add(c);
+            c.gameObject.SetActive(false);
         }
         Handheld.Vibrate();
     }

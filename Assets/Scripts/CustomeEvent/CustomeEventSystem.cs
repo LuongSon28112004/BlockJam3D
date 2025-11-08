@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using master;
 using UnityEngine;
 
@@ -36,7 +37,7 @@ public class CustomeEventSystem : SingletonDDOL<CustomeEventSystem>
         ShowLoadingAction?.Invoke();
     }
 
-
+    //Check Match_3
     public Action<TypeItem> CheckMatch_3_Action;
 
     public void CheckMatch_3(TypeItem typeItem)
@@ -44,10 +45,19 @@ public class CustomeEventSystem : SingletonDDOL<CustomeEventSystem>
         CheckMatch_3_Action?.Invoke(typeItem);
     }
 
-    public Action<List<int>>ActiveBoosterAction;
+
+    //active or inactive các booster UI
+    public Action<List<int>> ActiveBoosterAction;
     public void ActiveBooster(List<int> lists)
     {
         ActiveBoosterAction?.Invoke(lists);
     }
+
+    // Add In Pool
+    // public Action AddPoolAction;
+    // public void AddPool()
+    // {
+    //     AddPoolAction?.Invoke();
+    // }
 
 }

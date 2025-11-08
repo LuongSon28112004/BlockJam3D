@@ -31,7 +31,7 @@ public class NeighBors
     public BoardCell boardCell;
     public bool isActivatedByNeighbor;
 
-    public NeighBors(BoardCell boardCell , DirectionNeighBor directionNeighBor , bool isActivatedByNeighbor)
+    public NeighBors(BoardCell boardCell, DirectionNeighBor directionNeighBor, bool isActivatedByNeighbor)
     {
         this.boardCell = boardCell;
         this.directionNeighBor = directionNeighBor;
@@ -95,7 +95,6 @@ public class BoardCell : MonoBehaviour
     public bool IsInCellPlay { get => isInCellPlay; set => isInCellPlay = value; }
     public bool IsActive { get => isActive; set => isActive = value; }
     public bool HasSpawn { get => hasSpawn; set => hasSpawn = value; }
-
     public void AddNeighbor(BoardCell cell, DirectionNeighBor directionNeighBor)
     {
         if (cell != null && !neighbors.Contains(new NeighBors(cell, directionNeighBor, false)))
@@ -115,7 +114,6 @@ public class BoardCell : MonoBehaviour
             {
                 StartCoroutine(neighbors[i].boardCell.PlayBarrelAnimation());
                 AudioManager.Instance.PlayOneShot("BLJ_Game_Obstacles_Barrel_Break_01", 1f);
-
             }
             if (neighbors[i].boardCell.HasClick == true) continue;
             neighbors[i].boardCell.HasClick = true;
@@ -128,7 +126,7 @@ public class BoardCell : MonoBehaviour
         }
         yield break;
     }
-    
+
     public void SetInActiveNeighBor()
     {
         for (int i = 0; i < neighbors.Count; i++)
@@ -155,5 +153,18 @@ public class BoardCell : MonoBehaviour
     public void PlayBarrelAnimationDefaut()
     {
         barrelCell.BarrelCelAnimation.PlayBarrelDefault();
+    }
+
+    public void Reinitialize()
+    {
+        hasClick = false;
+        isBoosterAdd = false;
+        isInCellPlay = false;
+        isActive = false;
+        IsInCellPlay = false;
+        hasSpawn = false;
+        neighbors.Clear();
+        pos = Vector3.zero;
+        container = null;
     }
 }

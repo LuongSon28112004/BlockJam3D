@@ -227,7 +227,6 @@ public class ScreenGamePlay : ScreenUI
             FlashButtonRed(AddButton);
             return;
         }
-
         StartCoroutine(LevelManager.Instance.boosterCtrl.Add());
         UserData.coin -= boosterDatas[1].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);

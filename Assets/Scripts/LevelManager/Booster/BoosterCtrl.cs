@@ -4,26 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 public class BoosterCtrl : MonoBehaviour
 {
     [Header("Booster Component")]
     [SerializeField] private Transform parentBoard;
     [Header("Undo Booster")]
-    [SerializeField] private bool isMatch3 = false;
+    [SerializeField] private Stack<bool> isMatch3s;
     [SerializeField] private Stack<Queue<KeyValuePair<BoardCell, Container>>> undoQueue;
     [SerializeField] private Stack<(BoardCell cell, Container container, List<Vector3> path)> lastMove;
-    // [SerializeField] private Stack<Container> containerLastMove;
     [Header("Add Booster")]
     [SerializeField] private BoosterAddPos boosterAddPos;
     [SerializeField] private BoosterMagnetPos boosterMagnetPos;
 
-    public bool IsMatch3 { get => isMatch3; set => isMatch3 = value; }
     public Stack<Queue<KeyValuePair<BoardCell, Container>>> UndoQueue { get => undoQueue; set => undoQueue = value; }
     public Stack<(BoardCell cell, Container container, List<Vector3> path)> LastMove { get => lastMove; set => lastMove = value; }
     public BoosterAddPos BoosterAddPos { get => boosterAddPos; set => boosterAddPos = value; }
-
-    // public Stack<Container> ContainerLastMove { get => containerLastMove; set => containerLastMove = value; }
+    public Stack<bool> IsMatch3s { get => isMatch3s; set => isMatch3s = value; }
 
     [Header("Busy")]
     public bool IsBusy = false;
@@ -32,13 +28,21 @@ public class BoosterCtrl : MonoBehaviour
     {
         lastMove = new Stack<(BoardCell cell, Container container, List<Vector3> path)>();
         undoQueue = new Stack<Queue<KeyValuePair<BoardCell, Container>>>();
-        //containerLastMove = new Stack<Container>();
         countDict = new Dictionary<TypeItem, int>();
+        isMatch3s = new Stack<bool>();
     }
 
     #region Undo
+
+    public void ResetStackUndo()
+    {
+        lastMove.Clear();
+        undoQueue.Clear();
+        isMatch3s.Clear();
+    }
     public IEnumerator Undo()
     {
+        bool isMatch3 = isMatch3s.Pop();
         if (!isMatch3)
         {
             IsBusy = true;
@@ -49,6 +53,10 @@ public class BoosterCtrl : MonoBehaviour
             IsBusy = true;
             yield return StartCoroutine(UndoMatch3Move());
         }
+        int isUndo = LevelManager.Instance.boosterCtrl.IsMatch3s.Count == 0 ? -1 : 1;
+        CustomeEventSystem.Instance.ActiveBooster(new List<int> { isUndo, (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0 ? -1 : 1), 1, 1 });
+        LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+        yield return new WaitForSeconds(1f);
         IsBusy = false;
     }
 
@@ -64,8 +72,23 @@ public class BoosterCtrl : MonoBehaviour
 
         // if (cell == null || container == null)
         //     yield break;
+        if (!cell.IsBoosterAdd)
+        {
+            StartCoroutine(MoveToLeaderBoard(cell, container, path));
+        }
+        else
+        {
+            StartCoroutine(MoveToCellAdd(cell, container, path));
+        }
 
-        // 1 Gỡ cell khỏi danh sách và cập nhật trạng thái
+
+    }
+
+    private IEnumerator MoveToCellAdd(BoardCell cell, Container container, List<Vector3> path)
+    {
+        boosterAddPos.AddBoardCell(cell, container);
+        cell.HasClick = true;
+        cell.IsBoosterAdd = true;
         int index = LevelManager.Instance.cellPlayCtrl.BoardCells.IndexOf(cell);
         if (index != -1)
         {
@@ -76,7 +99,28 @@ public class BoosterCtrl : MonoBehaviour
             LevelManager.Instance.cellPlayCtrl.BoardCells.RemoveAt(index);
             if (LevelManager.Instance.cellPlayCtrl.CountCellType.ContainsKey(cell.TypeItem))
                 LevelManager.Instance.cellPlayCtrl.CountCellType[cell.TypeItem].Remove(cell);
-            // xóa block justSpawn nếu có
+            yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.RearrangeCellsAfterRemove());
+            AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
+        }
+
+        yield break;
+    }
+
+    private IEnumerator MoveToLeaderBoard(BoardCell cell, Container container, List<Vector3> path)
+    {
+        // 1 Gỡ cell khỏi danh sách và cập nhật trạng thái
+        LevelManager.Instance.BoardCtrl.AddBlockInLeaderBoard(container, cell);
+        int index = LevelManager.Instance.cellPlayCtrl.BoardCells.IndexOf(cell);
+        if (index != -1)
+        {
+            // đặt IsContaining trước khi remove nếu CellPlays vẫn song song với BoardCells
+            if (index < LevelManager.Instance.cellPlayCtrl.CellPlays.Count)
+                LevelManager.Instance.cellPlayCtrl.CellPlays[index].IsContaining = false;
+
+            LevelManager.Instance.cellPlayCtrl.BoardCells.RemoveAt(index);
+            if (LevelManager.Instance.cellPlayCtrl.CountCellType.ContainsKey(cell.TypeItem))
+                LevelManager.Instance.cellPlayCtrl.CountCellType[cell.TypeItem].Remove(cell);
+            //xóa block justSpawn nếu có
             List<GridSpotSpawn> gridSpotSpawns = LevelManager.Instance.BoardCtrl.gridSpotSpawns;
             for (int i = 0; i < gridSpotSpawns.Count; i++)
             {
@@ -99,9 +143,7 @@ public class BoosterCtrl : MonoBehaviour
 
             // inactive lại các hàng xóm
             cell.SetInActiveNeighBor();
-            // đã pop nên không cần gán lại lastMove
         }
-
     }
 
     // Undo khi CÓ Match-3
@@ -121,8 +163,8 @@ public class BoosterCtrl : MonoBehaviour
         AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
 
         // 3 Reset lại trạng thái
-        isMatch3 = false;
-        undoQueue.Clear();
+        // isMatch3 = false;
+        //undoQueue.Clear();
     }
 
     #endregion
@@ -186,10 +228,16 @@ public class BoosterCtrl : MonoBehaviour
     {
         //if (sourceCell == null || container == null) yield break;
 
-        string prefabName = Enum.GetName(typeof(TypeItem), sourceCell.TypeItem);
-        GameObject prefab = AddressableManager.Instance.GetPrefab(prefabName);
-        GameObject block = Instantiate(prefab, Vector3.zero, Quaternion.identity, parentBoard);
-
+        // string prefabName = Enum.GetName(typeof(TypeItem), sourceCell.TypeItem);
+        // GameObject prefab = AddressableManager.Instance.GetPrefab(prefabName);
+        int index = LevelManager.Instance.cellPlayCtrl.BoardCellMatch_3.IndexOf(sourceCell);
+        if (index == -1)
+        {
+            Debug.Log("not found gameobject");
+            yield break;
+        }
+        GameObject block = LevelManager.Instance.cellPlayCtrl.BoardCellMatch_3[index].gameObject;
+        block.SetActive(true);
         BoardCell newCell = block.GetComponent<BoardCell>();
         //config data
         newCell.TypeItem = sourceCell.TypeItem;
@@ -201,6 +249,10 @@ public class BoosterCtrl : MonoBehaviour
         newCell.BoardCellMovement = block.GetComponentInChildren<BoardCellMovement>();
         newCell.BoardCellAnimation.SetActive();
         newCell.Barrel.SetActive(false);
+
+        //lưu lại data của block vừa undo vào BoardCtrl để việc check win hoặc lose
+        // trường hợp normal không cần lưu vì code của tôi chưa xóa các class BoardCell đấy
+        LevelManager.Instance.BoardCtrl.BoardCells.Add(sourceCell);
 
         int posCell = LevelManager.Instance.cellPlayCtrl.CellPlays.IndexOf(container);
         yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.ShiftCellsRight(posCell));
@@ -228,60 +280,104 @@ public class BoosterCtrl : MonoBehaviour
         var (cellData, container, path) = lastMove.Pop();
         //if (cellData == null || container == null) yield break;
 
-        string prefabName = Enum.GetName(typeof(TypeItem), cellData.TypeItem);
-        GameObject prefab = AddressableManager.Instance.GetPrefab(prefabName);
-        GameObject block = Instantiate(prefab, Vector3.zero, Quaternion.identity, parentBoard);
-
-        BoardCell recreatedCell = block.GetComponent<BoardCell>();
-        //config data
-        recreatedCell.TypeItem = cellData.TypeItem;
-        recreatedCell.HasClick = false;
-        recreatedCell.Neighbors = cellData.Neighbors;
-        recreatedCell.Container = container;
-        recreatedCell.Pos = container.Pos;
-        recreatedCell.IsInCellPlay = false;
-        recreatedCell.BoardCellAnimation = block.GetComponentInChildren<BoardCellAnimation>();
-        recreatedCell.BoardCellMovement = block.GetComponentInChildren<BoardCellMovement>();
-        recreatedCell.BoardCellAnimation.SetActive();
-        recreatedCell.Barrel.SetActive(false);
-        recreatedCell.transform.localPosition = posUndoLast;
-
-        int index = LevelManager.Instance.cellPlayCtrl.CellPlays.IndexOf(container);
-        if (index != -1)
+        // string prefabName = Enum.GetName(typeof(TypeItem), cellData.TypeItem);
+        // GameObject prefab = AddressableManager.Instance.GetPrefab(prefabName);
+        // GameObject block = Instantiate(prefab, Vector3.zero, Quaternion.identity, parentBoard);
+        if (!cellData.IsBoosterAdd)
         {
-            // đảm bảo danh sách đủ dài
-            if (index < LevelManager.Instance.cellPlayCtrl.BoardCells.Count)
-                LevelManager.Instance.cellPlayCtrl.BoardCells[index] = recreatedCell;
-            else
-                LevelManager.Instance.cellPlayCtrl.BoardCells.Insert(index, recreatedCell);
-
-            if (index < LevelManager.Instance.cellPlayCtrl.CellPlays.Count)
-                LevelManager.Instance.cellPlayCtrl.CellPlays[index].IsContaining = true;
-
-            if (!LevelManager.Instance.cellPlayCtrl.CountCellType.ContainsKey(recreatedCell.TypeItem))
-                LevelManager.Instance.cellPlayCtrl.CountCellType[recreatedCell.TypeItem] = new List<BoardCell>();
-
-            LevelManager.Instance.cellPlayCtrl.CountCellType[recreatedCell.TypeItem].Add(recreatedCell);
-        }
-
-        // xóa block justSpawn
-        List<GridSpotSpawn> gridSpotSpawns = LevelManager.Instance.BoardCtrl.gridSpotSpawns;
-        for (int i = 0; i < gridSpotSpawns.Count; i++)
-        {
-            if (gridSpotSpawns[i].CheckContainer(container))
+            LevelManager.Instance.BoardCtrl.AddBlockInLeaderBoard(container, cellData);
+            int indexx = LevelManager.Instance.cellPlayCtrl.BoardCellMatch_3.IndexOf(cellData);
+            if (indexx == -1)
             {
-                gridSpotSpawns[i].DestroyBoardCellJustSpawn();
-                break;
+                Debug.Log("not found gameobject");
+                yield break;
             }
+            GameObject block = LevelManager.Instance.cellPlayCtrl.BoardCellMatch_3[indexx].gameObject;
+            block.SetActive(true);
+
+            BoardCell recreatedCell = block.GetComponent<BoardCell>();
+            //config data
+            recreatedCell.TypeItem = cellData.TypeItem;
+            recreatedCell.HasClick = false;
+            recreatedCell.Neighbors = cellData.Neighbors;
+            recreatedCell.Container = container;
+            recreatedCell.Pos = container.Pos;
+            recreatedCell.IsInCellPlay = false;
+            recreatedCell.BoardCellAnimation = block.GetComponentInChildren<BoardCellAnimation>();
+            recreatedCell.BoardCellMovement = block.GetComponentInChildren<BoardCellMovement>();
+            recreatedCell.BoardCellAnimation.SetActive();
+            recreatedCell.Barrel.SetActive(false);
+            recreatedCell.transform.localPosition = posUndoLast;
+
+            int index = LevelManager.Instance.cellPlayCtrl.CellPlays.IndexOf(container);
+            if (index != -1)
+            {
+                // đảm bảo danh sách đủ dài
+                if (index < LevelManager.Instance.cellPlayCtrl.BoardCells.Count)
+                    LevelManager.Instance.cellPlayCtrl.BoardCells[index] = recreatedCell;
+                else
+                    LevelManager.Instance.cellPlayCtrl.BoardCells.Insert(index, recreatedCell);
+
+                if (index < LevelManager.Instance.cellPlayCtrl.CellPlays.Count)
+                    LevelManager.Instance.cellPlayCtrl.CellPlays[index].IsContaining = true;
+
+                if (!LevelManager.Instance.cellPlayCtrl.CountCellType.ContainsKey(recreatedCell.TypeItem))
+                    LevelManager.Instance.cellPlayCtrl.CountCellType[recreatedCell.TypeItem] = new List<BoardCell>();
+
+                LevelManager.Instance.cellPlayCtrl.CountCellType[recreatedCell.TypeItem].Add(recreatedCell);
+            }
+
+            //lưu lại data của block vừa undo vào BoardCtrl để việc check win hoặc 
+            LevelManager.Instance.BoardCtrl.BoardCells.Add(cellData);
+
+            // xóa block justSpawn
+            List<GridSpotSpawn> gridSpotSpawns = LevelManager.Instance.BoardCtrl.gridSpotSpawns;
+            for (int i = 0; i < gridSpotSpawns.Count; i++)
+            {
+                if (gridSpotSpawns[i].CheckContainer(container))
+                {
+                    gridSpotSpawns[i].DestroyBoardCellJustSpawn();
+                    break;
+                }
+            }
+
+            yield return StartCoroutine(MoveBackward(recreatedCell, path));
+            //reset lai cac hang xom
+            recreatedCell.SetInActiveNeighBor();
+            recreatedCell.IsInCellPlay = false;
+
+            recreatedCell.HasClick = true;
+            container.IsContaining = true;
         }
+        else
+        {
+            int indexx = LevelManager.Instance.cellPlayCtrl.BoardCellMatch_3.IndexOf(cellData);
+            if (indexx == -1)
+            {
+                Debug.Log("not found gameobject");
+                yield break;
+            }
+            GameObject block = LevelManager.Instance.cellPlayCtrl.BoardCellMatch_3[indexx].gameObject;
+            block.SetActive(true);
+            boosterAddPos.AddBoardCell(cellData, container);
+            cellData.HasClick = true;
+            cellData.BoardCellAnimation.SetActive();
+            cellData.IsBoosterAdd = true;
+            int index = LevelManager.Instance.cellPlayCtrl.BoardCells.IndexOf(cellData);
+            if (index != -1)
+            {
+                // đặt IsContaining trước khi remove nếu CellPlays vẫn song song với BoardCells
+                if (index < LevelManager.Instance.cellPlayCtrl.CellPlays.Count)
+                    LevelManager.Instance.cellPlayCtrl.CellPlays[index].IsContaining = false;
 
-        yield return StartCoroutine(MoveBackward(recreatedCell, path));
-        //reset lai cac hang xom
-        recreatedCell.SetInActiveNeighBor();
-        recreatedCell.IsInCellPlay = false;
-
-        recreatedCell.HasClick = true;
-        container.IsContaining = true;
+                LevelManager.Instance.cellPlayCtrl.BoardCells.RemoveAt(index);
+                if (LevelManager.Instance.cellPlayCtrl.CountCellType.ContainsKey(cellData.TypeItem))
+                    LevelManager.Instance.cellPlayCtrl.CountCellType[cellData.TypeItem].Remove(cellData);
+                yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.RearrangeCellsAfterRemove());
+                AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
+            }
+            // StartCoroutine(MoveToCellAdd(cellData, container, path));
+        }
     }
 
     #endregion
@@ -317,9 +413,13 @@ public class BoosterCtrl : MonoBehaviour
             sc.Join(boardCellMovement.MovementToPosTween(boosterAddPos.ListPosBoosterAdd[pos]));
             LevelManager.Instance.cellPlayCtrl.BoardCells[i].IsInCellPlay = false;
             boardCellAnimation.SetIdle();
+            // config Boardcell
             LevelManager.Instance.cellPlayCtrl.CellPlays[i].IsContaining = false;
             LevelManager.Instance.cellPlayCtrl.BoardCells[i].HasClick = true;
             LevelManager.Instance.cellPlayCtrl.BoardCells[i].IsBoosterAdd = true;
+            // khi đi xuống dưới Add Booster thì gán lại bằng contaner bên dưới và đồng thời chỉnh lại Pos của BoardCell.
+            LevelManager.Instance.cellPlayCtrl.BoardCells[i].Container = boosterAddPos.Containers[pos];
+            LevelManager.Instance.cellPlayCtrl.BoardCells[i].Pos = boosterAddPos.Containers[pos].Pos;
             pos++;
         }
 
@@ -329,37 +429,16 @@ public class BoosterCtrl : MonoBehaviour
         int startIndex = Mathf.Max(0, boardCells.Count - removeCount);
 
         boardCells.RemoveRange(startIndex, boardCells.Count - startIndex);
+        //reset không cho Undo nưa
+        CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0 ? -1 : 1), 1, 1 });
+        LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+        LevelManager.Instance.boosterCtrl.ResetStackUndo();
         yield return sc.WaitForCompletion();
         IsBusy = false;
     }
     #endregion
 
     #region Shuffle
-    // IsBusy = true;
-    //     CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, -1 });
-    //     // Lấy reference gốc
-    //     LevelData original = LevelManager.Instance.BoardCtrl.levelData;
-
-    //     // Tạo bản sao runtime (không ảnh hưởng file gốc)
-    //     LevelData levelData = ScriptableObject.CreateInstance<LevelData>();
-    //     levelData.CopyFrom(original);
-
-    //     // Shuffle và load lại
-    //     string[] prefabNames = levelData.ShufflePrefabs();
-    //     levelData.prefabNames = prefabNames;
-    //     LevelManager.Instance.cellPlayCtrl.ResetCellPlay();
-    //     yield return StartCoroutine(LevelManager.Instance.BoardCtrl.LoadLevel(levelData, false));
-    //     if (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0)
-    //     {
-    //         CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, 1 });
-    //         LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
-    //     }
-    //     else
-    //     {
-    //         CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, 1, 1, 1 });
-    //         LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
-    //     }
-    //     IsBusy = false;
     public IEnumerator Shuffle(List<GameObject> leaderBoards)
     {
         if (leaderBoards == null || leaderBoards.Count == 0)
@@ -371,11 +450,15 @@ public class BoosterCtrl : MonoBehaviour
         int n = leaderBoards.Count;
         List<Vector3> startPositions = leaderBoards.Select(lb => lb?.transform.position ?? Vector3.zero).ToList();
 
+        //Sequence scKnob = DOTween.Sequence();
         List<int> selectedIndices = new List<int>();
         for (int i = 0; i < n; i++)
         {
             if (int.TryParse(leaderBoards[i].name, out int val) && val >= 1 && val <= 7)
+            {
                 selectedIndices.Add(i);
+                //scKnob.Join(leaderBoards[i].transform.DOMoveY(2f, 1.5f));
+            }
         }
 
         if (selectedIndices.Count < 2)
@@ -385,13 +468,14 @@ public class BoosterCtrl : MonoBehaviour
             yield break;
         }
 
+        //yield return scKnob.WaitForCompletion();
+
         System.Random rand = new System.Random();
         for (int i = selectedIndices.Count - 1; i > 0; i--)
         {
             int j = rand.Next(0, i + 1);
             (selectedIndices[i], selectedIndices[j]) = (selectedIndices[j], selectedIndices[i]);
         }
-
         List<Tween> tweens = new List<Tween>();
         for (int i = 0; i < selectedIndices.Count - 1; i += 2)
         {
@@ -401,23 +485,28 @@ public class BoosterCtrl : MonoBehaviour
             tweens.Add(leaderBoards[b].transform.DOMove(startPositions[a], 0.5f));
             (leaderBoards[a], leaderBoards[b]) = (leaderBoards[b], leaderBoards[a]);
         }
+        if (selectedIndices.Count % 2 != 0)
+        {
+            int lastIndex = selectedIndices[selectedIndices.Count - 1];
+            tweens.Add(leaderBoards[lastIndex].transform.DOMove(startPositions[lastIndex], 0.5f));
+        }
 
         yield return DOTween.Sequence().AppendInterval(0.5f).WaitForCompletion();
 
         LevelManager.Instance.BoardCtrl.RebuildGridFromBoardAlls();
 
+        //reset không cho Undo nưa
+        CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0 ? -1 : 1), 1, 1 });
+        LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+        LevelManager.Instance.boosterCtrl.ResetStackUndo();
+
+        yield return new WaitForSeconds(1f);
         var cellCount = LevelManager.Instance.cellPlayCtrl.BoardCells.Count;
         CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, (cellCount == 0 ? -1 : 1), 1, 1 });
         LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
 
         IsBusy = false;
     }
-
-
-
-
-
-
 
     #endregion
 
@@ -470,7 +559,7 @@ public class BoosterCtrl : MonoBehaviour
             GameObject obj = AddressableManager.Instance.GetPrefab(Enum.GetName(typeof(TypeItem), type));
             for (int i = 0; i < gridSpotSpawns.Count; i++)
             {
-                if (gridSpotSpawns[i].MaxPointSpawn > 0)
+                if (gridSpotSpawns[i].CurrentPointSpawn > 0)
                 {
                     StartCoroutine(gridSpotSpawns[i].SpawnBlockMagnet(obj, gridSpotSpawns[i].transform, type, (result) =>
                     {
@@ -486,7 +575,7 @@ public class BoosterCtrl : MonoBehaviour
                 }
             }
             // tránh vòng lặp vô tận nếu không spawn được
-            if (gridSpotSpawns.All(g => g.MaxPointSpawn <= 0)) break;
+            if (gridSpotSpawns.All(g => g.CurrentPointSpawn <= 0)) break;
         }
 
         count = 1;
@@ -588,6 +677,11 @@ public class BoosterCtrl : MonoBehaviour
             CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, 1, 1, 1 });
             LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
         }
+        //reset không cho Undo nữa
+        CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0 ? -1 : 1), 1, 1 });
+        LevelManager.Instance.BoardCtrl.itemClickCtrl.isStart = false;
+        LevelManager.Instance.boosterCtrl.ResetStackUndo();
+        // tắt trạng thái bận
         IsBusy = false;
     }
 

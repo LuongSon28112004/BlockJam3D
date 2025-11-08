@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DG.Tweening;
+using System.Text;
 
 #if UNITY_EDITOR
 namespace RPGFantasy.EditorClass
@@ -69,7 +70,7 @@ public class UIManager : master.Singleton<UIManager>
     protected override void Awake()
     {
         base.Awake();
-       // blockerUI.SetActive(false);
+        // blockerUI.SetActive(false);
         ResetResolution();
         /*  for (int i = 0; i < listScreenCached.Count; i++)
           {
@@ -111,18 +112,18 @@ public class UIManager : master.Singleton<UIManager>
         //        c.referenceResolution = new Vector2(1080, 1920);
         //    }
         //}
-        
+
     }
 
     public static float CalculateObjectScaleFactor(float matchWidthOrHeight, int referenceWidth = 1080, int referenceHeight = 1920)
     {
-        float logWidth  = Mathf.Log((float)Screen.width / referenceWidth, 2);
+        float logWidth = Mathf.Log((float)Screen.width / referenceWidth, 2);
         float logHeight = Mathf.Log((float)Screen.height / referenceHeight, 2);
 
         float lerp = Mathf.Lerp(logWidth, logHeight, matchWidthOrHeight);
         return Mathf.Pow(2, lerp); // scale factor cho GameObject world-space
     }
-    
+
     public bool ShowBreakAds(int typeShowOnPlaying)
     {
         //if (Application.internetReachability != NetworkReachability.NotReachable && !AdsHelper.isRemoveAds(0))
@@ -416,7 +417,7 @@ public class UIManager : master.Singleton<UIManager>
         {
             str = CurrentScreen.gameObject.name;
         }
- 
+
         if (string.IsNullOrEmpty(str))
         {
             //SDKManager.Instance.currPlacement = "default";

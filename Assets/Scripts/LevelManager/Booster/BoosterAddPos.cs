@@ -29,7 +29,7 @@ public class BoosterAddPos : MonoBehaviour
             containers[i].Pos = listTransformBoossterAdd[i].position;
         }
     }
-    
+
     private void SortBoardCell(int index)
     {
         for (int i = index; i < boardCells.Count && i < listPosBoosterAdd.Count; i++)
@@ -37,6 +37,8 @@ public class BoosterAddPos : MonoBehaviour
             var bc = boardCells[i].BoardCellMovement;
             if (bc == null) continue;
             StartCoroutine(bc.MovementToPos(listPosBoosterAdd[i]));
+            boardCells[i].Container = containers[i];
+            boardCells[i].Pos = containers[i].Pos;
         }
     }
 
@@ -44,12 +46,20 @@ public class BoosterAddPos : MonoBehaviour
     {
         int index = boardCells.IndexOf(boardCell);
         if (index < 0) return;
-        
+
         containers[boardCells.Count - 1].IsContaining = false;
         boardCells.RemoveAt(index);
         SortBoardCell(index);
     }
 
-   
-
+    public void AddBoardCell(BoardCell boardCell, Container container)
+    {
+        int index = containers.IndexOf(container);
+        if (index >= boardCells.Count)
+            boardCells.Add(boardCell);
+        else
+            boardCells.Insert(index, boardCell);
+        containers[boardCells.Count - 1].IsContaining = true;
+        SortBoardCell(index);
+    }
 }

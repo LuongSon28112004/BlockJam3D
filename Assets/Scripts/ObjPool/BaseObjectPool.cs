@@ -16,7 +16,7 @@ public class BaseobjectPool : MonoBehaviour
 
     protected virtual void Awake()
     {
-        //this.LoadPrefabs();
+        this.LoadPrefabs();
         this.LoadHolder();
     }
 
@@ -28,19 +28,19 @@ public class BaseobjectPool : MonoBehaviour
         Debug.Log(transform.name + ": Load Holder", gameObject);
     }
 
-    // protected virtual void LoadPrefabs()
-    // {
-    //     if (this.prefabs.Count > 0)
-    //         return;
-    //     Transform prefabObj = transform.Find("Prefabs");
-    //     foreach (Transform prefab in prefabObj)
-    //     {
-    //         prefabs.Add(prefab);
-    //         Debug.Log("Add");
-    //     }
-    //     this.HidePrefabs();
-    //     Debug.Log(transform.name + "Load prefabs", gameObject);
-    // }
+    protected virtual void LoadPrefabs()
+    {
+        if (this.prefabs.Count > 0)
+            return;
+        Transform prefabObj = transform.Find("Prefabs");
+        foreach (Transform prefab in prefabObj)
+        {
+            prefabs.Add(prefab);
+            Debug.Log("Add");
+        }
+        this.HidePrefabs();
+        Debug.Log(transform.name + "Load prefabs", gameObject);
+    }
 
     protected virtual void HidePrefabs()
     {
