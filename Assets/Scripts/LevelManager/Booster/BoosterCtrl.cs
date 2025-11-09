@@ -161,10 +161,6 @@ public class BoosterCtrl : MonoBehaviour
 
         //Audio sound
         AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
-
-        // 3 Reset lại trạng thái
-        // isMatch3 = false;
-        //undoQueue.Clear();
     }
 
     #endregion
@@ -183,6 +179,9 @@ public class BoosterCtrl : MonoBehaviour
         if (movement == null || animation == null) yield break;
 
         cell.transform.localRotation = Quaternion.Euler(0, 180, 0);
+        //gán lại Pos của BoardCell
+        cell.Pos = path[0];
+        //setAnimaion Running
         animation.SetRunning();
         // đi đến điểm cuối cùng trước
         yield return StartCoroutine(movement.MovementToPosNormal(path[^1]));
@@ -193,6 +192,7 @@ public class BoosterCtrl : MonoBehaviour
         {
             yield return StartCoroutine(movement.MovementToPosNormal(path[i]));
         }
+
 
         animation.SetIdle();
         cell.transform.localRotation = Quaternion.Euler(0, 0, 0);
@@ -376,7 +376,6 @@ public class BoosterCtrl : MonoBehaviour
                 yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.RearrangeCellsAfterRemove());
                 AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
             }
-            // StartCoroutine(MoveToCellAdd(cellData, container, path));
         }
     }
 

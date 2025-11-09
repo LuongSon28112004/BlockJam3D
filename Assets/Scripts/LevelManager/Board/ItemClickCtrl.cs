@@ -160,6 +160,7 @@ public class ItemClickCtrl : MonoBehaviour
             isStart = true;
             CustomeEventSystem.Instance.ActiveBooster(new List<int> { 1, 1, 1, 1 });
         }
+        AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
         // lấy data của BoardCell cũ
         Vector3 PosBoardCel = boardCell.Pos;
         LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);

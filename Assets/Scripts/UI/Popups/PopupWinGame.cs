@@ -36,6 +36,8 @@ public class PopupWinGame : PopupUI
 
     private IEnumerator PlayWinEffect()
     {
+        //Audio sound
+        AudioManager.Instance.PlayOneShot("BLJ_Game_Obstacles_DestructibleWall_Finish", 1f);
         buttonTapToContinue.gameObject.SetActive(false);
         int currentCoin = UserData.coin;
         totalCountText.text = currentCoin.ToString();

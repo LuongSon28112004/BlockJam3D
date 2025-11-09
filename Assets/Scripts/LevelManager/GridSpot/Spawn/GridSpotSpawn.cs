@@ -77,10 +77,10 @@ public class GridSpotSpawn : MonoBehaviour
             }
             else
             {
-                if (currentPointSpawn < maxPointSpawn)
-                {
-                    currentPointSpawn += 1;
-                }
+                // if (currentPointSpawn < maxPointSpawn)
+                // {
+                //     currentPointSpawn += 1;
+                // }
                 LevelManager.Instance.BoardCtrl.initialTypeCounts[JustSpawn.TypeItem] -= 1;
                 LevelManager.Instance.BoardCtrl.UpdateBoardCell(JustSpawn);
                 textCount.text = currentPointSpawn.ToString();

@@ -26,11 +26,11 @@ public class GameManager : SingletonDDOL<GameManager>
     private void Start()
     {
         // Nếu đang chạy trên Android
-        #if UNITY_ANDROID
+#if UNITY_ANDROID
         Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 0; 
+        QualitySettings.vSyncCount = 0;
         Debug.Log("Set FPS = 60 for Android");
-        #endif
+#endif
         StartCoroutine(ChangeState(GameState.Loading));
         Level = UserData.level;
         SaveDataManager.Load();
@@ -68,8 +68,6 @@ public class GameManager : SingletonDDOL<GameManager>
                 });
                 break;
             case GameState.Win:
-            //Audio sound
-                AudioManager.Instance.PlayOneShot("BLJ_Game_Obstacles_DestructibleWall_Finish", 1f);
                 UIManager.Instance.ShowPopup<PopupWinGame>(null);
                 yield return new WaitForSeconds(0.4f);
                 //Time.timeScale = 0;
@@ -86,7 +84,7 @@ public class GameManager : SingletonDDOL<GameManager>
                 break;
         }
     }
-    
+
     public IEnumerator LoadSceneAndWait(string sceneName, Action onLoaded)
     {
         AsyncOperation async = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
@@ -120,7 +118,6 @@ public class GameManager : SingletonDDOL<GameManager>
         StartCoroutine(ChangeState(GameState.Menu));
 
     }
-
 
     public void PauseGame()
     {
