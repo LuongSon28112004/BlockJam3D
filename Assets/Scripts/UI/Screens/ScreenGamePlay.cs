@@ -2,10 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using NUnit.Framework;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,6 +38,12 @@ public class ScreenGamePlay : ScreenUI
     [SerializeField] List<BoosterConfig> listBoosterConfigs;
 
     [SerializeField] private List<BoosterData> boosterDatas;
+
+    private Tween undoLoopTween;
+    private Tween addLoopTween;
+    private Tween shuffleLoopTween;
+    private Tween magnetLoopTween;
+
 
 
     private void OnEnable()
@@ -83,7 +86,7 @@ public class ScreenGamePlay : ScreenUI
 
     void Start()
     {
-        addAnimationIcon();
+        AddAnimationIcons();
         this.InitCoinText();
         this.InitPriceBooster();
         this.LoadTextLevel();
@@ -107,26 +110,39 @@ public class ScreenGamePlay : ScreenUI
         textCoin.text = UserData.coin.ToString();
     }
 
-    private void addAnimationIcon()
+    private void AddAnimationIcons()
     {
-        float moveAmount = 15f; // pixel di chuyển, UI dùng pixel chứ không dùng đơn vị world
+        float moveAmount = 15f;
+        float duration = 0.5f;
 
-        iconUndo.rectTransform.DOAnchorPosY(iconUndo.rectTransform.anchoredPosition.y + moveAmount, 0.5f)
+        // Lưu tween để dùng lại sau
+        undoLoopTween = iconUndo.rectTransform.DOAnchorPosY(iconUndo.rectTransform.anchoredPosition.y + moveAmount, duration)
             .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo);
+            .SetLoops(-1, LoopType.Yoyo)
+            .Pause(); // 👉 Dừng trước, để tất cả khởi động cùng lúc
 
-        iconAdd.rectTransform.DOAnchorPosY(iconAdd.rectTransform.anchoredPosition.y + moveAmount, 0.5f)
+        addLoopTween = iconAdd.rectTransform.DOAnchorPosY(iconAdd.rectTransform.anchoredPosition.y + moveAmount, duration)
             .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo);
+            .SetLoops(-1, LoopType.Yoyo)
+            .Pause();
 
-        iconShuffle.rectTransform.DOAnchorPosY(iconShuffle.rectTransform.anchoredPosition.y + moveAmount, 0.5f)
+        shuffleLoopTween = iconShuffle.rectTransform.DOAnchorPosY(iconShuffle.rectTransform.anchoredPosition.y + moveAmount, duration)
             .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo);
+            .SetLoops(-1, LoopType.Yoyo)
+            .Pause();
 
-        iconMagnet.rectTransform.DOAnchorPosY(iconMagnet.rectTransform.anchoredPosition.y + moveAmount, 0.5f)
+        magnetLoopTween = iconMagnet.rectTransform.DOAnchorPosY(iconMagnet.rectTransform.anchoredPosition.y + moveAmount, duration)
             .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo);
+            .SetLoops(-1, LoopType.Yoyo)
+            .Pause();
+
+        // Cho tất cả bắt đầu cùng lúc (đồng pha)
+        undoLoopTween.Play();
+        addLoopTween.Play();
+        shuffleLoopTween.Play();
+        magnetLoopTween.Play();
     }
+
 
 
     private void FlashButtonRed(Button button)
@@ -155,7 +171,7 @@ public class ScreenGamePlay : ScreenUI
         PlayMagnetEffect();
         Debug.Log("Magnet Clicked");
         AudioManager.Instance.PlayOneShot("BLJ_Boosters_Magnet_01", 1f);
-        StartCoroutine(LevelManager.Instance.boosterCtrl.Magnet());
+        StartCoroutine(LevelManager.Instance.boosterCtrl.BoosterMagnet.Magnet());
         UserData.coin -= boosterDatas[3].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
         SaveDataManager.Save();
@@ -199,11 +215,6 @@ public class ScreenGamePlay : ScreenUI
 
         magnetSeq.Play();
     }
-
-
-
-
-
     private void OnClickShuffle()
     {
         if (UserData.coin < boosterDatas[2].price || LevelManager.Instance.boosterCtrl.IsBusy)
@@ -214,7 +225,7 @@ public class ScreenGamePlay : ScreenUI
 
         Debug.Log("Shuffle Clicked");
         AudioManager.Instance.PlayOneShot("BLJ_Boosters_Shuffle_01", 1f);
-        StartCoroutine(LevelManager.Instance.boosterCtrl.Shuffle(LevelManager.Instance.BoardCtrl.boardAlls));
+        StartCoroutine(LevelManager.Instance.boosterCtrl.BoosterShuffle.Shuffle(LevelManager.Instance.BoardCtrl.boardAlls));
         UserData.coin -= boosterDatas[2].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
         SaveDataManager.Save();
@@ -227,7 +238,7 @@ public class ScreenGamePlay : ScreenUI
             FlashButtonRed(AddButton);
             return;
         }
-        StartCoroutine(LevelManager.Instance.boosterCtrl.Add());
+        StartCoroutine(LevelManager.Instance.boosterCtrl.BoosterAdd.Add());
         UserData.coin -= boosterDatas[1].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
         SaveDataManager.Save();
@@ -241,11 +252,56 @@ public class ScreenGamePlay : ScreenUI
             return;
         }
 
-        StartCoroutine(LevelManager.Instance.boosterCtrl.Undo());
+        PlayUndoEffect();
+        StartCoroutine(LevelManager.Instance.boosterCtrl.BoosterUndo.Undo());
         UserData.coin -= boosterDatas[0].price;
         CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
         SaveDataManager.Save();
     }
+
+
+    private void PlayUndoEffect()
+    {
+        if (iconUndo == null) return;
+
+        RectTransform rt = iconUndo.rectTransform;
+
+        // Dừng tween nhấp nhô đang chạy
+        undoLoopTween.Pause();
+        addLoopTween.Pause();
+        shuffleLoopTween.Pause();
+        magnetLoopTween.Pause();
+
+        Vector2 originalPos = rt.anchoredPosition;
+        // rt.DOKill();
+
+        var sc = DOTween.Sequence();
+
+        // Nâng lên
+        sc.Append(rt.DOAnchorPosY(originalPos.y + 100f, 0.15f).SetEase(Ease.OutQuad));
+
+        // Xoay trong lúc đang trên cao
+        sc.Join(rt.DOLocalRotate(new Vector3(0f, 0f, 360f), 0.3f, RotateMode.FastBeyond360)
+            .SetEase(Ease.Linear));
+
+        // Hạ xuống
+        sc.Append(rt.DOAnchorPosY(originalPos.y, 0.15f).SetEase(Ease.InQuad));
+
+        // Reset xoay
+        sc.OnComplete(() =>
+        {
+            rt.localRotation = Quaternion.identity;
+
+            // Khi hiệu ứng xong -> bật lại tween loop gốc, đồng bộ pha với các icon khác
+            undoLoopTween.Restart();
+            addLoopTween.Restart();
+            shuffleLoopTween.Restart();
+            magnetLoopTween.Restart();
+        });
+    }
+
+
+
 
     private void OnClickSetting()
     {

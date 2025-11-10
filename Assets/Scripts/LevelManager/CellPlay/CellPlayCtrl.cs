@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using DG.Tweening;
 using NUnit.Framework;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 
 using UnityEngine;
@@ -124,7 +125,7 @@ public class CellPlayCtrl : MonoBehaviour
         if (insertIndex == boardCells.Count)
         {
             boardCells.Add(boardCell);
-            // delete component 
+            // Đánh dấu là không thể click
             boardCell.HasClick = false;
             // add count type boardcell
             countCellType[boardCell.TypeItem].Add(boardCell);
@@ -146,7 +147,7 @@ public class CellPlayCtrl : MonoBehaviour
         {
             orderPlayInCellPlay.Add(boardCell.TypeItem);
         }
-        StartCoroutine(ResetPosCellPlay(0.3f));
+        StartCoroutine(ResetPosCellPlay(0.2f));
     }
 
     private int FindInsertIndex(BoardCell newCell)
@@ -199,7 +200,7 @@ public class CellPlayCtrl : MonoBehaviour
     {
         if (boardCells.Count == MAX_ROW)
         {
-            yield return new WaitForSeconds(0.2f);
+            //yield return new WaitForSeconds(0.2f);
             for (int i = 0; i < boardCells.Count; i++)
             {
                 if (!boardCells[i].IsInCellPlay)
@@ -234,6 +235,8 @@ public class CellPlayCtrl : MonoBehaviour
 
     private IEnumerator Match3Process(TypeItem typeItem)
     {
+        // check xem cấc ô đã đi đến đúng vị trí của bản thân hay chưa
+        StartCoroutine(ResetPosCellPlay(0.1f));
         foreach (var kvp in countCellType)
         {
             TypeItem type = kvp.Key;
@@ -251,18 +254,26 @@ public class CellPlayCtrl : MonoBehaviour
                 BoardCell c3 = list[2];
 
                 if (c1 == null || c2 == null || c3 == null)
+                {
                     continue;
+                }
 
                 // Xóa logic trước khi anim
+                yield return new WaitUntil(() =>
+                Vector3.Distance(c1.transform.position, c1.Pos) < 0.01f &&
+                Vector3.Distance(c2.transform.position, c2.Pos) < 0.01f &&
+                Vector3.Distance(c3.transform.position, c3.Pos) < 0.01f
+                );
                 RemoveCellData(new List<BoardCell> { c1, c2, c3 }, type);
 
                 // Animation merge & pop
                 StartCoroutine(SetAnimMerge(new List<BoardCell> { c1, c2, c3 }));
 
-                // Sau khi xóa, sắp xếp lại cell
+                // Sau khi xóa, sắp xếp lại cell tạm thời đang để chờ 0.2s rồi mới sort lại
                 yield return new WaitForSeconds(0.2f);
                 StartCoroutine(RearrangeCellsAfterRemove());
-                StartCoroutine(ResetPosCellPlay(0.1f));
+                // check xem cấc ô đã đi đến đúng vị trí của bản thân hay chưa
+                StartCoroutine(ResetPosCellPlay(0.3f));
             }
         }
 

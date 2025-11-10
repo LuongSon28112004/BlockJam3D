@@ -202,7 +202,7 @@ public class BoardCellMovement : MonoBehaviour
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         // float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
         Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond)
-            .SetEase(Ease.InSine);
+            .SetEase(Ease.Linear);
 
         yield return moveTween.WaitForCompletion();
         yield return new WaitForSeconds(0.1f);

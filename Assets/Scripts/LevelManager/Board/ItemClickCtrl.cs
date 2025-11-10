@@ -74,17 +74,12 @@ public class ItemClickCtrl : MonoBehaviour
                 yield break;
             }
 
-
-            if (!boardCell.HasClick)
-            {
-                yield break;
-            }
-
-
+            // nếu block đó ở trên leaderboard
             if (!boardCell.IsBoosterAdd)
             {
                 StartCoroutine(LeaderBoardClick(boardCell));
             }
+            // nếu block đó đang được sử dụng bởi boosterAdd
             else
             {
                 StartCoroutine(BoosterAddClick(boardCell));
@@ -119,8 +114,9 @@ public class ItemClickCtrl : MonoBehaviour
         //reset container
         Container container = boardCell.Container;
         boardCell.Container.IsContaining = false;
-        //boardCell.Container = null;
         AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
+
+        // save data của khối block xuống trước.
         LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);
 
         StartCoroutine(boardCell.SetActiveNeighBor());
@@ -128,27 +124,13 @@ public class ItemClickCtrl : MonoBehaviour
         //start Run
         LevelManager.Instance.cellPlayCtrl.PosCell();
         StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container, null));
+        // Undo
+        LevelManager.Instance.boosterCtrl.BoosterUndo.AddStack(boardCell, container, path);
         StartCoroutine(boardCell.BoardCellMovement.MovementPath(path, (check) =>
         {
-            LevelManager.Instance.boosterCtrl.LastMove.Push((boardCell, container, path));
-            Queue<KeyValuePair<BoardCell, Container>> temp = new Queue<KeyValuePair<BoardCell, Container>>();
-            for (int i = 0; i < LevelManager.Instance.cellPlayCtrl.BoardCells.Count; i++)
+            if (check)
             {
-                if (LevelManager.Instance.cellPlayCtrl.BoardCells[i].TypeItem == boardCell.TypeItem && LevelManager.Instance.cellPlayCtrl.BoardCells[i] != boardCell)
-                {
-                    temp.Enqueue(new KeyValuePair<BoardCell, Container>(LevelManager.Instance.cellPlayCtrl.BoardCells[i], LevelManager.Instance.cellPlayCtrl.CellPlays[i]));
-                }
-            }
-            if (temp.Count != 0 && temp.Count == 2) LevelManager.Instance.boosterCtrl.UndoQueue.Push(temp);
-            if (check && LevelManager.Instance.cellPlayCtrl.HasMatch3(boardCell.TypeItem))
-            {
-                CustomeEventSystem.Instance.CheckMatch_3(boardCell.TypeItem);
-                LevelManager.Instance.boosterCtrl.IsMatch3s.Push(true);
-            }
-            else
-            {
-                LevelManager.Instance.boosterCtrl.IsMatch3s.Push(false);
-                StartCoroutine(LevelManager.Instance.cellPlayCtrl.checkLose());
+                Checkmatch_3(boardCell);
             }
         }));
     }
@@ -167,12 +149,12 @@ public class ItemClickCtrl : MonoBehaviour
         Vector3 pos = LevelManager.Instance.cellPlayCtrl.PosCell();
         boardCell.transform.localRotation = Quaternion.Euler(0, 180, 0);
         // xoa data khỏi hàng chờ add
-        LevelManager.Instance.boosterCtrl.BoosterAddPos.RemoveBoardCell(boardCell);
+        LevelManager.Instance.boosterCtrl.BoosterAdd.BoosterAddPos.RemoveBoardCell(boardCell);
         yield return boardCell.BoardCellMovement.MovementToPos(pos);
         // xét boardcell này bằng true để phục vị cho việc match_3
         boardCell.IsInCellPlay = true;
         boardCell.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        LevelManager.Instance.boosterCtrl.LastMove.Push((boardCell, boardCell.Container, new List<Vector3> { PosBoardCel }));
+        LevelManager.Instance.boosterCtrl.BoosterUndo.LastMove.Push((boardCell, boardCell.Container, new List<Vector3> { PosBoardCel }));
         Queue<KeyValuePair<BoardCell, Container>> temp = new Queue<KeyValuePair<BoardCell, Container>>();
         for (int i = 0; i < LevelManager.Instance.cellPlayCtrl.BoardCells.Count; i++)
         {
@@ -181,15 +163,20 @@ public class ItemClickCtrl : MonoBehaviour
                 temp.Enqueue(new KeyValuePair<BoardCell, Container>(LevelManager.Instance.cellPlayCtrl.BoardCells[i], LevelManager.Instance.cellPlayCtrl.CellPlays[i]));
             }
         }
-        if (temp.Count != 0 && temp.Count == 2) LevelManager.Instance.boosterCtrl.UndoQueue.Push(temp);
+        if (temp.Count != 0 && temp.Count == 2) LevelManager.Instance.boosterCtrl.BoosterUndo.UndoQueue.Push(temp);
+        Checkmatch_3(boardCell);
+    }
+
+    private void Checkmatch_3(BoardCell boardCell)
+    {
         if (LevelManager.Instance.cellPlayCtrl.HasMatch3(boardCell.TypeItem))
         {
             CustomeEventSystem.Instance.CheckMatch_3(boardCell.TypeItem);
-            LevelManager.Instance.boosterCtrl.IsMatch3s.Push(true);
+            LevelManager.Instance.boosterCtrl.BoosterUndo.IsMatch3s.Push(true);
         }
         else
         {
-            LevelManager.Instance.boosterCtrl.IsMatch3s.Push(false);
+            LevelManager.Instance.boosterCtrl.BoosterUndo.IsMatch3s.Push(false);
             StartCoroutine(LevelManager.Instance.cellPlayCtrl.checkLose());
         }
     }

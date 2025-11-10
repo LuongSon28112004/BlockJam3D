@@ -25,17 +25,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3503007282671849078}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 76.51}
+  m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
+  m_LocalPosition: {x: 0, y: 0, z: 62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8982611434432942210}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 55.33, y: 0}
-  m_SizeDelta: {x: 125.46, y: 114.63}
+  m_AnchoredPosition: {x: 54, y: 6}
+  m_SizeDelta: {x: 140, y: 114.63}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7273483043598305308
 CanvasRenderer:
@@ -92,8 +92,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60
-  m_fontSizeBase: 60
+  m_fontSize: 68
+  m_fontSizeBase: 68
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -182,11 +182,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f2f2b570318ec145839d07e44425dfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tyoeSpot: 0
+  currentPointSpawn: 1
   maxPointSpawn: 1
-  maxContainer: 1
   directions: 01000000
   GridParent: {fileID: 0}
-  containers: []
   baseGridSpotAnimation: {fileID: 242616786595051804}
   textCount: {fileID: 5148795567347402321}
 --- !u!1 &7959347588216785812
