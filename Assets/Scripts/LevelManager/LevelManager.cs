@@ -40,13 +40,20 @@ public class LevelManager : Singleton<LevelManager>
         // đưa các gameobject vào pool
         yield return new WaitForSeconds(1f);
         AudioManager.Instance.PlayOneShot("BLJ_League_LeaderBoard_Enter", 1f);
-        BlockItemSpawner.Instance.AddBlockInPool();
+        // đưa các object vào pool để tái sử dụng
+        AddPool();
         Round += 1;
         if (Round > 2) yield break;
         CustomeEventSystem.Instance.ChangeRound(Round);
         CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, 1 });
         isNextRound = false;
         yield return BoardCtrl.LoadLevel(levelDatas[Round]);
+    }
+
+    private void AddPool()
+    {
+        BlockItemSpawner.Instance.AddBlockInPool();
+        WallItemSpawner.Instance.AddOtherInPool();
     }
 
 }

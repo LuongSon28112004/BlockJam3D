@@ -42,6 +42,7 @@ public class BoosterCtrl : MonoBehaviour
     }
     public IEnumerator Undo()
     {
+        if (isMatch3s.Count == 0) yield break;
         bool isMatch3 = isMatch3s.Pop();
         if (!isMatch3)
         {
@@ -188,14 +189,20 @@ public class BoosterCtrl : MonoBehaviour
 
         // xóa phần tử cuối (đã đến)
         path.RemoveAt(path.Count - 1);
+        // di chuyển ngược lại đường đi ban đầu
+        yield return MovePath(path, movement);
+
+        animation.SetIdle();
+        cell.transform.localRotation = Quaternion.Euler(0, 0, 0);
+    }
+
+    private IEnumerator MovePath(List<Vector3> path, BoardCellMovement movement)
+    {
         for (int i = path.Count - 1; i >= 0; i--)
         {
             yield return StartCoroutine(movement.MovementToPosNormal(path[i]));
         }
 
-
-        animation.SetIdle();
-        cell.transform.localRotation = Quaternion.Euler(0, 0, 0);
     }
 
     // Reset trạng thái sau khi Undo thường

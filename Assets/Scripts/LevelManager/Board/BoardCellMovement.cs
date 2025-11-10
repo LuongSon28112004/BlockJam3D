@@ -233,10 +233,10 @@ public class BoardCellMovement : MonoBehaviour
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
         // float timer = (distanceMagnitude / distancePerCell) * timerPerCellMatrixSecond;
-        transform.parent.DOMove(pos, timerPerCellMatrixSecond)
+        Tween moveTween = transform.parent.DOMove(pos, timerPerCellMatrixSecond / 4)
             .SetEase(Ease.InSine);
 
-        // yield return moveTween.WaitForCompletion();
+        yield return moveTween.WaitForCompletion();
         // yield return new WaitForSeconds(0.1f);
         transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.InSine);
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();

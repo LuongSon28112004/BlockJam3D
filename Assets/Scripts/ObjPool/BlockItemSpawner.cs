@@ -52,7 +52,7 @@ public class BlockItemSpawner : BaseobjectPool
         base.Despawn(obj);
         if (obj.TryGetComponent<BoardCell>(out BoardCell boardCell))
         {
-            // hiện tại vẫn chưa có cái nào dùng đến boardCellPools tôi lưu lại để sau này cần nâng cấp hệ thống thì dùng
+            // hiện tại vẫn chưa có cái nào dùng đến boardCellPools tôi lưu lại để sau này cần mở rộng hệ thống thì dùng
             boardCellPools.Add(boardCell);
         }
     }

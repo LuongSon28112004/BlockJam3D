@@ -271,7 +271,9 @@ public class BoardCtrl : MonoBehaviour
             "4", "4B",
             "5", "5B",
             "6", "6B",
-            "7", "7B"
+            "7", "7B",
+            "Wall",
+            "Container"
         };
 
         for (int i = gridParent.childCount - 1; i >= 0; i--)
@@ -343,12 +345,11 @@ public class BoardCtrl : MonoBehaviour
                 {
                     string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
                     obj = BlockItemSpawner.Instance.spawnCellItem(name, new Vector3(posX, 0f, posZ), Quaternion.identity).gameObject;
-                    // if (prefabName.Length > 1)
-                    // {
-                    //     BoardCell boardCell = obj.GetComponent<BoardCell>();
-                    //     boardCell.Barrel.gameObject.SetActive(true);
-                    //     boardCell.BarrelCell.BarrelCelAnimation.PlayBarrelDefault();
-                    // }
+                    obj.transform.SetParent(gridParent);
+                }
+                else if (prefabName == "Wall")
+                {
+                    obj = WallItemSpawner.Instance.SpawnOtherItem(prefabName, new Vector3(posX, 0f, posZ), Quaternion.identity).gameObject;
                     obj.transform.SetParent(gridParent);
                 }
                 else

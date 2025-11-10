@@ -202,7 +202,10 @@ public class CellPlayCtrl : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
             for (int i = 0; i < boardCells.Count; i++)
             {
-                if (!boardCells[i].IsInCellPlay) yield break;
+                if (!boardCells[i].IsInCellPlay)
+                {
+                    yield break;
+                }
             }
             BlockItemSpawner.Instance.AddBlockInPool();
             GameManager.Instance.LoseGame();
