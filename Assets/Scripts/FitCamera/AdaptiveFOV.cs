@@ -55,6 +55,6 @@ public class AdaptiveFOV : MonoBehaviour
         float vFovRad = 2f * Mathf.Atan(Mathf.Tan(baseFovRad / 2f) * (baseAspect / currentAspect));
 
         // Gán vertical FOV cho camera
-        cam.fieldOfView = vFovRad * Mathf.Rad2Deg - 3.5f;
+        cam.fieldOfView = vFovRad * Mathf.Rad2Deg - 6f;
     }
 }

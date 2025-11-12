@@ -87,9 +87,37 @@ public class ScreenGamePlay : ScreenUI
     void Start()
     {
         AddAnimationIcons();
+        SetCounterOrPrice();
         this.InitCoinText();
         this.InitPriceBooster();
         this.LoadTextLevel();
+    }
+
+    private void SetCounterOrPrice()
+    {
+        foreach (var boosterCounter in UserData.listBoosterCounters)
+        {
+            if (boosterCounter.count > 0)
+            {
+                if (boosterCounter.name == "Undo")
+                {
+                    listBoosterConfigs[0].SetCounter(boosterCounter.count);
+                }
+                else if (boosterCounter.name == "Add")
+                {
+                    listBoosterConfigs[1].SetCounter(boosterCounter.count);
+                }
+                else if (boosterCounter.name == "Shuffle")
+                {
+                    listBoosterConfigs[2].SetCounter(boosterCounter.count);
+                }
+                else
+                {
+                    listBoosterConfigs[3].SetCounter(boosterCounter.count);
+                }
+
+            }
+        }
     }
 
     private void LoadTextLevel()
@@ -119,7 +147,7 @@ public class ScreenGamePlay : ScreenUI
         undoLoopTween = iconUndo.rectTransform.DOAnchorPosY(iconUndo.rectTransform.anchoredPosition.y + moveAmount, duration)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo)
-            .Pause(); // 👉 Dừng trước, để tất cả khởi động cùng lúc
+            .Pause(); // Dừng trước, để tất cả khởi động cùng lúc
 
         addLoopTween = iconAdd.rectTransform.DOAnchorPosY(iconAdd.rectTransform.anchoredPosition.y + moveAmount, duration)
             .SetEase(Ease.InOutSine)
@@ -163,17 +191,32 @@ public class ScreenGamePlay : ScreenUI
 
     private IEnumerator ClickMagnet()
     {
-        if (UserData.coin < boosterDatas[3].price || LevelManager.Instance.boosterCtrl.IsBusy || LevelManager.Instance.BoardCtrl.BoardCells.Count == 0)
+        if (LevelManager.Instance.boosterCtrl.IsBusy || LevelManager.Instance.BoardCtrl.BoardCells.Count == 0)
         {
-            FlashButtonRed(MagnetButton);
+            if (UserData.coin < boosterDatas[3].price && UserData.listBoosterCounters[3].count == 0)
+            {
+                FlashButtonRed(MagnetButton);
+            }
             yield break;
         }
         PlayMagnetEffect();
         Debug.Log("Magnet Clicked");
         AudioManager.Instance.PlayOneShot("BLJ_Boosters_Magnet_01", 1f);
         StartCoroutine(LevelManager.Instance.boosterCtrl.BoosterMagnet.Magnet());
-        UserData.coin -= boosterDatas[3].price;
-        CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
+        if (UserData.listBoosterCounters[3].count <= 0)
+        {
+            UserData.coin -= boosterDatas[3].price;
+            CustomeEventSystem.Instance.ChangeCoin(UserData.coin);
+        }
+        else
+        {
+            UserData.listBoosterCounters[3].count -= 1;
+            if (UserData.listBoosterCounters[3].count <= 0)
+            {
+                listBoosterConfigs[3].SetPrice();
+            }
+            listBoosterConfigs[3].SetTextCounter(UserData.listBoosterCounters[3].count);
+        }
         SaveDataManager.Save();
     }
 
@@ -217,45 +260,92 @@ public class ScreenGamePlay : ScreenUI
     }
     private void OnClickShuffle()
     {
-        if (UserData.coin < boosterDatas[2].price || LevelManager.Instance.boosterCtrl.IsBusy)
+        if (LevelManager.Instance.boosterCtrl.IsBusy || LevelManager.Instance.BoardCtrl.BoardCells.Count == 0)
         {
-            FlashButtonRed(ShuffleButton);
+            if (UserData.coin < boosterDatas[2].price && UserData.listBoosterCounters[2].count == 0)
+            {
+                FlashButtonRed(MagnetButton);
+            }
             return;
         }
 
         Debug.Log("Shuffle Clicked");
         AudioManager.Instance.PlayOneShot("BLJ_Boosters_Shuffle_01", 1f);
         StartCoroutine(LevelManager.Instance.boosterCtrl.BoosterShuffle.Shuffle(LevelManager.Instance.BoardCtrl.boardAlls));
-        UserData.coin -= boosterDatas[2].price;
-        CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
+        if (UserData.listBoosterCounters[2].count <= 0)
+        {
+            UserData.coin -= boosterDatas[2].price;
+            CustomeEventSystem.Instance.ChangeCoin(UserData.coin);
+        }
+        else
+        {
+            UserData.listBoosterCounters[2].count -= 1;
+            if (UserData.listBoosterCounters[2].count <= 0)
+            {
+                listBoosterConfigs[2].SetPrice();
+            }
+            listBoosterConfigs[2].SetTextCounter(UserData.listBoosterCounters[2].count);
+        }
         SaveDataManager.Save();
     }
 
     private void OnClickAdd()
     {
-        if (UserData.coin < boosterDatas[1].price || LevelManager.Instance.boosterCtrl.IsBusy)
+        if (LevelManager.Instance.boosterCtrl.IsBusy || LevelManager.Instance.BoardCtrl.BoardCells.Count == 0)
         {
-            FlashButtonRed(AddButton);
+            if (UserData.coin < boosterDatas[1].price && UserData.listBoosterCounters[1].count == 0)
+            {
+                FlashButtonRed(MagnetButton);
+            }
             return;
         }
+        AudioManager.Instance.PlayOneShot("BLJ_Boosters_Continue_01", 1f);
         StartCoroutine(LevelManager.Instance.boosterCtrl.BoosterAdd.Add());
-        UserData.coin -= boosterDatas[1].price;
-        CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
+        if (UserData.listBoosterCounters[1].count <= 0)
+        {
+            UserData.coin -= boosterDatas[1].price;
+            CustomeEventSystem.Instance.ChangeCoin(UserData.coin);
+        }
+        else
+        {
+            UserData.listBoosterCounters[1].count -= 1;
+            if (UserData.listBoosterCounters[1].count <= 0)
+            {
+                listBoosterConfigs[1].SetPrice();
+            }
+            listBoosterConfigs[1].SetTextCounter(UserData.listBoosterCounters[1].count);
+        }
         SaveDataManager.Save();
     }
 
     private void OnClickUndo()
     {
-        if (UserData.coin < boosterDatas[0].price || LevelManager.Instance.boosterCtrl.IsBusy)
+        if (LevelManager.Instance.boosterCtrl.IsBusy || LevelManager.Instance.BoardCtrl.BoardCells.Count == 0)
         {
-            FlashButtonRed(UndoButton);
+            if (UserData.coin < boosterDatas[0].price && UserData.listBoosterCounters[0].count == 0)
+            {
+                FlashButtonRed(MagnetButton);
+            }
             return;
         }
-
         PlayUndoEffect();
+        //Audio sound
+        AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
         StartCoroutine(LevelManager.Instance.boosterCtrl.BoosterUndo.Undo());
-        UserData.coin -= boosterDatas[0].price;
-        CustomeEventSystem.Instance.ChangeCoinAction(UserData.coin);
+        if (UserData.listBoosterCounters[0].count <= 0)
+        {
+            UserData.coin -= boosterDatas[0].price;
+            CustomeEventSystem.Instance.ChangeCoin(UserData.coin);
+        }
+        else
+        {
+            UserData.listBoosterCounters[0].count -= 1;
+            if (UserData.listBoosterCounters[0].count <= 0)
+            {
+                listBoosterConfigs[0].SetPrice();
+            }
+            listBoosterConfigs[0].SetTextCounter(UserData.listBoosterCounters[0].count);
+        }
         SaveDataManager.Save();
     }
 

@@ -25,12 +25,16 @@ public class GameManager : SingletonDDOL<GameManager>
 
     private void Start()
     {
-        // Nếu đang chạy trên Android
-#if UNITY_ANDROID
-        Application.targetFrameRate = 60;
+#if UNITY_EDITOR
+        Application.targetFrameRate = 120;
         QualitySettings.vSyncCount = 0;
-        Debug.Log("Set FPS = 60 for Android");
+        Debug.Log("Set FPS = 120 in Editor");
+#elif UNITY_ANDROID
+    Application.targetFrameRate = 60;
+    QualitySettings.vSyncCount = 0;
+    Debug.Log("Set FPS = 60 for Android");
 #endif
+
         StartCoroutine(ChangeState(GameState.Loading));
         Level = UserData.level;
         SaveDataManager.Load();
@@ -61,8 +65,11 @@ public class GameManager : SingletonDDOL<GameManager>
                 });
                 break;
             case GameState.GamePlay:
+                UIManager.Instance.ShowPopup<PopupLoadingGamePlay>(null);
+                yield return new WaitForSeconds(2f);
                 yield return LoadSceneAndWait("GamePlay", () =>
                 {
+                    UIManager.Instance.HideAllPopup();
                     LevelManager.Instance.Init();
                     UIManager.Instance.ShowScreen<ScreenGamePlay>();
                 });
@@ -114,9 +121,7 @@ public class GameManager : SingletonDDOL<GameManager>
 
     public void BackToMenu()
     {
-
         StartCoroutine(ChangeState(GameState.Menu));
-
     }
 
     public void PauseGame()

@@ -101,7 +101,6 @@ public class BoosterUndo : MonoBehaviour
             if (LevelManager.Instance.cellPlayCtrl.CountCellType.ContainsKey(cell.TypeItem))
                 LevelManager.Instance.cellPlayCtrl.CountCellType[cell.TypeItem].Remove(cell);
             yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.RearrangeCellsAfterRemove());
-            AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
         }
 
         yield break;
@@ -139,8 +138,6 @@ public class BoosterUndo : MonoBehaviour
             yield return StartCoroutine(LevelManager.Instance.cellPlayCtrl.RearrangeCellsAfterRemove());
             ResetCellAfterUndo(cell, container);
 
-            //Audio sound
-            AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
 
             // inactive lại các hàng xóm
             cell.SetInActiveNeighBor();
@@ -159,9 +156,6 @@ public class BoosterUndo : MonoBehaviour
         // 2 Tạo lại ô di chuyển cuối cùng (nếu có)
         if (lastMove != null && lastMove.Count > 0)
             yield return StartCoroutine(RecreateLastMovedCell());
-
-        //Audio sound
-        AudioManager.Instance.PlayOneShot("BLJ_Boosters_Undo_01", 1f);
     }
 
     #endregion

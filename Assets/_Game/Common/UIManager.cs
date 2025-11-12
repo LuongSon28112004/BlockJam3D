@@ -59,10 +59,10 @@ public class UIManager : master.Singleton<UIManager>
     public RectTransform popupHolder;
     [SerializeField] NotifyPanel notifyPanel;
     [SerializeField] CanvasScaler[] canvasScaler;
-    List<PopupUI> listPopupCached = new List<PopupUI>();
-    List<PopupUI> listPopupExist = new List<PopupUI>();
-    List<ScreenUI> listScreenCached = new List<ScreenUI>();
-    List<ScreenUI> listScreenExist = new List<ScreenUI>();
+    [SerializeField] List<PopupUI> listPopupCached = new List<PopupUI>();
+    [SerializeField] List<PopupUI> listPopupExist = new List<PopupUI>();
+    [SerializeField] List<ScreenUI> listScreenCached = new List<ScreenUI>();
+    [SerializeField] List<ScreenUI> listScreenExist = new List<ScreenUI>();
     public List<PopupUI> ListPopupCached => listPopupCached;
     public ScreenUI CurrentScreen { get; private set; }
     public PopupUI CurrentPopup { get; private set; }

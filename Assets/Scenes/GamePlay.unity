@@ -384,7 +384,7 @@ Transform:
   m_GameObject: {fileID: 180589249}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.2, y: 0, z: -11}
+  m_LocalPosition: {x: -4, y: 0, z: -12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -678,7 +678,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 5000
+  m_ColorTemperature: 8000
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -855,7 +855,7 @@ Transform:
   m_GameObject: {fileID: 459026246}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.2, y: 0, z: -13}
+  m_LocalPosition: {x: -4, y: 0, z: -14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -927,6 +927,50 @@ Transform:
   - {fileID: 1571738746}
   m_Father: {fileID: 1078581829}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &529909502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 529909503}
+  - component: {fileID: 529909504}
+  m_Layer: 0
+  m_Name: Tutorial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &529909503
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529909502}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1614532944}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &529909504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529909502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b9460fd608a4df4890438c23dbed3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &572042518
 GameObject:
   m_ObjectHideFlags: 0
@@ -1857,6 +1901,10 @@ MonoBehaviour:
   notifyPanel: {fileID: 0}
   canvasScaler:
   - {fileID: 614996034}
+  listPopupCached: []
+  listPopupExist: []
+  listScreenCached: []
+  listScreenExist: []
 --- !u!1001 &1205823812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2107,7 +2155,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 30
+  field of view: 26.500002
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -2137,9 +2185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cd94c112e345f0409cf9a45a73cd71f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardCenter: {fileID: 2089489465}
-  baseAspect: 1.7777778
-  baseDistance: 30
+  baseFOV: 30
+  baseResolution: {x: 1080, y: 1920}
 --- !u!1 &1425541984
 GameObject:
   m_ObjectHideFlags: 0
@@ -2446,7 +2493,7 @@ Transform:
   m_GameObject: {fileID: 1571738744}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.2, y: 0, z: -13}
+  m_LocalPosition: {x: -4, y: 0, z: -14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2520,6 +2567,7 @@ MonoBehaviour:
   BoardCtrl: {fileID: 2015014349}
   cellPlayCtrl: {fileID: 180589251}
   boosterCtrl: {fileID: 1078581830}
+  TutorialCtrl: {fileID: 529909504}
   isNextRound: 0
 --- !u!4 &1614532944
 Transform:
@@ -2538,6 +2586,7 @@ Transform:
   - {fileID: 180589250}
   - {fileID: 1078581829}
   - {fileID: 2089489465}
+  - {fileID: 529909503}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1672539686

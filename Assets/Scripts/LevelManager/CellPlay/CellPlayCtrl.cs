@@ -210,6 +210,7 @@ public class CellPlayCtrl : MonoBehaviour
             }
             BlockItemSpawner.Instance.AddBlockInPool();
             GameManager.Instance.LoseGame();
+            BoosterCtrl.Instance.IsBusy = true;
         }
     }
 
@@ -224,6 +225,7 @@ public class CellPlayCtrl : MonoBehaviour
             UserData.level += 1;
             SaveDataManager.Save();
             GameManager.Instance.WinGame();
+            BoosterCtrl.Instance.IsBusy = true;
         }
         isCheckWin = false;
     }

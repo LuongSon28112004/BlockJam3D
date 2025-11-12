@@ -118,7 +118,7 @@ public class ItemClickCtrl : MonoBehaviour
 
         // save data của khối block xuống trước.
         LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);
-
+        LevelManager.Instance.AddTutorial();
         StartCoroutine(boardCell.SetActiveNeighBor());
 
         //start Run

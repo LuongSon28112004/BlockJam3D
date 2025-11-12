@@ -14,7 +14,6 @@ public class BoosterAdd : MonoBehaviour
         // Play sound
         if (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0) yield break;
         BoosterCtrl.Instance.IsBusy = true;
-        AudioManager.Instance.PlayOneShot("BLJ_Boosters_Continue_01", 1f);
         int pos = 0;
         for (int i = 0; i < boosterAddPos.Containers.Count; i++)
         {
