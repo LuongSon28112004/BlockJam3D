@@ -14569,7 +14569,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4767309436023698}
@@ -14656,7 +14656,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 0.9724138, b: 0, a: 1}
-      maxColor: {r: 1, g: 0.47368425, b: 0, a: 1}
+      maxColor: {r: 0.6679245, g: 0.31892344, b: 0.0037806502, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -17441,6 +17441,8 @@ MonoBehaviour:
   hasClick: 0
   isBoosterAdd: 0
   isInCellPlay: 0
+  isActive: 0
+  hasSpawn: 0
   neighbors: []
   pos: {x: 0, y: 0, z: 0}
   boardCellAnimation: {fileID: 1914893369096470440}

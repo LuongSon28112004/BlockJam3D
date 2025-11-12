@@ -53,6 +53,8 @@ MonoBehaviour:
   hasClick: 0
   isBoosterAdd: 0
   isInCellPlay: 0
+  isActive: 0
+  hasSpawn: 0
   neighbors: []
   pos: {x: 0, y: 0, z: 0}
   boardCellAnimation: {fileID: 825286568497037130}
@@ -6935,15 +6937,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4735390647609767, guid: ad9409c2913c60a4cbb476e0f2da85f1, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4735390647609767, guid: ad9409c2913c60a4cbb476e0f2da85f1, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4735390647609767, guid: ad9409c2913c60a4cbb476e0f2da85f1, type: 3}
       propertyPath: m_LocalScale.z
-      value: 2.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4735390647609767, guid: ad9409c2913c60a4cbb476e0f2da85f1, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -7007,7 +7009,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198585766699361661, guid: ad9409c2913c60a4cbb476e0f2da85f1, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
-      value: 1
+      value: 0.8113208
       objectReference: {fileID: 0}
     - target: {fileID: 198585766699361661, guid: ad9409c2913c60a4cbb476e0f2da85f1, type: 3}
       propertyPath: InitialModule.startColor.maxColor.g
@@ -7015,7 +7017,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198585766699361661, guid: ad9409c2913c60a4cbb476e0f2da85f1, type: 3}
       propertyPath: InitialModule.startColor.maxColor.r
-      value: 0.4871831
+      value: 0.39452478
       objectReference: {fileID: 0}
     - target: {fileID: 198860331758735360, guid: ad9409c2913c60a4cbb476e0f2da85f1, type: 3}
       propertyPath: InitialModule.startSize.scalar

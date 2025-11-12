@@ -328,7 +328,7 @@ public class CellPlayCtrl : MonoBehaviour
             c.BoardCellAnimation.SetPop();
         }
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1f);
 
         // Xoá object sau khi pop
         foreach (var c in cells)
