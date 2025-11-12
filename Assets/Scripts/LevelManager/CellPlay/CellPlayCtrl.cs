@@ -328,6 +328,7 @@ public class CellPlayCtrl : MonoBehaviour
             c.BoardCellAnimation.SetPop();
         }
 
+        Handheld.Vibrate();
         yield return new WaitForSeconds(1f);
 
         // Xoá object sau khi pop
@@ -343,7 +344,6 @@ public class CellPlayCtrl : MonoBehaviour
             boardCellMatch_3.Add(c);
             c.gameObject.SetActive(false);
         }
-        Handheld.Vibrate();
     }
 
     private IEnumerator MergeToCenter(BoardCell c1, BoardCell c2, BoardCell c3)
