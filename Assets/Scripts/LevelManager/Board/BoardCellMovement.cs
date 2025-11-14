@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System;
-using Unity.VisualScripting;
 
 public class BoardCellMovement : MonoBehaviour
 {
     [Header("Timing Settings")]
-    private float timerPerCellMatrixSecond = 0.07f;
+    private float timerPerCellMatrixSecond = 0.08f;
     private float distancePerCell = 1.25f;
 
     private float totalCell;
@@ -42,12 +41,12 @@ public class BoardCellMovement : MonoBehaviour
             if (transform.parent.position.x > containers[i].x)
             {
                 // Di chuyển sang trái → quay sang trái
-                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
+                transform.parent.DOLocalRotate(new Vector3(0, 60, 0), 0.15f).SetEase(Ease.InSine);
             }
             else if (transform.parent.position.x < containers[i].x)
             {
                 // Di chuyển sang phải → quay sang phải
-                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
+                transform.parent.DOLocalRotate(new Vector3(0, -60, 0), 0.15f).SetEase(Ease.InSine);
             }
             else
             {
@@ -63,15 +62,13 @@ public class BoardCellMovement : MonoBehaviour
 
             // Chờ tween hoàn thành
             yield return moveTween.WaitForCompletion();
-            //send event checkmatch_3
         }
         yield return StartCoroutine(MovementToCellPlay(transform.parent.GetComponent<BoardCell>().Pos));
         //setIdle Animation
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
+
         transform.parent.GetComponent<BoardCell>().IsInCellPlay = true;
         complete.Invoke(true);
-
-        // Debug.Log("Đã hoàn thành di chuyển trên ma trận.");
     }
 
     /// <summary>
@@ -92,8 +89,6 @@ public class BoardCellMovement : MonoBehaviour
             .SetEase(Ease.InSine);
 
         yield return moveTween.WaitForCompletion();
-
-        // Debug.Log("Đã di chuyển xuống CellPlay.");
     }
 
     /// <summary>
@@ -110,12 +105,12 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
         {
             // Di chuyển sang trái → quay sang trái
-            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
+            transform.parent.DOLocalRotate(new Vector3(0, 60, 0), 0.15f).SetEase(Ease.InSine);
         }
         else if (transform.parent.position.x < pos.x)
         {
             // Di chuyển sang phải → quay sang phải
-            transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
+            transform.parent.DOLocalRotate(new Vector3(0, -60, 0), 0.15f).SetEase(Ease.InSine);
         }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
@@ -150,12 +145,12 @@ public class BoardCellMovement : MonoBehaviour
             if (transform.parent.position.x > pos.x)
             {
                 // Di chuyển sang trái → quay sang trái
-                transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
+                transform.parent.DOLocalRotate(new Vector3(0, 60, 0), 0.15f).SetEase(Ease.InSine);
             }
             else if (transform.parent.position.x < pos.x)
             {
                 // Di chuyển sang phải → quay sang phải
-                transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
+                transform.parent.DOLocalRotate(new Vector3(0, -60, 0), 0.15f).SetEase(Ease.InSine);
             }
         }
 
@@ -181,6 +176,8 @@ public class BoardCellMovement : MonoBehaviour
 
     public IEnumerator MovementToPosOwner()
     {
+        if (transform.parent.GetComponent<BoardCell>().NeedUpdatePosAfter) yield break;
+        transform.parent.GetComponent<BoardCell>().NeedUpdatePosAfter = true;
         Vector3 pos = transform.parent.GetComponent<BoardCell>().Pos;
         if (transform.parent == null)
         {
@@ -191,12 +188,12 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
         {
             // Di chuyển sang trái → quay sang trái
-            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
+            transform.parent.DOLocalRotate(new Vector3(0, 60, 0), 0.15f).SetEase(Ease.InSine);
         }
         else if (transform.parent.position.x < pos.x)
         {
             // Di chuyển sang phải → quay sang phải
-            transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
+            transform.parent.DOLocalRotate(new Vector3(0, -60, 0), 0.15f).SetEase(Ease.InSine);
         }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);
@@ -208,6 +205,7 @@ public class BoardCellMovement : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.InSine);
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
+        transform.parent.GetComponent<BoardCell>().NeedUpdatePosAfter = false;
 
         Debug.Log("Đã hoàn thành MovementToPos.");
     }
@@ -223,12 +221,12 @@ public class BoardCellMovement : MonoBehaviour
         if (transform.parent.position.x > pos.x)
         {
             // Di chuyển sang trái → quay sang trái
-            transform.parent.DOLocalRotate(new Vector3(0, 90, 0), 0.15f).SetEase(Ease.InSine);
+            transform.parent.DOLocalRotate(new Vector3(0, 60, 0), 0.15f).SetEase(Ease.InSine);
         }
         else if (transform.parent.position.x < pos.x)
         {
             // Di chuyển sang phải → quay sang phải
-            transform.parent.DOLocalRotate(new Vector3(0, -90, 0), 0.15f).SetEase(Ease.InSine);
+            transform.parent.DOLocalRotate(new Vector3(0, -60, 0), 0.15f).SetEase(Ease.InSine);
         }
         transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
         // float distanceMagnitude = Vector3.Distance(pos, transform.parent.position);

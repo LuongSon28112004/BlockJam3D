@@ -66,6 +66,8 @@ public class BoardCell : MonoBehaviour
     [SerializeField] private bool isInCellPlay;
     [SerializeField] private bool isActive;
     [SerializeField] private bool hasSpawn;
+    [SerializeField] private bool needUpdatePosAfter;
+    [SerializeField] private bool isMagnetBooster;
 
     [Header("Neighbors")]
     [SerializeField] private List<NeighBors> neighbors = new List<NeighBors>();
@@ -95,6 +97,11 @@ public class BoardCell : MonoBehaviour
     public bool IsInCellPlay { get => isInCellPlay; set => isInCellPlay = value; }
     public bool IsActive { get => isActive; set => isActive = value; }
     public bool HasSpawn { get => hasSpawn; set => hasSpawn = value; }
+    public bool NeedUpdatePosAfter { get => needUpdatePosAfter; set => needUpdatePosAfter = value; }
+    public bool IsMagnetBooster { get => isMagnetBooster; set => isMagnetBooster = value; }
+
+
+    //-------------------------------Method---------------------------------------------
     public void AddNeighbor(BoardCell cell, DirectionNeighBor directionNeighBor)
     {
         if (cell != null && !neighbors.Contains(new NeighBors(cell, directionNeighBor, false)))
@@ -119,7 +126,6 @@ public class BoardCell : MonoBehaviour
             neighbors[i].boardCell.HasClick = true;
             neighbors[i].isActivatedByNeighbor = true;
             neighbors[i].boardCell.BoardCellAnimation.SetActive();
-            //neighbors[i].boardCell.RemoveNeighbor(this);
             yield return new WaitForSeconds(0.25f);
             if (neighbors[i].boardCell.barrel == null) yield break;
             neighbors[i].boardCell.Barrel.SetActive(false);

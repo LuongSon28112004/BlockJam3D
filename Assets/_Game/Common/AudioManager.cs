@@ -41,7 +41,7 @@ public class AudioManager : MonoBehaviour
 
     private float musicPlayTime;
     private bool musicIsPlaying;
-    
+
     [SerializeField] AudioMixer audioMixer;
     private AudioConfiguration audioConfiguration;
     [field: SerializeField] private List<AudioSource> listAudioSources = new List<AudioSource>();
@@ -56,7 +56,7 @@ public class AudioManager : MonoBehaviour
         }
         set
         {
-            PlayerPrefs.SetFloat("cf_ratio_sound", Mathf.Clamp(value,0,1));
+            PlayerPrefs.SetFloat("cf_ratio_sound", Mathf.Clamp(value, 0, 1));
         }
     }
 
@@ -74,7 +74,7 @@ public class AudioManager : MonoBehaviour
             AudioSource sourceFX = Instantiate(soundSource, transform);
             listAudioSources.Add(sourceFX);
         }
-        musicSource.volume = AudioMusicSetting ? 1 *Ratio_Sound : 0;
+        musicSource.volume = AudioMusicSetting ? 1 * Ratio_Sound : 0;
         soundSource.volume = AudioSoundSetting ? 1 * Ratio_Sound : 0;
         this.WaitUntil(() => audioMixer != null, () =>
         {
@@ -103,7 +103,7 @@ public class AudioManager : MonoBehaviour
                 break;
             }
         }
-        if(audioSource == null)
+        if (audioSource == null)
         {
             audioSource = listAudioSources[0];
         }
@@ -249,7 +249,7 @@ public class AudioManager : MonoBehaviour
     {
         AudioListener.pause = false;
     }
-    
+
     public void ResetAudio()
     {
         AudioSettings.Reset(audioConfiguration);
@@ -266,7 +266,7 @@ public class AudioManager : MonoBehaviour
         musicPlayTime = musicSource.time;
         musicIsPlaying = musicSource.isPlaying;
     }
-    
+
     public void settingMusic(int volume)
     {
         musicSource.volume = volume;
@@ -291,7 +291,7 @@ public class AudioManager : MonoBehaviour
         audioMixer.SetFloat("SFXMusic", dB);
     }
 
-    public void PlayVibrate() 
+    public void PlayVibrate()
     {
         //GameHelper.Instance.Vibrate(type_Vibreate);
 #if UNITY_ANDROID || UNITY_IOS

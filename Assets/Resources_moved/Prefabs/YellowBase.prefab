@@ -6883,6 +6883,7 @@ MonoBehaviour:
   isInCellPlay: 0
   isActive: 0
   hasSpawn: 0
+  needUpdatePosAfter: 0
   neighbors: []
   pos: {x: 0, y: 0, z: 0}
   boardCellAnimation: {fileID: 8118373883149257686}
@@ -7007,9 +7008,25 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 137002833958879087, guid: a56c89fa065a4b84aa58824d72884fa5, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 137002833958879087, guid: a56c89fa065a4b84aa58824d72884fa5, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 616e508e4f2dd3c4cba6575687281788, type: 2}
+    - target: {fileID: 198207412698993707, guid: a56c89fa065a4b84aa58824d72884fa5, type: 3}
+      propertyPath: lengthInSec
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 198207412698993707, guid: a56c89fa065a4b84aa58824d72884fa5, type: 3}
       propertyPath: InitialModule.startSize.scalar
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 198207412698993707, guid: a56c89fa065a4b84aa58824d72884fa5, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 198207412698993707, guid: a56c89fa065a4b84aa58824d72884fa5, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
@@ -7070,6 +7087,14 @@ PrefabInstance:
     - target: {fileID: 198682686767333348, guid: a56c89fa065a4b84aa58824d72884fa5, type: 3}
       propertyPath: lengthInSec
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 198682686767333348, guid: a56c89fa065a4b84aa58824d72884fa5, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 198682686767333348, guid: a56c89fa065a4b84aa58824d72884fa5, type: 3}
+      propertyPath: InitialModule.startLifetime.minMaxState
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114948538144737642, guid: a56c89fa065a4b84aa58824d72884fa5, type: 3}

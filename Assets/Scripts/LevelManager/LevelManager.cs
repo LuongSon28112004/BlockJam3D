@@ -81,8 +81,7 @@ public class LevelManager : Singleton<LevelManager>
         if (isNextRound) yield break;
         isNextRound = true;
 
-        // đưa các gameobject vào pool
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         AudioManager.Instance.PlayOneShot("BLJ_League_LeaderBoard_Enter", 1f);
 
         // đưa các object vào pool để tái sử dụng
@@ -96,6 +95,8 @@ public class LevelManager : Singleton<LevelManager>
         isNextRound = false;
         //khóa không cho dùng Booster khi chưa Load song round
         BoosterCtrl.Instance.IsBusy = true;
+        //reset booster Undo
+        boosterCtrl.BoosterUndo.ResetStackUndo();
         //Load round level
         yield return BoardCtrl.LoadLevel(levelDatas[Round]);
 

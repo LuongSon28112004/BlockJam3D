@@ -28,6 +28,7 @@ public class GridSpotSpawn : MonoBehaviour
     [Header("Config")]
     [SerializeField] int currentPointSpawn = 1;
     [SerializeField] int maxPointSpawn;
+    [SerializeField] private bool lastBlockMove;
     //[SerializeField] 
     //[SerializeField] int maxContainer = 1;
     [SerializeField] List<Direction> directions;
@@ -53,14 +54,20 @@ public class GridSpotSpawn : MonoBehaviour
     }
 
     public int MaxPointSpawn { get => maxPointSpawn; set => maxPointSpawn = value; }
+    public bool LastBlockMove { get => lastBlockMove; set => lastBlockMove = value; }
 
     public void DestroyBoardCellJustSpawn()
     {
         if (currentPointSpawn == 0)
         {
-
+            if (lastBlockMove)
+            {
+                lastBlockMove = false;
+                return;
+            }
             BoardCell JustSpawn = JustSpawns.Peek();
             if (JustSpawn == null) return;
+
             if (JustSpawn.Pos == JustSpawn.Container.Pos)
             {
                 JustSpawns.Pop();
@@ -88,6 +95,7 @@ public class GridSpotSpawn : MonoBehaviour
         }
         else
         {
+            if (JustSpawns.Count == 0) return;
             BoardCell JustSpawn = JustSpawns.Pop();
             if (JustSpawn == null) return;
             JustSpawn.transform.DOScale(Vector3.zero, 0.15f);

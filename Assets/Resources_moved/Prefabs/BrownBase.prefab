@@ -4844,7 +4844,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1142014707098741}
   serializedVersion: 8
-  lengthInSec: 1
+  lengthInSec: 2
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -4883,7 +4883,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -9763,8 +9763,8 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 3
-      scalar: 0.7
+      minMaxState: 0
+      scalar: 0.5
       minScalar: 0.5
       maxCurve:
         serializedVersion: 2
@@ -17294,6 +17294,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 0602584e7ce1b924dbf732e3aca84a77, type: 2}
+  - {fileID: 2100000, guid: 616e508e4f2dd3c4cba6575687281788, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17443,6 +17444,7 @@ MonoBehaviour:
   isInCellPlay: 0
   isActive: 0
   hasSpawn: 0
+  needUpdatePosAfter: 0
   neighbors: []
   pos: {x: 0, y: 0, z: 0}
   boardCellAnimation: {fileID: 1914893369096470440}

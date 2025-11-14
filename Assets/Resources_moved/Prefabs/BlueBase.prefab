@@ -100,6 +100,7 @@ MonoBehaviour:
   isInCellPlay: 0
   isActive: 0
   hasSpawn: 0
+  needUpdatePosAfter: 0
   neighbors: []
   pos: {x: 0, y: 0, z: 0}
   boardCellAnimation: {fileID: 1914893369096470440}
@@ -492,6 +493,38 @@ PrefabInstance:
     - target: {fileID: 4834805458960677, guid: dbc9297365a91e7499a0d7590161a874, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -10.524634
+      objectReference: {fileID: 0}
+    - target: {fileID: 137270991103459342, guid: dbc9297365a91e7499a0d7590161a874, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 137270991103459342, guid: dbc9297365a91e7499a0d7590161a874, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 616e508e4f2dd3c4cba6575687281788, type: 2}
+    - target: {fileID: 198178270660234349, guid: dbc9297365a91e7499a0d7590161a874, type: 3}
+      propertyPath: lengthInSec
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 198178270660234349, guid: dbc9297365a91e7499a0d7590161a874, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 198178270660234349, guid: dbc9297365a91e7499a0d7590161a874, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 198178270660234349, guid: dbc9297365a91e7499a0d7590161a874, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198178270660234349, guid: dbc9297365a91e7499a0d7590161a874, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.11566973
+      objectReference: {fileID: 0}
+    - target: {fileID: 198178270660234349, guid: dbc9297365a91e7499a0d7590161a874, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198327730184052320, guid: dbc9297365a91e7499a0d7590161a874, type: 3}
       propertyPath: lengthInSec

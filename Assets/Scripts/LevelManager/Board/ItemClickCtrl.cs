@@ -126,10 +126,13 @@ public class ItemClickCtrl : MonoBehaviour
         StartCoroutine(LevelManager.Instance.BoardCtrl.SpawnBlockToGSPAction.Invoke(container, null));
         // Undo
         LevelManager.Instance.boosterCtrl.BoosterUndo.AddStack(boardCell, container, path);
+        // di chuyển theo đường đi chuẩn xác
+        boardCell.HasClick = false;
         StartCoroutine(boardCell.BoardCellMovement.MovementPath(path, (check) =>
         {
             if (check)
             {
+                boardCell.HasClick = false;
                 Checkmatch_3(boardCell);
             }
         }));

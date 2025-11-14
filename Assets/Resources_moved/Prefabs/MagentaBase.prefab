@@ -190,6 +190,7 @@ MonoBehaviour:
   isInCellPlay: 0
   isActive: 0
   hasSpawn: 0
+  needUpdatePosAfter: 0
   neighbors: []
   pos: {x: 0, y: 0, z: 0}
   boardCellAnimation: {fileID: 2084944823176013233}
@@ -621,6 +622,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 9ab12d3798b837043b5b47ade83a23d2, type: 2}
+    - target: {fileID: 137067364586310789, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 137067364586310789, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 616e508e4f2dd3c4cba6575687281788, type: 2}
     - target: {fileID: 198238124247925753, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: lengthInSec
       value: 0.5
@@ -658,6 +667,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198498981728788029, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
+      propertyPath: lengthInSec
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 198498981728788029, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: emitterVelocityMode
       value: 0
       objectReference: {fileID: 0}
@@ -667,7 +680,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198498981728788029, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: InitialModule.startLifetime.scalar
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 198498981728788029, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
@@ -684,6 +697,14 @@ PrefabInstance:
     - target: {fileID: 198706027851794583, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: lengthInSec
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 198706027851794583, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 198706027851794583, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
+      propertyPath: InitialModule.startLifetime.minMaxState
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114670340030400562, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}

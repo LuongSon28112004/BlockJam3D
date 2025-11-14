@@ -101,6 +101,7 @@ public class BoosterMagnet : MonoBehaviour
             seqKnob.Join(bc.Knob());
         }
 
+        // Lấy tất cả các BoardCell cùng loại ở cellplay bên dưới
         List<BoardCell> boardCellss = LevelManager.Instance.cellPlayCtrl.BoardCells;
         for (int i = 0; i < boardCellss.Count; i++)
         {
@@ -108,6 +109,7 @@ public class BoosterMagnet : MonoBehaviour
             {
                 BoardCellMovement bc = boardCellss[i].BoardCellMovement;
                 allBoardCells.Add(boardCellss[i]);
+                boardCellss[i].IsMagnetBooster = true;
                 seqKnob.Join(bc.Knob());
             }
         }

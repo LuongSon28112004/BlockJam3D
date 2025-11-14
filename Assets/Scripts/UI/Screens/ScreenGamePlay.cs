@@ -88,9 +88,21 @@ public class ScreenGamePlay : ScreenUI
     {
         AddAnimationIcons();
         SetCounterOrPrice();
-        this.InitCoinText();
-        this.InitPriceBooster();
-        this.LoadTextLevel();
+        InitCoinText();
+        InitPriceBooster();
+        LoadTextLevel();
+        CheckLocked();
+    }
+
+    private void CheckLocked()
+    {
+        if (GameManager.Instance.Level == 1)
+        {
+            foreach (var i in listBoosterConfigs)
+            {
+                i.LockedBooster();
+            }
+        }
     }
 
     private void SetCounterOrPrice()

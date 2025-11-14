@@ -52,7 +52,6 @@ public class CellPlayCtrl : MonoBehaviour
     }
 
 
-
     private void Start()
     {
         boardCells = new List<BoardCell>();
@@ -62,6 +61,11 @@ public class CellPlayCtrl : MonoBehaviour
         boardCellMatch_3 = new List<BoardCell>();
         InitCountCellType();
         GenerateCell();
+    }
+
+    private void Update()
+    {
+        StartCoroutine(ResetPosCellPlay(0f));
     }
 
     private void InitCountCellType()
@@ -147,7 +151,6 @@ public class CellPlayCtrl : MonoBehaviour
         {
             orderPlayInCellPlay.Add(boardCell.TypeItem);
         }
-        StartCoroutine(ResetPosCellPlay(0.2f));
     }
 
     private int FindInsertIndex(BoardCell newCell)
@@ -178,7 +181,12 @@ public class CellPlayCtrl : MonoBehaviour
             boardCells[i] = boardCells[i - 1];
             boardCells[i].Pos = cellPlays[i].Pos;
             boardCells[i].Container = cellPlays[i];
-            if (!boardCells[i].IsInCellPlay) continue;
+            if (!boardCells[i].IsInCellPlay)
+            {
+                //boardCells[i].NeedUpdatePosAfter = true;
+                //if (i == boardCells.Count - 1) yield break;
+                continue;
+            }
             BoardCellMovement bc = boardCells[i - 1].BoardCellMovement;
             StartCoroutine(bc.MovementToPos(cellPlays[i].Pos));
         }
@@ -237,8 +245,6 @@ public class CellPlayCtrl : MonoBehaviour
 
     private IEnumerator Match3Process(TypeItem typeItem)
     {
-        // check xem cấc ô đã đi đến đúng vị trí của bản thân hay chưa
-        StartCoroutine(ResetPosCellPlay(0.1f));
         foreach (var kvp in countCellType)
         {
             TypeItem type = kvp.Key;
@@ -262,9 +268,9 @@ public class CellPlayCtrl : MonoBehaviour
 
                 // Xóa logic trước khi anim
                 yield return new WaitUntil(() =>
-                Vector3.Distance(c1.transform.position, c1.Pos) < 0.01f &&
-                Vector3.Distance(c2.transform.position, c2.Pos) < 0.01f &&
-                Vector3.Distance(c3.transform.position, c3.Pos) < 0.01f
+                Vector3.Distance(c1.transform.position, c1.Pos) <= 0.01f &&
+                Vector3.Distance(c2.transform.position, c2.Pos) <= 0.01f &&
+                Vector3.Distance(c3.transform.position, c3.Pos) <= 0.01f
                 );
                 RemoveCellData(new List<BoardCell> { c1, c2, c3 }, type);
 
@@ -272,28 +278,45 @@ public class CellPlayCtrl : MonoBehaviour
                 StartCoroutine(SetAnimMerge(new List<BoardCell> { c1, c2, c3 }));
 
                 // Sau khi xóa, sắp xếp lại cell tạm thời đang để chờ 0.2s rồi mới sort lại
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.15f);
                 StartCoroutine(RearrangeCellsAfterRemove());
-                // check xem cấc ô đã đi đến đúng vị trí của bản thân hay chưa
-                StartCoroutine(ResetPosCellPlay(0.3f));
             }
         }
 
         yield break;
     }
 
-    public IEnumerator ResetPosCellPlay(float timer)
+    public IEnumerator ResetPosCellPlay(float delay)
     {
-        yield return new WaitForSeconds(timer);
-        for (int i = 0; i < boardCells.Count; i++)
+        // Đợi theo thời gian truyền vào
+        yield return new WaitForSeconds(delay);
+        foreach (var cell in boardCells)
         {
-            if (boardCells[i].IsInCellPlay && boardCells[i].transform.position != boardCells[i].Pos)
-            {
-                Debug.Log("yesyes" + boardCells[i].TypeItem + " " + boardCells[i].transform.position + " " + boardCells[i].Pos);
-                if (boardCells[i].transform.position != boardCells[i].Pos) StartCoroutine(boardCells[i].BoardCellMovement.MovementToPosOwner());
-            }
+            if (cell == null) continue;
+            if (!cell.gameObject.activeSelf) continue;
+            if (cell.IsMagnetBooster) continue;
+            if (!cell.IsInCellPlay) continue;
+            float distance = Vector3.Distance(cell.transform.position, cell.Pos);
+            if (distance <= 0.01f) continue;
+            StartCoroutine(cell.BoardCellMovement.MovementToPosOwner());
         }
+
+        // foreach (var cell in boardCells)
+        // {
+        //     if (cell == null) continue;
+        //     if (!cell.gameObject.activeSelf) continue;                 // bỏ qua nếu cell bị ẩn
+        //     if (!cell.IsInCellPlay) continue;                         // bỏ qua nếu không trong vùng chơi
+        //     if (!cell.NeedUpdatePosAfter) continue;                   // bỏ qua nếu không cần cập nhật
+
+        //     float distance = Vector3.Distance(cell.transform.position, cell.Pos);
+        //     if (distance <= 0.01f) continue;                          // bỏ qua nếu gần đúng vị trí mong muốn
+
+
+        //     // Chạy coroutine di chuyển về vị trí đúng
+        //     StartCoroutine(cell.BoardCellMovement.MovementToPosOwner());
+        // }
     }
+
 
     private IEnumerator WaitRotaion(List<BoardCell> cells)
     {
@@ -306,6 +329,8 @@ public class CellPlayCtrl : MonoBehaviour
 
     public IEnumerator SetAnimMerge(List<BoardCell> cells)
     {
+        // chặn chưa có dùng booster Undo
+        CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, 1, 1, 1 });
         yield return WaitRotaion(cells);
         cells.RemoveAll(c => c == null || c.gameObject == null);
         if (cells.Count < 3) yield break;
@@ -328,9 +353,10 @@ public class CellPlayCtrl : MonoBehaviour
             c.BoardCellAnimation.SetPop();
         }
 
-        Handheld.Vibrate();
-        yield return new WaitForSeconds(1f);
-
+        AudioManager.Instance.PlayVibrate();
+        yield return new WaitForSeconds(0.6f);
+        // mở khóa Booster Undo
+        CustomeEventSystem.Instance.ActiveBooster(new List<int> { 1, 1, 1, 1 });
         // Xoá object sau khi pop
         foreach (var c in cells)
         {
@@ -382,9 +408,6 @@ public class CellPlayCtrl : MonoBehaviour
         StartCoroutine(checkWin());
 
     }
-
-
-
 
     public void RemoveCellData(List<BoardCell> cells, TypeItem type)
     {
@@ -439,9 +462,14 @@ public class CellPlayCtrl : MonoBehaviour
             cell.Container = cellPlays[i];
             cell.Pos = targetPos;
             cellPlays[i].IsContaining = true;
-            if (!boardCells[i].IsInCellPlay) continue;
+            if (!boardCells[i].IsInCellPlay)
+            {
+                continue;
+            }
 
-            // Join tween nếu hợp lệ
+            float distance = Vector3.Distance(cell.transform.position, cell.Pos);
+            if (distance <= 0.01f) continue;
+
             var moveTween = cell.BoardCellMovement?.MovementToPosTween(targetPos);
             if (moveTween != null)
                 sc.Join(moveTween);
@@ -454,6 +482,7 @@ public class CellPlayCtrl : MonoBehaviour
         {
             var cell = boardCells[i];
             if (cell == null || cell.gameObject == null) continue;
+            if (!cell.IsInCellPlay) continue;
 
             cell.BoardCellAnimation.SetIdle();
         }
@@ -463,6 +492,7 @@ public class CellPlayCtrl : MonoBehaviour
         {
             var cell = boardCells[i];
             if (cell == null || cell.gameObject == null) continue;
+            if (!cell.IsInCellPlay) continue;
 
             // Xoay lại góc ban đầu
             cell.transform.DOLocalRotate(Vector3.zero, 0.25f).SetEase(Ease.OutBack);

@@ -10,6 +10,10 @@ public class BoosterConfig : MonoBehaviour
     [SerializeField] Image Panel;
     [SerializeField] Image IconBooster;
 
+    // Lock
+    [SerializeField] GameObject Locked;
+    [SerializeField] bool isLocked;
+
     // price
     [Header("Price")]
     [SerializeField] GameObject Price;
@@ -46,7 +50,7 @@ public class BoosterConfig : MonoBehaviour
 
     public void Active()
     {
-        buttonBooster.interactable = true;
+        if (!isLocked) buttonBooster.interactable = true;
         Panel.color = colorActive;
         IconBooster.color = colorActive;
         PanelPrice.color = colorActive;
@@ -62,5 +66,21 @@ public class BoosterConfig : MonoBehaviour
         PanelPrice.color = colorInactive;
         IconCoin.color = colorInactive;
         PanelCounter.color = colorInactive;
+    }
+
+    public void LockedBooster()
+    {
+        isLocked = true;
+        Panel.gameObject.SetActive(false);
+        Locked.SetActive(true);
+        buttonBooster.interactable = false;
+    }
+
+    public void Unlock()
+    {
+        isLocked = false;
+        Locked.SetActive(false);
+        Panel.gameObject.SetActive(true);
+        buttonBooster.interactable = true;
     }
 }

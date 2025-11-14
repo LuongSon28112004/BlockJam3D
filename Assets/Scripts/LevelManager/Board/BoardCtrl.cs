@@ -8,6 +8,7 @@ using DG.Tweening;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class BoardCtrl : MonoBehaviour
@@ -66,12 +67,12 @@ public class BoardCtrl : MonoBehaviour
         }
     }
 
-    public IEnumerator CheckSpawnBlock(Container container, BoardCell boardCell = null)//neu sau nay muon truyen index thi them vao
+    public IEnumerator CheckSpawnBlock(Container container, BoardCell boardCelll = null)//neu sau nay muon truyen index thi them vao
     {
         if (gridSpotSpawns.Count == 0) yield break;
         for (int i = 0; i < gridSpotSpawns.Count; i++)
         {
-            if (gridSpotSpawns[i].CheckContainer(container))
+            if (gridSpotSpawns[i].CheckContainer(container) && gridSpotSpawns[i].CurrentPointSpawn > 0)
             {
                 TypeItem typeItem = GetNextRandomType(levelData.totalUnits);
                 GameObject obj = AddressableManager.Instance.GetPrefab(Enum.GetName(typeof(TypeItem), typeItem));
@@ -96,7 +97,11 @@ public class BoardCtrl : MonoBehaviour
                         boardCell.HasSpawn = true;
                     }
                 }));
-                break;
+                yield break;
+            }
+            if (gridSpotSpawns[i].CurrentPointSpawn <= 0)
+            {
+                gridSpotSpawns[i].LastBlockMove = true;
             }
         }
         yield break;
@@ -160,11 +165,11 @@ public class BoardCtrl : MonoBehaviour
         int currentTotal = initialTypeCounts.Values.Sum();
 
         // Nếu đã đạt giới hạn tổng, reset lại vòng (nếu muốn)
-        if (currentTotal >= totalCount)
-        {
-            Debug.Log("Đã đạt tổng quân tối đa, reset bộ đếm!");
-            InitTypeCounts(); // reset nếu cần tạo batch mới
-        }
+        // if (currentTotal >= totalCount)
+        // {
+        //     Debug.Log("Đã đạt tổng quân tối đa, reset bộ đếm!");
+        //     InitTypeCounts(); // reset nếu cần tạo batch mới
+        // }
 
         // B1: Lấy danh sách các loại chưa đạt bội 3
         List<TypeItem> notMultipleOfThree = new List<TypeItem>();
@@ -192,6 +197,8 @@ public class BoardCtrl : MonoBehaviour
         initialTypeCounts[chosenType]++;
 
         Debug.Log($"[RandomType] Chọn {chosenType}, hiện có {initialTypeCounts[chosenType]} quân.");
+        int currentTotall = initialTypeCounts.Values.Sum();
+        Debug.Log("Total: " + currentTotall);
 
         return chosenType;
     }
