@@ -1,16 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
-using System.Threading.Tasks;
+using UnityEngine;  // mới có Vector2, Vector3 đúng của Unity
 using DG.Tweening;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
-
 public class BoardCtrl : MonoBehaviour
 {
 
@@ -98,10 +91,6 @@ public class BoardCtrl : MonoBehaviour
                     }
                 }));
                 yield break;
-            }
-            if (gridSpotSpawns[i].CurrentPointSpawn <= 0)
-            {
-                gridSpotSpawns[i].LastBlockMove = true;
             }
         }
         yield break;
@@ -352,6 +341,7 @@ public class BoardCtrl : MonoBehaviour
                 {
                     string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
                     obj = BlockItemSpawner.Instance.spawnCellItem(name, new Vector3(posX, 0f, posZ), Quaternion.identity).gameObject;
+                    obj.transform.localScale = new Vector3(1f, 1f, 1f);
                     obj.transform.SetParent(gridParent);
                 }
                 else if (prefabName == "Wall")

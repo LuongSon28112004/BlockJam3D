@@ -116,6 +116,17 @@ public class ItemClickCtrl : MonoBehaviour
         boardCell.Container.IsContaining = false;
         AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Click_01", 1f);
 
+
+        // đánh dấu GridSpotSpawn cuối cùng đã di chuyển khỏi pipe
+        for (int i = 0; i < LevelManager.Instance.BoardCtrl.gridSpotSpawns.Count; i++)
+        {
+            if (LevelManager.Instance.BoardCtrl.gridSpotSpawns[i].CheckContainer(container) && LevelManager.Instance.BoardCtrl.gridSpotSpawns[i].CurrentPointSpawn <= 0)
+            {
+                LevelManager.Instance.BoardCtrl.gridSpotSpawns[i].LastBlockMove = true;
+                break;
+            }
+        }
+
         // save data của khối block xuống trước.
         LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);
         LevelManager.Instance.AddTutorial();

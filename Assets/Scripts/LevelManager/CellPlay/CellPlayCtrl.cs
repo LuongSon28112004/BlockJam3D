@@ -183,8 +183,6 @@ public class CellPlayCtrl : MonoBehaviour
             boardCells[i].Container = cellPlays[i];
             if (!boardCells[i].IsInCellPlay)
             {
-                //boardCells[i].NeedUpdatePosAfter = true;
-                //if (i == boardCells.Count - 1) yield break;
                 continue;
             }
             BoardCellMovement bc = boardCells[i - 1].BoardCellMovement;
@@ -229,7 +227,7 @@ public class CellPlayCtrl : MonoBehaviour
         isCheckWin = true;
         if (LevelManager.Instance.BoardCtrl.BoardCells.Count == 0 && LevelManager.Instance.Round >= 2)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(1.5f);
             UserData.level += 1;
             SaveDataManager.Save();
             GameManager.Instance.WinGame();
@@ -300,21 +298,6 @@ public class CellPlayCtrl : MonoBehaviour
             if (distance <= 0.01f) continue;
             StartCoroutine(cell.BoardCellMovement.MovementToPosOwner());
         }
-
-        // foreach (var cell in boardCells)
-        // {
-        //     if (cell == null) continue;
-        //     if (!cell.gameObject.activeSelf) continue;                 // bỏ qua nếu cell bị ẩn
-        //     if (!cell.IsInCellPlay) continue;                         // bỏ qua nếu không trong vùng chơi
-        //     if (!cell.NeedUpdatePosAfter) continue;                   // bỏ qua nếu không cần cập nhật
-
-        //     float distance = Vector3.Distance(cell.transform.position, cell.Pos);
-        //     if (distance <= 0.01f) continue;                          // bỏ qua nếu gần đúng vị trí mong muốn
-
-
-        //     // Chạy coroutine di chuyển về vị trí đúng
-        //     StartCoroutine(cell.BoardCellMovement.MovementToPosOwner());
-        // }
     }
 
 
@@ -498,8 +481,6 @@ public class CellPlayCtrl : MonoBehaviour
             cell.transform.DOLocalRotate(Vector3.zero, 0.25f).SetEase(Ease.OutBack);
         }
     }
-
-
 
     public bool HasMatch3(TypeItem typeItem)
     {

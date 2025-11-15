@@ -84,10 +84,6 @@ public class GridSpotSpawn : MonoBehaviour
             }
             else
             {
-                // if (currentPointSpawn < maxPointSpawn)
-                // {
-                //     currentPointSpawn += 1;
-                // }
                 LevelManager.Instance.BoardCtrl.initialTypeCounts[JustSpawn.TypeItem] -= 1;
                 LevelManager.Instance.BoardCtrl.UpdateBoardCell(JustSpawn);
                 textCount.text = currentPointSpawn.ToString();
@@ -177,6 +173,7 @@ public class GridSpotSpawn : MonoBehaviour
         //Instantiate(blockPrefab, transform.position, Quaternion.identity, GridParent.transform);
         string typeIndexSpawn = Enum.GetName(typeof(TypeItem), typeItem);
         GameObject obj = BlockItemSpawner.Instance.spawnCellItem(typeIndexSpawn, transform.position, Quaternion.identity).gameObject;
+        obj.transform.localScale = new Vector3(1, 1, 1);
         obj.transform.SetParent(GridParent.transform);
         BoardCell boardCell = obj.GetComponent<BoardCell>();
         JustSpawns.Push(boardCell);
