@@ -142,19 +142,22 @@ public class PopupTutorial : PopupUI
         TMP_Text text = match_3_Color_Text;
         text.ForceMeshUpdate();
 
-        TMP_TextInfo textInfo = text.textInfo;
         float time = 0f;
 
-        // Màu gốc
-        Color blue = new Color(0.2f, 0.6f, 1f);
         Color brown = new Color(0.6f, 0.3f, 0.1f);
+        Color green = new Color(0.1f, 0.9f, 0.3f);
 
         while (true)
         {
-            text.ForceMeshUpdate();
-            textInfo = text.textInfo;
+            time += Time.deltaTime * 2f;
 
-            time += Time.deltaTime * 2f; // tốc độ sóng
+            // Nếu sin > 0 → xanh, ngược lại → nâu
+            bool isGreen = Mathf.Sin(time * 2f) > 0f;
+            text.color = isGreen ? green : brown;
+
+            // Giữ hiệu ứng sóng y như cũ (nếu bạn muốn)
+            text.ForceMeshUpdate();
+            TMP_TextInfo textInfo = text.textInfo;
 
             for (int i = 0; i < textInfo.characterCount; i++)
             {
@@ -166,35 +169,26 @@ public class PopupTutorial : PopupUI
 
                 Vector3[] vertices = textInfo.meshInfo[materialIndex].vertices;
 
-                // Sóng di chuyển theo hình sin
-                float wave = Mathf.Sin(time * 3f + i * 0.5f) * 5f; // biên độ sóng
+                // Wave nhảy chữ
+                float wave = Mathf.Sin(time * 3f + i * 0.5f) * 5f;
                 Vector3 offset = new Vector3(0, wave, 0);
 
                 vertices[vertexIndex + 0] += offset;
                 vertices[vertexIndex + 1] += offset;
                 vertices[vertexIndex + 2] += offset;
                 vertices[vertexIndex + 3] += offset;
-
-                // Hiệu ứng đổi màu
-                Color color = Color.Lerp(blue, brown, (Mathf.Sin(time + i * 0.3f) + 1f) / 2f);
-                Color32[] colors = textInfo.meshInfo[materialIndex].colors32;
-
-                colors[vertexIndex + 0] = color;
-                colors[vertexIndex + 1] = color;
-                colors[vertexIndex + 2] = color;
-                colors[vertexIndex + 3] = color;
             }
 
-            // Cập nhật lại mesh
+            // Update lại mesh
             for (int i = 0; i < textInfo.meshInfo.Length; i++)
             {
                 var meshInfo = textInfo.meshInfo[i];
                 meshInfo.mesh.vertices = meshInfo.vertices;
-                meshInfo.mesh.colors32 = meshInfo.colors32;
                 text.UpdateGeometry(meshInfo.mesh, i);
             }
 
             yield return null;
         }
     }
+
 }
