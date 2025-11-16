@@ -6871,6 +6871,7 @@ MonoBehaviour:
   isActive: 0
   hasSpawn: 0
   needUpdatePosAfter: 0
+  isMagnetBooster: 0
   neighbors: []
   pos: {x: 0, y: 0, z: 0}
   boardCellAnimation: {fileID: 7008707036251779333}
@@ -6966,7 +6967,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9088357174725338720}
   serializedVersion: 8
-  lengthInSec: 2
+  lengthInSec: 8
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -7005,7 +7006,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 8
       minScalar: 5
       maxCurve:
         serializedVersion: 2

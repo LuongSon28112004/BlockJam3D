@@ -261,7 +261,7 @@ public class BoosterUndo : MonoBehaviour
         if (posCell >= 0 && posCell < LevelManager.Instance.cellPlayCtrl.BoardCells.Count)
             LevelManager.Instance.cellPlayCtrl.BoardCells[posCell] = newCell;
         else
-            LevelManager.Instance.cellPlayCtrl.BoardCells.Insert(posCell, newCell);
+            LevelManager.Instance.cellPlayCtrl.BoardCells.Add(newCell);
 
         if (posCell >= 0 && posCell < LevelManager.Instance.cellPlayCtrl.CellPlays.Count)
             LevelManager.Instance.cellPlayCtrl.CellPlays[posCell].IsContaining = true;

@@ -10,12 +10,14 @@ using UnityEngine;
 public class LevelManager : Singleton<LevelManager>
 {
     [Header("Setting LevelManager Components")]
-    public int Round = 0;
-    public List<LevelData> levelDatas;
     public BoardCtrl BoardCtrl;
     public CellPlayCtrl cellPlayCtrl;
     public BoosterCtrl boosterCtrl;
     public TutorialCtrl TutorialCtrl;
+
+
+    public List<LevelData> levelDatas;
+    public int Round = 0;
     [Header("Action")]
     public Func<IEnumerator> NextRound;
     public bool isNextRound = false;

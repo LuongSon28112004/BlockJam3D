@@ -191,6 +191,7 @@ MonoBehaviour:
   isActive: 0
   hasSpawn: 0
   needUpdatePosAfter: 0
+  isMagnetBooster: 0
   neighbors: []
   pos: {x: 0, y: 0, z: 0}
   boardCellAnimation: {fileID: 2084944823176013233}
@@ -668,7 +669,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198498981728788029, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: lengthInSec
-      value: 2
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 198498981728788029, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: emitterVelocityMode
@@ -680,7 +681,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198498981728788029, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: InitialModule.startLifetime.scalar
-      value: 2
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 198498981728788029, guid: 1cc5b4ad6ba95894e80ae73a2f60d6a4, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b

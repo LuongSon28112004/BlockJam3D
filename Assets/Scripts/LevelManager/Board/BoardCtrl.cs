@@ -311,7 +311,7 @@ public class BoardCtrl : MonoBehaviour
 
                 // Chọn prefab
                 GameObject prefab = null;
-                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight")
+                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight" && prefabName != "GSPLeft")
                 {
                     //Sửa lỗi tham chiếu: Sử dụng Enum.GetName(typeof(TypeItem), int.Parse(prefabName))
                     string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
@@ -337,7 +337,7 @@ public class BoardCtrl : MonoBehaviour
                 float posZ = startZ - row * offsetZ; // hàng 0 ở trên, hàng cuối ở dưới
 
                 GameObject obj = null;
-                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight" && prefabName.Length < 2)
+                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight" && prefabName != "GSPLeft" && prefabName.Length < 2)
                 {
                     string name = Enum.GetName(typeof(TypeItem), int.Parse(prefabName[0].ToString()) - 1);
                     obj = BlockItemSpawner.Instance.spawnCellItem(name, new Vector3(posX, 0f, posZ), Quaternion.identity).gameObject;
@@ -354,7 +354,7 @@ public class BoardCtrl : MonoBehaviour
                     obj = Instantiate(prefab, new Vector3(posX, 0f, posZ), Quaternion.identity, gridParent);
                 }
                 obj.name = prefabName;
-                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight")
+                if (prefabName != "Wall" && prefabName != "Container" && prefabName != "GSPDown" && prefabName != "GSPBottomRight" && prefabName != "GSPRight" && prefabName != "GSPLeft")
                 {
                     GameObject prefabTemp = AddressableManager.Instance.GetPrefab("Container");
                     GameObject objj = Instantiate(prefabTemp, new Vector3(posX, 0f, posZ), Quaternion.identity, gridParent);
@@ -381,7 +381,7 @@ public class BoardCtrl : MonoBehaviour
                         grid[row, col] = boardCell;
                     }
                 }
-                if (prefabName == "GSPDown" || prefabName == "GSPBottomRight" || prefabName == "GSPRight")
+                if (prefabName == "GSPDown" || prefabName == "GSPBottomRight" || prefabName == "GSPRight" || prefabName == "GSPLeft")
                 {
                     if (obj.TryGetComponent(out GridSpotSpawn gridSpotSpawn))
                     {
@@ -418,7 +418,7 @@ public class BoardCtrl : MonoBehaviour
                     containerToAdd.Pos = new Vector3(posX, 0f, posZ);
                 }
 
-                if (prefabName == "Wall" || prefabName == "Container" || prefabName == "GSPDown" || prefabName == "GSPBottomRight" || prefabName == "GSPRight")
+                if (prefabName == "Wall" || prefabName == "Container" || prefabName == "GSPDown" || prefabName == "GSPBottomRight" || prefabName == "GSPRight" || prefabName == "GSPLeft")
                     itemClickCtrl.FindingPath.containers.Add(containerToAdd);
             }
         }

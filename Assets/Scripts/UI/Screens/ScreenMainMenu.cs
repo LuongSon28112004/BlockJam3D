@@ -32,7 +32,7 @@ public class ScreenMainMenu : ScreenUI
 
     private void OnPlayClicked()
     {
-        if (UserData.level >= 7) GameManager.Instance.Level = 6;
+        if (UserData.level >= 11) GameManager.Instance.Level = 10;
         else GameManager.Instance.Level = UserData.level;
         AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
         GameManager.Instance.StartGame();
