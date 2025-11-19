@@ -110,27 +110,31 @@ public class BoardCell : MonoBehaviour
         }
     }
 
-    public IEnumerator SetActiveNeighBor()
+    public void SetActiveNeighBor()
     {
         for (int i = 0; i < neighbors.Count; i++)
         {
-            if (neighbors[i] == null) continue;
-            if (neighbors[i].boardCell.IsInCellPlay) continue;
-            if (neighbors[i].boardCell.Barrel == null) continue;
-            if (neighbors[i].boardCell.Barrel.activeSelf)
-            {
-                StartCoroutine(neighbors[i].boardCell.PlayBarrelAnimation());
-                AudioManager.Instance.PlayOneShot("BLJ_Game_Obstacles_Barrel_Break_01", 1f);
-            }
-            if (neighbors[i].boardCell.HasClick == true) continue;
-            neighbors[i].boardCell.HasClick = true;
-            neighbors[i].isActivatedByNeighbor = true;
-            neighbors[i].boardCell.BoardCellAnimation.SetActive();
-            yield return new WaitForSeconds(0.25f);
-            if (neighbors[i].boardCell.barrel == null) yield break;
-            neighbors[i].boardCell.Barrel.SetActive(false);
+            StartCoroutine(Active(neighbors[i]));
         }
-        yield break;
+    }
+
+    public IEnumerator Active(NeighBors neighbor)
+    {
+        if (neighbor == null) yield break;
+        if (neighbor.boardCell.IsInCellPlay) yield break;
+        if (neighbor.boardCell.Barrel == null) yield break;
+        if (neighbor.boardCell.Barrel.activeSelf)
+        {
+            StartCoroutine(neighbor.boardCell.PlayBarrelAnimation());
+            AudioManager.Instance.PlayOneShot("BLJ_Game_Obstacles_Barrel_Break_01", 1f);
+        }
+        if (neighbor.boardCell.HasClick == true) yield break;
+        neighbor.boardCell.HasClick = true;
+        neighbor.isActivatedByNeighbor = true;
+        neighbor.boardCell.BoardCellAnimation.SetActive();
+        yield return new WaitForSeconds(0.25f);
+        if (neighbor.boardCell.barrel == null) yield break;
+        neighbor.boardCell.Barrel.SetActive(false);
     }
 
     public void SetInActiveNeighBor()

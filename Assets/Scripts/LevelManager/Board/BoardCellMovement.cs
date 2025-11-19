@@ -17,11 +17,14 @@ public class BoardCellMovement : MonoBehaviour
     /// </summary>
     public IEnumerator MovementPath(List<Vector3> containers, Action<bool> complete)
     {
-        transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetRunning();
+        var parent = transform.parent;
+        var boardCell = parent.GetComponent<BoardCell>();
+        boardCell.BoardCellAnimation.SetRunning();
+
         if (containers == null || containers.Count == 0)
         {
             Debug.LogWarning("containers rỗng, không thể di chuyển.");
-            complete.Invoke(false);
+            complete(false);
             yield break;
         }
 
@@ -29,47 +32,58 @@ public class BoardCellMovement : MonoBehaviour
 
         for (int i = 1; i < containers.Count; i++)
         {
-            if (transform.parent == null)
+            if (parent == null)
             {
-                Debug.LogWarning("Không có transform.parent, không thể di chuyển.");
-                complete.Invoke(false);
+                Debug.LogWarning("Không có parent!");
+                complete(false);
                 yield break;
             }
 
+            Vector3 current = parent.position;
+            Vector3 next = containers[i];
+            Vector3 dir = (next - current).normalized;
 
-            // //rotate 
-            if (transform.parent.position.x > containers[i].x)
+            // ----- XÁC ĐỊNH GÓC XOAY DỰA TRÊN HƯỚNG -----
+            float targetYRotation = parent.localEulerAngles.y;
+
+            // Ưu tiên di chuyển theo trục nào có độ thay đổi lớn hơn
+            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.z))
             {
-                // Di chuyển sang trái → quay sang trái
-                transform.parent.DOLocalRotate(new Vector3(0, 60, 0), 0.15f).SetEase(Ease.InSine);
-            }
-            else if (transform.parent.position.x < containers[i].x)
-            {
-                // Di chuyển sang phải → quay sang phải
-                transform.parent.DOLocalRotate(new Vector3(0, -60, 0), 0.15f).SetEase(Ease.InSine);
+                // Di chuyển theo trục X
+                if (dir.x > 0)
+                    targetYRotation = -90f;  // phải
+                else
+                    targetYRotation = 90f;   // trái
             }
             else
             {
-                // Không thay đổi trục x → quay về hướng mặc định
-                transform.parent.DOLocalRotate(new Vector3(0, 0, 0), 0.15f).SetEase(Ease.InSine);
+                // Di chuyển theo trục Z
+                if (dir.z > 0)
+                    targetYRotation = 180f;  // lên
+                else
+                    targetYRotation = 0f;    // xuống
             }
 
-            Vector3 nextPos = containers[i];
+            // ----- XOAY CHỈ 1 LẦN -----
+            parent.DOLocalRotate(new Vector3(0, targetYRotation, 0), 0.15f)
+                  .SetEase(Ease.InSine);
 
-            // Tạo tween di chuyển
-            Tween moveTween = transform.parent.DOMove(nextPos, timerPerCellMatrixSecond)
-                .SetEase(Ease.InSine);
+            // ----- DI CHUYỂN -----
+            Tween moveTween = parent.DOMove(next, timerPerCellMatrixSecond)
+                                    .SetEase(Ease.InSine);
 
-            // Chờ tween hoàn thành
             yield return moveTween.WaitForCompletion();
         }
-        yield return StartCoroutine(MovementToCellPlay(transform.parent.GetComponent<BoardCell>().Pos));
-        //setIdle Animation
-        transform.parent.GetComponent<BoardCell>().BoardCellAnimation.SetIdle();
 
-        transform.parent.GetComponent<BoardCell>().IsInCellPlay = true;
-        complete.Invoke(true);
+        // Sau khi đi hết path → đi đến cellPlay
+        yield return StartCoroutine(MovementToCellPlay(boardCell.Pos));
+
+        boardCell.BoardCellAnimation.SetIdle();
+        boardCell.IsInCellPlay = true;
+
+        complete(true);
     }
+
 
     /// <summary>
     /// Di chuyển từ ma trận xuống vị trí CellPlay với thời gian tính theo khoảng cách (Coroutine).

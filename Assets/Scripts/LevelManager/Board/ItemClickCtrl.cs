@@ -130,7 +130,11 @@ public class ItemClickCtrl : MonoBehaviour
         // save data của khối block xuống trước.
         LevelManager.Instance.cellPlayCtrl.CheckAndSaveBoardCell(boardCell);
         LevelManager.Instance.AddTutorial();
-        StartCoroutine(boardCell.SetActiveNeighBor());
+        boardCell.SetActiveNeighBor();
+        // if (path.Count > 15)
+        // {
+        //     AudioManager.Instance.PlayOneShot("BLJ_Game_Blockies_Running_Default_Loop_01", 1f);
+        // }
 
         //start Run
         LevelManager.Instance.cellPlayCtrl.PosCell();

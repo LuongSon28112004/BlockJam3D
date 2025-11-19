@@ -90,7 +90,7 @@ public class BoosterMagnet : MonoBehaviour
             BoardCellMovement bc = ListChoices[i].BoardCellMovement;
             BoardCellAnimation boardCellAnimation = ListChoices[i].BoardCellAnimation;
             StartCoroutine(LevelManager.Instance.BoardCtrl.CheckSpawnBlock(ListChoices[i].Container));
-            StartCoroutine(ListChoices[i].SetActiveNeighBor());
+            ListChoices[i].SetActiveNeighBor();
             if (ListChoices[i].Barrel.activeSelf)
             {
                 yield return StartCoroutine(ListChoices[i].PlayBarrelAnimation());
