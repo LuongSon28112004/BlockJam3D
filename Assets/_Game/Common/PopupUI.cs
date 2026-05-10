@@ -11,7 +11,7 @@ enum AnimShowPopUp
 public abstract class PopupUI : MonoBehaviour
 {
     protected UIManager uiManager;
-    public static event Action<PopupUI> OnDestroyPopup; 
+    public static event Action<PopupUI> OnDestroyPopup;
     public Action OnHide;
     public Action OnHideInPlace;
     public static event Action<PopupUI> OnShow;
@@ -25,7 +25,7 @@ public abstract class PopupUI : MonoBehaviour
     private bool isSetup = false;
     public void Setup()
     {
-        if(isSetup) return; 
+        if (isSetup) return;
         isSetup = true;
         Initialize(UIManager.Instance);
     }
@@ -44,7 +44,7 @@ public abstract class PopupUI : MonoBehaviour
         Setup();
         OnHide = onClose;
         isShowing = true;
-        
+
         if (mainPopUp)
         {
             switch (animType)
@@ -98,6 +98,6 @@ public abstract class PopupUI : MonoBehaviour
     {
 
     }
-    public virtual void PreloadAssets(){}
-    public virtual void ReleasedAssets(){}
+    public virtual void PreloadAssets() { }
+    public virtual void ReleasedAssets() { }
 }

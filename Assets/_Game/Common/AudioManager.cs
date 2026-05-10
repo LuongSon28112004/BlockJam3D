@@ -151,7 +151,7 @@ public class AudioManager : MonoBehaviour
             musicSource.Play();
         }
 
-        musicSource.volume = AudioMusicSetting ? volume * Ratio_Sound : 0;
+        // musicSource.volume = AudioMusicSetting ? volume * Ratio_Sound : 0;
     }
 
     public void PlayBGMusicMain()
@@ -179,6 +179,10 @@ public class AudioManager : MonoBehaviour
 
     public void StopMusic() => musicSource.Stop();
     public void StopSFX() => soundSource.Stop();
+    public void PauseMusic() => musicSource.Pause();
+    public void ResumeMusic() => musicSource.UnPause();
+    public void PauseSound() => soundSource.Pause();
+    public void ResumeSound() => soundSource.UnPause();
 
     public void PlayOneShot(string name, float volume = 1, float delayPlay = 0)
     {
@@ -293,9 +297,18 @@ public class AudioManager : MonoBehaviour
 
     public void PlayVibrate()
     {
+        if (!AudioVibrateSetting) return;
         //GameHelper.Instance.Vibrate(type_Vibreate);
 #if UNITY_ANDROID || UNITY_IOS
         Handheld.Vibrate(); // Short default vibration
 #endif
     }
+
+    public void VibrateAndroid(long milliseconds)
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+    VibrateAndroid(milliseconds);
+#endif
+    }
+
 }

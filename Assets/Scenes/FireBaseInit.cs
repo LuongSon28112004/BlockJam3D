@@ -4,89 +4,61 @@ using Firebase.Firestore;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class FirestoreTest : MonoBehaviour
+public class FirebaseManager : MonoBehaviour
 {
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     void Start()
     {
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
-            if (task.Result == DependencyStatus.Available)
+            var status = task.Result;
+            if (status == DependencyStatus.Available)
             {
                 Debug.Log("Firebase Ready");
 
                 db = FirebaseFirestore.DefaultInstance;
 
-                TestRead();
-                TestWrite();
+                GetUserData();
             }
             else
             {
-                Debug.LogError("Firebase lỗi: " + task.Result);
+                Debug.LogError("Firebase Error: " + status);
             }
         });
     }
 
-    // ===== READ =====
-    void TestRead()
+    void GetUserData()
     {
         db.Collection("UserData")
-          .Document("ThanhVinh37")
+          .Document("Son28112004")
           .GetSnapshotAsync()
           .ContinueWithOnMainThread(task =>
           {
               if (task.IsCompleted && !task.IsFaulted)
               {
-                  var snapshot = task.Result;
+                  DocumentSnapshot snapshot = task.Result;
 
                   if (snapshot.Exists)
                   {
-                      Debug.Log("=== READ SUCCESS ===");
+                      Dictionary<string, object> data = snapshot.ToDictionary();
 
-                      var data = snapshot.ToDictionary();
-
-                      foreach (var item in data)
-                      {
-                          Debug.Log(item.Key + " : " + item.Value);
-                      }
+                      Debug.Log("=== USER DATA ===");
+                      Debug.Log("Coin: " + data["Coin"]);
+                      Debug.Log("Level: " + data["Level"]);
+                      Debug.Log("Heart: " + data["Heart"]);
+                      Debug.Log("Frame: " + data["Frame"]);
+                      Debug.Log("Name: " + data["Name"]);
+                      Debug.Log("Id: " + data["Id"]);
                   }
                   else
                   {
-                      Debug.Log("Không có document!");
+                      Debug.Log("Document not found!");
                   }
               }
               else
               {
-                  Debug.LogError("Read lỗi: " + task.Exception);
-              }
-          });
-    }
-
-    // ===== WRITE =====
-    void TestWrite()
-    {
-        Dictionary<string, object> newData = new Dictionary<string, object>()
-        {
-            { "Coin", Random.Range(0,100) },
-            { "Level", 999 },
-            { "Heart", 10 },
-            { "Frame", 1 },
-            { "Name", "ThanhVinh37" }
-        };
-
-        db.Collection("UserData")
-          .Document("ThanhVinh37")
-          .UpdateAsync(newData)
-          .ContinueWithOnMainThread(task =>
-          {
-              if (task.IsCompleted)
-              {
-                  Debug.Log("=== WRITE SUCCESS ===");
-              }
-              else
-              {
-                  Debug.LogError("Write lỗi: " + task.Exception);
+                  Debug.LogError("Get failed: " + task.Exception);
               }
           });
     }
