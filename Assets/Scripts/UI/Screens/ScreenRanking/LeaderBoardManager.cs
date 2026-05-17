@@ -1,10 +1,9 @@
 using System;
-using master;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LeaderBoardManager : SingletonDDOL<LeaderBoardManager>
+public class LeaderBoardManager : MonoBehaviour
 {
     [SerializeField] private Button btnFriend;
     [SerializeField] private Button btnPlayer;
