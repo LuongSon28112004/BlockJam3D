@@ -770,6 +770,7 @@ GameObject:
   - component: {fileID: 6336787243851718412}
   - component: {fileID: 2292622655874908042}
   - component: {fileID: 5628837224240392465}
+  - component: {fileID: 9104800541438806334}
   m_Layer: 5
   m_Name: TextTitle
   m_TagString: Untagged
@@ -895,6 +896,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &9104800541438806334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4768830031686802130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5dc8ec1e7f151442b68591c0a092291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_settings
 --- !u!1 &4873660727839237414
 GameObject:
   m_ObjectHideFlags: 0
@@ -1019,6 +1033,7 @@ GameObject:
   - component: {fileID: 2484120700896743124}
   - component: {fileID: 1836871442017434501}
   - component: {fileID: 5721546656922005704}
+  - component: {fileID: 6196853936970506538}
   m_Layer: 5
   m_Name: TextQuit
   m_TagString: Untagged
@@ -1144,6 +1159,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6196853936970506538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7266880728725078379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5dc8ec1e7f151442b68591c0a092291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_quit_level
 --- !u!1 &7376877886699905012
 GameObject:
   m_ObjectHideFlags: 0
@@ -1499,6 +1527,7 @@ GameObject:
   - component: {fileID: 6445423850306039860}
   - component: {fileID: 8355778522271735230}
   - component: {fileID: 6742114404954850562}
+  - component: {fileID: 5754604548479021497}
   m_Layer: 5
   m_Name: TextADS
   m_TagString: Untagged
@@ -1626,6 +1655,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5754604548479021497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337863060491207735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5dc8ec1e7f151442b68591c0a092291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_no_ads
 --- !u!1 &8419903572513544040
 GameObject:
   m_ObjectHideFlags: 0
@@ -1796,6 +1838,14 @@ MonoBehaviour:
   animType: 1
   mainPopUp: {fileID: 2022003590588435398}
   quitLevel: {fileID: 4555461051815833859}
+  buttonSound: {fileID: 0}
+  iconSound: {fileID: 0}
+  spriteSoundOn: {fileID: 0}
+  spriteSoundOff: {fileID: 0}
+  buttonVibration: {fileID: 0}
+  iconVibration: {fileID: 0}
+  spriteVibrationOn: {fileID: 0}
+  spriteVibrationOff: {fileID: 0}
 --- !u!1 &8796069986562923227
 GameObject:
   m_ObjectHideFlags: 0

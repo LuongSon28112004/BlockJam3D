@@ -118,7 +118,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
             // - Hiện popup UI
             // - Load info user từ Firestore
             // - Hiện nút Accept / Reject
-            UIManager.Instance.NotifyContent($"Bạn có một lời mời kết bạn mới từ {fromUserId}!");
+            UIManager.Instance.NotifyContent(Loc.Get("friend_new_request_fmt", fromUserId));
             // XÓA NGAY để tránh trigger lại
             friendRequestRef.Child(fromUserId).RemoveValueAsync();
         }
@@ -132,7 +132,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
 
             Debug.Log($"[Realtime] Friend accepted: {toUserId}");
 
-            UIManager.Instance.NotifyContent($"Người chơi {toUserId} đã chấp nhận lời mời kết bạn của bạn!");
+            UIManager.Instance.NotifyContent(Loc.Get("friend_request_accepted_by_fmt", toUserId));
 
             // XÓA để tránh bị trigger lại
             friendAcceptRef.Child(toUserId).RemoveValueAsync();
@@ -147,7 +147,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
 
             Debug.Log($"[Realtime] Friend declined: {toUserId}");
 
-            UIManager.Instance.NotifyContent($"Người chơi {toUserId} đã từ chối lời mời kết bạn của bạn!");
+            UIManager.Instance.NotifyContent(Loc.Get("friend_request_declined_by_fmt", toUserId));
 
             // XÓA để tránh bị trigger lại
             friendDeclineRef.Child(toUserId).RemoveValueAsync();
@@ -172,9 +172,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
             {
                 HeartManager.Instance.Add(amount);
 
-                UIManager.Instance.NotifyContent(
-                    $"Bạn nhận được {amount} tim từ {fromUserId}!"
-                );
+                UIManager.Instance.NotifyContent(Loc.Get("received_hearts_fmt", amount, fromUserId));
             }
             else
             {
@@ -204,9 +202,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
                     });
                 }
 
-                UIManager.Instance.NotifyContent(
-                    $"Bạn nhận được {boosterName} x{amount} từ {fromUserId}!"
-                );
+                UIManager.Instance.NotifyContent(Loc.Get("received_booster_fmt", boosterName, amount, fromUserId));
             }
 
             // =========================
@@ -436,7 +432,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
         if (!IsFirebaseInitialized)
         {
             Debug.LogWarning("[UnityLogin] Firebase chưa init xong, thử lại sau.");
-            if (UIManager.Instance != null) UIManager.Instance.NotifyContent("Firebase chưa sẵn sàng, thử lại sau.");
+            if (UIManager.Instance != null) UIManager.Instance.NotifyContent(Loc.Get("firebase_not_ready"));
             onComplete?.Invoke(false, "firebase_not_ready");
             return;
         }
@@ -445,7 +441,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
         _ = LoginWithUnityPlayerAsync(onComplete);
 #else
         Debug.LogWarning("[UnityLogin] Package com.unity.services.authentication chưa được cài hoặc symbol UNITY_PLAYER_ID chưa được define.");
-        if (UIManager.Instance != null) UIManager.Instance.NotifyContent("Tính năng đăng nhập Unity Player ID chưa được cấu hình.");
+        if (UIManager.Instance != null) UIManager.Instance.NotifyContent(Loc.Get("unity_pid_not_configured"));
         onComplete?.Invoke(false, "package_missing");
 #endif
     }
@@ -498,7 +494,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
         catch (Exception ex)
         {
             Debug.LogError($"[UnityLogin] Failed: {ex}");
-            if (UIManager.Instance != null) UIManager.Instance.NotifyContent("Đăng nhập Unity Player ID thất bại.");
+            if (UIManager.Instance != null) UIManager.Instance.NotifyContent(Loc.Get("unity_pid_login_failed"));
             onComplete?.Invoke(false, ex.Message);
         }
     }
@@ -529,7 +525,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
 
         StartListeningFriendRequest(CurrentUserId);
 
-        if (UIManager.Instance != null) UIManager.Instance.NotifyContent($"Đăng nhập thành công, chào {CurrentUserName}!");
+        if (UIManager.Instance != null) UIManager.Instance.NotifyContent(Loc.Get("welcome_back_fmt", CurrentUserName));
         onComplete?.Invoke(true, CurrentUserId);
     }
 #endif
@@ -1240,7 +1236,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
                     }
                 }
 
-                UIManager.Instance.NotifyContent("Gửi thành công!");
+                UIManager.Instance.NotifyContent(Loc.Get("send_success"));
 
                 onComplete?.Invoke(true);
 
@@ -1260,35 +1256,25 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
                 switch (sendEx.ErrorCode)
                 {
                     case "LIMIT_REACHED":
-                        UIManager.Instance.NotifyContent(
-                            $"Bạn chỉ được gửi tối đa {MAX_SEND_PER_DAY} lần mỗi ngày!"
-                        );
+                        UIManager.Instance.NotifyContent(Loc.Get("gift_daily_limit_fmt", MAX_SEND_PER_DAY));
                         break;
 
                     case "NOT_ENOUGH":
-                        UIManager.Instance.NotifyContent(
-                            "Bạn không đủ booster để gửi!"
-                        );
+                        UIManager.Instance.NotifyContent(Loc.Get("gift_not_enough"));
                         break;
 
                     case "USER_NOT_FOUND":
-                        UIManager.Instance.NotifyContent(
-                            "Không tìm thấy người chơi!"
-                        );
+                        UIManager.Instance.NotifyContent(Loc.Get("user_not_found"));
                         break;
 
                     default:
-                        UIManager.Instance.NotifyContent(
-                            $"Bạn chỉ được gửi tối đa {MAX_SEND_PER_DAY} lần mỗi ngày!"
-                        );
+                        UIManager.Instance.NotifyContent(Loc.Get("gift_daily_limit_fmt", MAX_SEND_PER_DAY));
                         break;
                 }
             }
             else
             {
-                UIManager.Instance.NotifyContent(
-                    "Có lỗi kết nối Firebase!"
-                );
+                UIManager.Instance.NotifyContent(Loc.Get("firebase_error"));
             }
 
             Debug.LogError($"[Send] Failed: {task.Exception}");
@@ -1327,7 +1313,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
         catch (Exception ex)
         {
             Debug.LogError($"[Google Link] {ex.GetType().Name}: {ex.Message}");
-            UIManager.Instance.NotifyContent("Liên kết Google thất bại!");
+            UIManager.Instance.NotifyContent(Loc.Get("google_link_failed"));
             onComplete?.Invoke(false);
         }
     }
@@ -1438,7 +1424,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
                 StartListeningFriendRequest(CurrentUserId);
 
                 Debug.Log($"[Google Link] Data synced from Firebase! UserId: {cloudUserId}, Coin: {UserData.coin}, Level: {UserData.level}");
-                UIManager.Instance.NotifyContent("Đăng nhập Google thành công! Dữ liệu đã được đồng bộ.");
+                UIManager.Instance.NotifyContent(Loc.Get("google_login_synced"));
                 onComplete?.Invoke(true);
             }
             else
@@ -1458,14 +1444,14 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
                         .SetAsync(updates, SetOptions.MergeAll);
 
                 Debug.Log($"[Google Link] Linked current account! UnityPlayerId: {unityPlayerId}");
-                UIManager.Instance.NotifyContent("Liên kết Google thành công!");
+                UIManager.Instance.NotifyContent(Loc.Get("google_link_success"));
                 onComplete?.Invoke(true);
             }
         }
         catch (Exception ex)
         {
             Debug.LogError($"[Google Link] {ex.GetType().Name}: {ex.Message}");
-            UIManager.Instance.NotifyContent("Liên kết Google thất bại!");
+            UIManager.Instance.NotifyContent(Loc.Get("google_link_failed"));
             onComplete?.Invoke(false);
         }
     }

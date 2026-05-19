@@ -38,6 +38,7 @@ public class GameManager : SingletonDDOL<GameManager>
         StartCoroutine(ChangeState(GameState.Loading));
         Level = UserData.level;
         SaveDataManager.Load();
+        Loc.Init(UserData.language == "vi" ? Language.VI : Language.EN);
     }
 
     public IEnumerator ChangeState(GameState newState)

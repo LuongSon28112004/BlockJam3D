@@ -53,11 +53,11 @@ public class LeaderBoardFriendController : MonoBehaviour
         if (!string.IsNullOrEmpty(myId))
         {
             GUIUtility.systemCopyBuffer = myId;
-            UIManager.Instance.NotifyContent("Đã sao chép ID của bạn vào clipboard.");
+            UIManager.Instance.NotifyContent(Loc.Get("id_copied_to_clipboard"));
         }
         else
         {
-            UIManager.Instance.NotifyContent("Không tìm thấy ID của bạn.");
+            UIManager.Instance.NotifyContent(Loc.Get("id_not_found"));
         }
     }
 
@@ -70,7 +70,7 @@ public class LeaderBoardFriendController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(inputSearchFriend.text))
         {
-            UIManager.Instance.NotifyContent("Vui lòng nhập từ khóa tìm kiếm.");
+            UIManager.Instance.NotifyContent(Loc.Get("enter_search_keyword"));
             // Clear old search results
             foreach (Transform child in contentSearchFriend.transform)
             {
@@ -108,7 +108,7 @@ public class LeaderBoardFriendController : MonoBehaviour
                 }
                 if (users == null || users.Count == 0)
                 {
-                    UIManager.Instance.NotifyContent("Không tìm thấy người dùng nào.");
+                    UIManager.Instance.NotifyContent(Loc.Get("no_users_found"));
                     LoadingPanel.SetActive(false);
                     return;
                 }
@@ -201,7 +201,7 @@ public class LeaderBoardFriendController : MonoBehaviour
             if (friends.Count == 0)
             {
                 LoadingPanel.SetActive(false);
-                UIManager.Instance.NotifyContent("Bạn chưa có bạn bè nào.");
+                UIManager.Instance.NotifyContent(Loc.Get("no_friends"));
                 return;
             }
 

@@ -93,13 +93,13 @@ public class PopupSendGilf : PopupUI
     {
         if (currentSelected == null)
         {
-            UIManager.Instance.NotifyContent("Bạn chưa chọn quà!");
+            UIManager.Instance.NotifyContent(Loc.Get("gift_no_selection"));
             return;
         }
 
         if (string.IsNullOrEmpty(idUser))
         {
-            UIManager.Instance.NotifyContent("Không tìm thấy người nhận!");
+            UIManager.Instance.NotifyContent(Loc.Get("gift_no_recipient"));
             return;
         }
 
@@ -116,12 +116,12 @@ public class PopupSendGilf : PopupUI
             {
                 if (success)
                 {
-                    UIManager.Instance.NotifyContent($"Đã gửi {giftName}!");
+                    UIManager.Instance.NotifyContent(Loc.Get("gift_sent_fmt", giftName));
                     Hide();
                 }
                 else
                 {
-                    UIManager.Instance.NotifyContent($"Bạn chỉ được gửi tối đa {3} lần mỗi ngày!");
+                    UIManager.Instance.NotifyContent(Loc.Get("gift_daily_limit_fmt", 3));
                 }
             }
         );

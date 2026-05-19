@@ -56,7 +56,7 @@ public class PopupLoseGame : PopupUI
             if (Resources.Load<PopupAddHeart>("UI/Popups/PopupAddHeart") != null)
                 UIManager.Instance.ShowPopup<PopupAddHeart>(null);
             else
-                UIManager.Instance.NotifyContent("No hearts left. Wait for regen.");
+                UIManager.Instance.NotifyContent(Loc.Get("no_hearts_wait_regen"));
             return;
         }
         Hide();

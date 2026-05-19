@@ -19,7 +19,7 @@ public class PopupLoadingGamePlay : PopupUI
     {
         int rand = Random.Range(0, spriteLoadings.Count);
         imageBg.sprite = spriteLoadings[rand];
-        TextLoading.text = "Loading";
+        TextLoading.text = Loc.Get("loading_text");
         StartCoroutine(TextLoadingAnimation());
     }
 

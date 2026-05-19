@@ -25,11 +25,11 @@ public class FriendUserSuggestInfo : MonoBehaviour
         {
             if (success)
             {
-                UIManager.Instance.NotifyContent("Yêu cầu kết bạn đã được gửi.");
+                UIManager.Instance.NotifyContent(Loc.Get("friend_request_sent"));
             }
             else
             {
-                UIManager.Instance.NotifyContent("Đã xảy ra lỗi khi gửi yêu cầu kết bạn.");
+                UIManager.Instance.NotifyContent(Loc.Get("friend_request_send_error"));
             }
         });
     }

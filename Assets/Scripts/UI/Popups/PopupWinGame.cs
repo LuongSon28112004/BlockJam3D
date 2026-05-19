@@ -41,7 +41,7 @@ public class PopupWinGame : PopupUI
         buttonTapToContinue.gameObject.SetActive(false);
         int currentCoin = UserData.coin;
         totalCountText.text = currentCoin.ToString();
-        textLevelPass.text = "Level " + (UserData.level - 1).ToString() + " Passed";
+        textLevelPass.text = Loc.Get("level_passed_fmt", UserData.level - 1);
         yield return new WaitForSeconds(2f);
 
 

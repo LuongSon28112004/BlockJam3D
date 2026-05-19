@@ -74,6 +74,7 @@ public class ScreenMainMenu : ScreenUI
     {
         heartManagerRef = HeartManager.Instance;
         if (heartManagerRef != null) heartManagerRef.OnHeartsChanged += RefreshHeartUI;
+        Loc.OnLanguageChanged += RefreshLocalizedDynamicText;
         RefreshHeartUI();
     }
 
@@ -81,6 +82,12 @@ public class ScreenMainMenu : ScreenUI
     {
         if (heartManagerRef != null) heartManagerRef.OnHeartsChanged -= RefreshHeartUI;
         heartManagerRef = null;
+        Loc.OnLanguageChanged -= RefreshLocalizedDynamicText;
+    }
+
+    private void RefreshLocalizedDynamicText()
+    {
+        if (textLevel != null) textLevel.text = Loc.Get("main_play_level_fmt", UserData.level);
     }
 
     private void OnSettingClicked()
@@ -92,8 +99,7 @@ public class ScreenMainMenu : ScreenUI
 
     void Start()
     {
-        textLevel.text = " Play\n" +
-        "Level " + UserData.level.ToString();
+        textLevel.text = Loc.Get("main_play_level_fmt", UserData.level);
         textCoin.text = UserData.coin.ToString();
     }
 
@@ -111,7 +117,7 @@ public class ScreenMainMenu : ScreenUI
     private void RefreshTimerLabel()
     {
         if (textHeartTimer == null || HeartManager.Instance == null) return;
-        if (HeartManager.Instance.IsFull) { textHeartTimer.text = "FULL"; return; }
+        if (HeartManager.Instance.IsFull) { textHeartTimer.text = Loc.Get("heart_full_label"); return; }
         int s = HeartManager.Instance.SecondsUntilNextHeart;
         textHeartTimer.text = $"{s / 60}m{(s % 60):00}";
     }
@@ -121,7 +127,7 @@ public class ScreenMainMenu : ScreenUI
         AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
         if (Resources.Load<PopupAddHeart>("UI/Popups/PopupAddHeart") == null)
         {
-            UIManager.Instance.NotifyContent("Add-heart popup not built yet.");
+            UIManager.Instance.NotifyContent(Loc.Get("addheart_popup_missing"));
             return;
         }
         UIManager.Instance.ShowPopup<PopupAddHeart>(null);

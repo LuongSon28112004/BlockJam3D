@@ -28,12 +28,12 @@ public class FriendUserRequestInfo : MonoBehaviour
         {
             if (success)
             {
-                UIManager.Instance.NotifyContent("Yêu cầu kết bạn đã được chấp nhận.");
+                UIManager.Instance.NotifyContent(Loc.Get("friend_request_accepted"));
                 LeaderBoardManager.onUpdateFriendList?.Invoke();
             }
             else
             {
-                UIManager.Instance.NotifyContent("Đã xảy ra lỗi khi chấp nhận yêu cầu kết bạn.");
+                UIManager.Instance.NotifyContent(Loc.Get("friend_request_accept_error"));
             }
         });
     }
@@ -47,12 +47,12 @@ public class FriendUserRequestInfo : MonoBehaviour
         {
             if (success)
             {
-                UIManager.Instance.NotifyContent("Yêu cầu kết bạn đã được từ chối.");
+                UIManager.Instance.NotifyContent(Loc.Get("friend_request_declined"));
                 LeaderBoardManager.onUpdateFriendList?.Invoke();
             }
             else
             {
-                UIManager.Instance.NotifyContent("Đã xảy ra lỗi khi từ chối yêu cầu kết bạn.");
+                UIManager.Instance.NotifyContent(Loc.Get("friend_request_decline_error"));
             }
         });
     }

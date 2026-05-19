@@ -19,4 +19,6 @@ public static class UserData
 
     public static int hearts = MAX_HEARTS;
     public static long nextHeartUnixTicks = 0;
+
+    public static string language = "en";
 }

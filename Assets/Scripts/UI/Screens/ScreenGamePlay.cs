@@ -134,7 +134,7 @@ public class ScreenGamePlay : ScreenUI
 
     private void LoadTextLevel()
     {
-        textLevel.text = "Level " + UserData.level.ToString();
+        textLevel.text = Loc.Get("level_fmt", UserData.level);
     }
 
     private void InitPriceBooster()
@@ -213,7 +213,7 @@ public class ScreenGamePlay : ScreenUI
         }
         if (UserData.listBoosterCounters[3].count <= 0 && UserData.coin < boosterDatas[3].price)
         {
-            UIManager.Instance.NotifyContent("Not enough coins.");
+            UIManager.Instance.NotifyContent(Loc.Get("not_enough_coins"));
             FlashButtonRed(MagnetButton);
             yield break;
         }
@@ -288,7 +288,7 @@ public class ScreenGamePlay : ScreenUI
         }
         if (UserData.listBoosterCounters[2].count <= 0 && UserData.coin < boosterDatas[2].price)
         {
-            UIManager.Instance.NotifyContent("Not enough coins.");
+            UIManager.Instance.NotifyContent(Loc.Get("not_enough_coins"));
             FlashButtonRed(MagnetButton);
             return;
         }
@@ -325,7 +325,7 @@ public class ScreenGamePlay : ScreenUI
         }
         if (UserData.listBoosterCounters[1].count <= 0 && UserData.coin < boosterDatas[1].price)
         {
-            UIManager.Instance.NotifyContent("Not enough coins.");
+            UIManager.Instance.NotifyContent(Loc.Get("not_enough_coins"));
             FlashButtonRed(MagnetButton);
             return;
         }
@@ -360,7 +360,7 @@ public class ScreenGamePlay : ScreenUI
         }
         if (UserData.listBoosterCounters[0].count <= 0 && UserData.coin < boosterDatas[0].price)
         {
-            UIManager.Instance.NotifyContent("Not enough coins.");
+            UIManager.Instance.NotifyContent(Loc.Get("not_enough_coins"));
             FlashButtonRed(MagnetButton);
             return;
         }

@@ -10,6 +10,7 @@ public class PlayerData
     public List<BoosterCounter> listBoosterCounters;
     public int hearts = UserData.MAX_HEARTS;
     public long nextHeartUnixTicks = 0;
+    public string language = "en";
 }
 
 public static class SaveDataManager
@@ -25,7 +26,8 @@ public static class SaveDataManager
             level = UserData.level,
             listBoosterCounters = UserData.listBoosterCounters,
             hearts = UserData.hearts,
-            nextHeartUnixTicks = UserData.nextHeartUnixTicks
+            nextHeartUnixTicks = UserData.nextHeartUnixTicks,
+            language = UserData.language
         };
 
         string json = JsonUtility.ToJson(data, true);
@@ -61,6 +63,7 @@ public static class SaveDataManager
         UserData.level = data.level;
         UserData.hearts = Mathf.Clamp(data.hearts, 0, UserData.MAX_HEARTS);
         UserData.nextHeartUnixTicks = data.nextHeartUnixTicks;
+        UserData.language = string.IsNullOrEmpty(data.language) ? "en" : data.language;
 
         // Kiểm tra list null
         if (data.listBoosterCounters != null)

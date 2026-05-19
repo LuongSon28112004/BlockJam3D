@@ -5,6 +5,26 @@ public class PopupSettingsUIMain : PopupUI
 {
     [SerializeField] private Button buttonSignInWithGoogle;
 
+    [Header("Sound")]
+    [SerializeField] private Button buttonSound;
+    [SerializeField] private Image iconSound;
+    [SerializeField] private Sprite spriteSoundOn;
+    [SerializeField] private Sprite spriteSoundOff;
+
+    [Header("Vibration")]
+    [SerializeField] private Button buttonVibration;
+    [SerializeField] private Image iconVibration;
+    [SerializeField] private Sprite spriteVibrationOn;
+    [SerializeField] private Sprite spriteVibrationOff;
+
+    [Header("Language")]
+    [SerializeField] private Button buttonEn;
+    [SerializeField] private Button buttonVi;
+    [SerializeField] private Image iconEn;
+    [SerializeField] private Image iconVi;
+
+    private static readonly Color OFF_TINT = new Color(0.45f, 0.45f, 0.45f, 1f);
+
     private void Awake()
     {
         if (buttonSignInWithGoogle == null)
@@ -19,6 +39,132 @@ public class PopupSettingsUIMain : PopupUI
 
         if (buttonSignInWithGoogle != null)
             buttonSignInWithGoogle.onClick.AddListener(OnSignInWithGoogleClicked);
+
+        AutoDiscoverToggles();
+        if (buttonSound != null) buttonSound.onClick.AddListener(OnToggleSound);
+        if (buttonVibration != null) buttonVibration.onClick.AddListener(OnToggleVibration);
+        if (buttonEn != null) buttonEn.onClick.AddListener(OnPickEn);
+        if (buttonVi != null) buttonVi.onClick.AddListener(OnPickVi);
+
+        RefreshIcons();
+        RefreshLanguageIcons();
+    }
+
+    private void AutoDiscoverToggles()
+    {
+        if (buttonSound == null || iconSound == null)
+        {
+            Transform t = FindDeep(transform, "ButtonSound");
+            if (t != null)
+            {
+                if (buttonSound == null)
+                {
+                    buttonSound = t.GetComponent<Button>();
+                    if (buttonSound == null) buttonSound = t.gameObject.AddComponent<Button>();
+                }
+                if (iconSound == null)
+                {
+                    iconSound = t.GetComponentInChildren<Image>(true);
+                }
+            }
+        }
+        if (buttonVibration == null || iconVibration == null)
+        {
+            Transform t = FindDeep(transform, "ButtonVibrate");
+            if (t != null)
+            {
+                if (buttonVibration == null)
+                {
+                    buttonVibration = t.GetComponent<Button>();
+                    if (buttonVibration == null) buttonVibration = t.gameObject.AddComponent<Button>();
+                }
+                if (iconVibration == null)
+                {
+                    iconVibration = t.GetComponentInChildren<Image>(true);
+                }
+            }
+        }
+        if (buttonEn == null || iconEn == null)
+        {
+            Transform t = FindDeep(transform, "ButtonEn");
+            if (t != null)
+            {
+                if (buttonEn == null)
+                {
+                    buttonEn = t.GetComponent<Button>();
+                    if (buttonEn == null) buttonEn = t.gameObject.AddComponent<Button>();
+                }
+                if (iconEn == null) iconEn = t.GetComponentInChildren<Image>(true);
+            }
+        }
+        if (buttonVi == null || iconVi == null)
+        {
+            Transform t = FindDeep(transform, "ButtonVi");
+            if (t != null)
+            {
+                if (buttonVi == null)
+                {
+                    buttonVi = t.GetComponent<Button>();
+                    if (buttonVi == null) buttonVi = t.gameObject.AddComponent<Button>();
+                }
+                if (iconVi == null) iconVi = t.GetComponentInChildren<Image>(true);
+            }
+        }
+    }
+
+    private void OnToggleSound()
+    {
+        AudioManager.AudioSoundSetting = !AudioManager.AudioSoundSetting;
+        AudioManager.AudioMusicSetting = AudioManager.AudioSoundSetting;
+        AudioManager.Instance.FixVolumeSFX();
+        AudioManager.Instance.FixVolumeMusic();
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
+        RefreshIcons();
+    }
+
+    private void OnToggleVibration()
+    {
+        AudioManager.AudioVibrateSetting = !AudioManager.AudioVibrateSetting;
+        if (AudioManager.AudioVibrateSetting) AudioManager.Instance.PlayVibrate();
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
+        RefreshIcons();
+    }
+
+    private void RefreshIcons()
+    {
+        if (iconSound != null)
+        {
+            if (spriteSoundOn != null && spriteSoundOff != null)
+                iconSound.sprite = AudioManager.AudioSoundSetting ? spriteSoundOn : spriteSoundOff;
+            iconSound.color = AudioManager.AudioSoundSetting ? Color.white : OFF_TINT;
+        }
+        if (iconVibration != null)
+        {
+            if (spriteVibrationOn != null && spriteVibrationOff != null)
+                iconVibration.sprite = AudioManager.AudioVibrateSetting ? spriteVibrationOn : spriteVibrationOff;
+            iconVibration.color = AudioManager.AudioVibrateSetting ? Color.white : OFF_TINT;
+        }
+    }
+
+    private void OnPickEn() { ChangeLanguage(Language.EN); }
+    private void OnPickVi() { ChangeLanguage(Language.VI); }
+
+    private void ChangeLanguage(Language lang)
+    {
+        if (GameManager.Instance != null && GameManager.Instance.gameState != GameState.Menu) return;
+        if (Loc.Current == lang) return;
+
+        Loc.SetLanguage(lang);
+        UserData.language = lang == Language.VI ? "vi" : "en";
+        SaveDataManager.Save();
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
+        RefreshLanguageIcons();
+    }
+
+    private void RefreshLanguageIcons()
+    {
+        if (iconEn != null) iconEn.color = Loc.Current == Language.EN ? Color.white : OFF_TINT;
+        if (iconVi != null) iconVi.color = Loc.Current == Language.VI ? Color.white : OFF_TINT;
     }
 
     private async void OnSignInWithGoogleClicked()
@@ -26,8 +172,8 @@ public class PopupSettingsUIMain : PopupUI
         await UserDataFirebaseManager.Instance
             .LinkGoogleAccount((res) =>
             {
-                if (res) UIManager.Instance.NotifyContent("Login Success");
-                else UIManager.Instance.NotifyContent("Login Failed");
+                if (res) UIManager.Instance.NotifyContent(Loc.Get("login_success"));
+                else UIManager.Instance.NotifyContent(Loc.Get("login_failed"));
             });
     }
 

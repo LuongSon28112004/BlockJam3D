@@ -266,6 +266,7 @@ GameObject:
   - component: {fileID: 1220001}
   - component: {fileID: 1220002}
   - component: {fileID: 1220003}
+  - component: {fileID: 5375296537523171139}
   m_Layer: 5
   m_Name: TextTitle
   m_TagString: Untagged
@@ -391,6 +392,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5375296537523171139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5dc8ec1e7f151442b68591c0a092291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_get_hearts
 --- !u!1 &1240000
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,6 +674,7 @@ GameObject:
   - component: {fileID: 1310001}
   - component: {fileID: 1310002}
   - component: {fileID: 1310003}
+  - component: {fileID: 4080378717567933195}
   m_Layer: 5
   m_Name: LabelBuy
   m_TagString: Untagged
@@ -785,6 +800,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4080378717567933195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5dc8ec1e7f151442b68591c0a092291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_buy_with_coins
 --- !u!1 &1320000
 GameObject:
   m_ObjectHideFlags: 0
@@ -1053,6 +1081,7 @@ GameObject:
   - component: {fileID: 1410001}
   - component: {fileID: 1410002}
   - component: {fileID: 1410003}
+  - component: {fileID: 2646982600689276357}
   m_Layer: 5
   m_Name: LabelFriend
   m_TagString: Untagged
@@ -1178,6 +1207,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2646982600689276357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5dc8ec1e7f151442b68591c0a092291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_ask_a_friend
 --- !u!1 &1500000
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,6 +1352,7 @@ GameObject:
   - component: {fileID: 1510001}
   - component: {fileID: 1510002}
   - component: {fileID: 1510003}
+  - component: {fileID: 1401821195034967701}
   m_Layer: 5
   m_Name: LabelAd
   m_TagString: Untagged
@@ -1435,6 +1478,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1401821195034967701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5dc8ec1e7f151442b68591c0a092291, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_watch_ad_heart
 --- !u!1 &1700000
 GameObject:
   m_ObjectHideFlags: 0

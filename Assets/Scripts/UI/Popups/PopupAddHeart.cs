@@ -33,6 +33,7 @@ public class PopupAddHeart : PopupUI
         base.Show(onClose);
         heartManagerRef = HeartManager.Instance;
         if (heartManagerRef != null) heartManagerRef.OnHeartsChanged += Refresh;
+        Loc.OnLanguageChanged += Refresh;
         Refresh();
     }
 
@@ -40,6 +41,7 @@ public class PopupAddHeart : PopupUI
     {
         if (heartManagerRef != null) heartManagerRef.OnHeartsChanged -= Refresh;
         heartManagerRef = null;
+        Loc.OnLanguageChanged -= Refresh;
         base.Hide();
     }
 
@@ -68,12 +70,12 @@ public class PopupAddHeart : PopupUI
         var hm = HeartManager.Instance;
         if (hm.IsFull)
         {
-            UIManager.Instance.NotifyContent("Hearts already full.");
+            UIManager.Instance.NotifyContent(Loc.Get("hearts_full"));
             return;
         }
         if (UserData.coin < COIN_COST_PER_HEART)
         {
-            UIManager.Instance.NotifyContent("Not enough coins.");
+            UIManager.Instance.NotifyContent(Loc.Get("not_enough_coins"));
             return;
         }
         UserData.coin -= COIN_COST_PER_HEART;
@@ -95,7 +97,7 @@ public class PopupAddHeart : PopupUI
 #if UNITY_EDITOR
         GrantHeart();
 #else
-        UIManager.Instance.NotifyContent("Ads not available yet.");
+        UIManager.Instance.NotifyContent(Loc.Get("ads_not_available"));
 #endif
     }
 
