@@ -159,12 +159,30 @@ public class UIManager : master.Singleton<UIManager>
 
     public void NotifyContent(string content, string key = "", float number = 0)
     {
+        EnsureNotifyPanel();
+        if (notifyPanel == null) return;
         notifyPanel.ShowNotify(content, key, number);
     }
 
     public void NotifyContent2(string content, string key = "", string objFormat = "")
     {
+        EnsureNotifyPanel();
+        if (notifyPanel == null) return;
         notifyPanel.ShowNotify(content, key, objFormat);
+    }
+
+    private void EnsureNotifyPanel()
+    {
+        if (notifyPanel != null) return;
+        var prefab = Resources.Load<NotifyPanel>("UI/NotifyPanel");
+        if (prefab == null)
+        {
+            Debug.LogWarning($"[UIManager] NotifyPanel prefab missing at Resources/UI/NotifyPanel in scene '{gameObject.scene.name}'.");
+            return;
+        }
+        var parent = canvas != null ? canvas.transform : (popupHolder != null ? (Transform)popupHolder : transform);
+        notifyPanel = Instantiate(prefab, parent);
+        notifyPanel.transform.SetAsLastSibling();
     }
 
     public void OnPopupDestroyed(PopupUI obj)

@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(Get-ChildItem -Path \"D:\\\\Study\\\\unity\\\\BlockJam3D\" -Directory)",
-      "Bash(Select-Object Name)"
+      "Bash(Select-Object Name)",
+      "mcp__unity-mcp__Unity_ReadConsole",
+      "WebSearch",
+      "WebFetch(domain:issuetracker.unity3d.com)",
+      "WebFetch(domain:discussions.unity.com)"
     ]
   }
 }

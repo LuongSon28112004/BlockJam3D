@@ -85,7 +85,7 @@ public class PopupWinGame : PopupUI
         yield return new WaitForSeconds(coinFlyDuration + 0.3f);
 
         // Cập nhật số coin người chơi
-        int targetCoin = currentCoin + 4;// để tạm là 4
+        int targetCoin = currentCoin + 100;
         int displayedCoin = currentCoin;
 
         DOTween.To(() => displayedCoin, x =>

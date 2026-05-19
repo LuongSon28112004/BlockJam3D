@@ -211,6 +211,12 @@ public class ScreenGamePlay : ScreenUI
             }
             yield break;
         }
+        if (UserData.listBoosterCounters[3].count <= 0 && UserData.coin < boosterDatas[3].price)
+        {
+            UIManager.Instance.NotifyContent("Not enough coins.");
+            FlashButtonRed(MagnetButton);
+            yield break;
+        }
         PlayMagnetEffect();
         Debug.Log("Magnet Clicked");
         AudioManager.Instance.PlayOneShot("BLJ_Boosters_Magnet_01", 1f);
@@ -280,6 +286,12 @@ public class ScreenGamePlay : ScreenUI
             }
             return;
         }
+        if (UserData.listBoosterCounters[2].count <= 0 && UserData.coin < boosterDatas[2].price)
+        {
+            UIManager.Instance.NotifyContent("Not enough coins.");
+            FlashButtonRed(MagnetButton);
+            return;
+        }
 
         Debug.Log("Shuffle Clicked");
         AudioManager.Instance.PlayOneShot("BLJ_Boosters_Shuffle_01", 1f);
@@ -311,6 +323,12 @@ public class ScreenGamePlay : ScreenUI
             }
             return;
         }
+        if (UserData.listBoosterCounters[1].count <= 0 && UserData.coin < boosterDatas[1].price)
+        {
+            UIManager.Instance.NotifyContent("Not enough coins.");
+            FlashButtonRed(MagnetButton);
+            return;
+        }
         AudioManager.Instance.PlayOneShot("BLJ_Boosters_Continue_01", 1f);
         StartCoroutine(LevelManager.Instance.boosterCtrl.BoosterAdd.Add());
         if (UserData.listBoosterCounters[1].count <= 0)
@@ -338,6 +356,12 @@ public class ScreenGamePlay : ScreenUI
             {
                 FlashButtonRed(MagnetButton);
             }
+            return;
+        }
+        if (UserData.listBoosterCounters[0].count <= 0 && UserData.coin < boosterDatas[0].price)
+        {
+            UIManager.Instance.NotifyContent("Not enough coins.");
+            FlashButtonRed(MagnetButton);
             return;
         }
         PlayUndoEffect();

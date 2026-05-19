@@ -38,7 +38,7 @@ public class PopupSendGilf : PopupUI
             { btnFreeze, "Undo" },
             { btnHammer, "Add" },
             { btnBomb, "Shuffle" },
-            { btnHeart, "Magnet" }
+            { btnHeart, "Heart" }
         };
 
         btnFreeze.onClick.AddListener(() => SelectGift(btnFreeze));

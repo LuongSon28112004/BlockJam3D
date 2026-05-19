@@ -14,6 +14,7 @@ public class PopupLoseGame : PopupUI
     [SerializeField] private Ease beatEase = Ease.InOutSine;
 
     private Tween heartbeatTween;
+    private bool consumed;
 
     private void Awake()
     {
@@ -25,6 +26,11 @@ public class PopupLoseGame : PopupUI
     private void Start()
     {
         StartHeartBeat();
+        if (!consumed)
+        {
+            HeartManager.Instance.TryConsume(1);
+            consumed = true;
+        }
     }
 
     private void StartHeartBeat()
@@ -43,8 +49,17 @@ public class PopupLoseGame : PopupUI
 
     private void OnTryAgainClicked()
     {
-        Hide();
         AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
+        if (HeartManager.Instance.Hearts <= 0)
+        {
+            Hide();
+            if (Resources.Load<PopupAddHeart>("UI/Popups/PopupAddHeart") != null)
+                UIManager.Instance.ShowPopup<PopupAddHeart>(null);
+            else
+                UIManager.Instance.NotifyContent("No hearts left. Wait for regen.");
+            return;
+        }
+        Hide();
         GameManager.Instance.StartGame();
     }
 

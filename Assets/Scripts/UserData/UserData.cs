@@ -10,7 +10,13 @@ public class BoosterCounter
 
 public static class UserData
 {
+    public const int MAX_HEARTS = 5;
+    public const int REGEN_SECONDS = 600;
+
     public static int coin = 99999;
     public static int level = 1;
     public static List<BoosterCounter> listBoosterCounters = new List<BoosterCounter>();
+
+    public static int hearts = MAX_HEARTS;
+    public static long nextHeartUnixTicks = 0;
 }

@@ -8,6 +8,8 @@ public class PlayerData
     public int coin;
     public int level;
     public List<BoosterCounter> listBoosterCounters;
+    public int hearts = UserData.MAX_HEARTS;
+    public long nextHeartUnixTicks = 0;
 }
 
 public static class SaveDataManager
@@ -21,7 +23,9 @@ public static class SaveDataManager
         {
             coin = UserData.coin,
             level = UserData.level,
-            listBoosterCounters = UserData.listBoosterCounters
+            listBoosterCounters = UserData.listBoosterCounters,
+            hearts = UserData.hearts,
+            nextHeartUnixTicks = UserData.nextHeartUnixTicks
         };
 
         string json = JsonUtility.ToJson(data, true);
@@ -55,6 +59,8 @@ public static class SaveDataManager
 
         UserData.coin = data.coin;
         UserData.level = data.level;
+        UserData.hearts = Mathf.Clamp(data.hearts, 0, UserData.MAX_HEARTS);
+        UserData.nextHeartUnixTicks = data.nextHeartUnixTicks;
 
         // Kiểm tra list null
         if (data.listBoosterCounters != null)
@@ -63,6 +69,8 @@ public static class SaveDataManager
             UserData.listBoosterCounters = new List<BoosterCounter>();
 
         Debug.Log("[SaveDataManager] Dữ liệu đã được tải thành công!");
+
+        if (HeartManager.Instance != null) HeartManager.Instance.CatchUpRegen();
     }
 
     // Xóa file lưu
