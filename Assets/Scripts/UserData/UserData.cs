@@ -21,4 +21,7 @@ public static class UserData
     public static long nextHeartUnixTicks = 0;
 
     public static string language = "en";
+
+    // Daily Mission progress (seeded lần đầu bởi DailyMissionManager).
+    public static DailyMissionProgress dailyMissionProgress;
 }

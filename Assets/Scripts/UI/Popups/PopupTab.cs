@@ -41,14 +41,14 @@ public class PopupTab : PopupUI
 
     private void AddButtonListeners()
     {
-        ShopButton.onClick.AddListener(() => ChangeStatusChoicePanel(StatusChoice.Shop));
-        MissionButton.onClick.AddListener(() => ChangeStatusChoicePanel(StatusChoice.Mission));
-        MainMenuButton.onClick.AddListener(() => ChangeStatusChoicePanel(StatusChoice.MainMenu));
-        LeagueButton.onClick.AddListener(() => ChangeStatusChoicePanel(StatusChoice.League));
-        CollectionButton.onClick.AddListener(() => ChangeStatusChoicePanel(StatusChoice.Collection));
+        ShopButton.onClick.AddListener(() => SelectTab(StatusChoice.Shop));
+        MissionButton.onClick.AddListener(() => SelectTab(StatusChoice.Mission));
+        MainMenuButton.onClick.AddListener(() => SelectTab(StatusChoice.MainMenu));
+        LeagueButton.onClick.AddListener(() => SelectTab(StatusChoice.League));
+        CollectionButton.onClick.AddListener(() => SelectTab(StatusChoice.Collection));
     }
 
-    private void ChangeStatusChoicePanel(StatusChoice newChoice)
+    public void SelectTab(StatusChoice newChoice)
     {
         if (newChoice == currentStatus) return;
 

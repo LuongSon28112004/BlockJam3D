@@ -526,17 +526,87 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
         StartListeningFriendRequest(CurrentUserId);
 
         if (UIManager.Instance != null) UIManager.Instance.NotifyContent(Loc.Get("welcome_back_fmt", CurrentUserName));
+        CustomeEventSystem.Instance?.AccountChanged();
         onComplete?.Invoke(true, CurrentUserId);
     }
 #endif
 
+    /// <summary>
+    /// Đẩy số coin hiện tại của UserData lên Firestore. No-op nếu Firebase chưa sẵn sàng
+    /// hoặc chưa có CurrentUserId. Dùng chung cho mọi flow đổi coin (win level, claim mission, mua heart...).
+    /// </summary>
+    public void PushCoinSnapshot()
+    {
+        if (string.IsNullOrEmpty(CurrentUserId)) return;
+        SaveUserData(CurrentUserId, new Dictionary<string, object> { { "Coin", UserData.coin } });
+    }
+
+    // Khoá lưu snapshot account local trước khi link sang Google account khác.
+    // Dùng để revert PlayerID/Coin khi user logout.
+    private const string SNAPSHOT_ID_KEY = "PreLinkLocalPlayerID";
+    private const string SNAPSHOT_NAME_KEY = "PreLinkLocalPlayerName";
+    private const string SNAPSHOT_COIN_KEY = "PreLinkLocalCoin";
+
+    private void CaptureLocalSnapshotIfMissing(string localId, string localName, int localCoin)
+    {
+        if (PlayerPrefs.HasKey(SNAPSHOT_ID_KEY)) return; // đã capture từ trước, không ghi đè
+        if (string.IsNullOrEmpty(localId)) return;
+        PlayerPrefs.SetString(SNAPSHOT_ID_KEY, localId);
+        PlayerPrefs.SetString(SNAPSHOT_NAME_KEY, localName ?? "");
+        PlayerPrefs.SetInt(SNAPSHOT_COIN_KEY, localCoin);
+        PlayerPrefs.Save();
+        Debug.Log($"[UnityLogin] Captured local snapshot: id={localId}, coin={localCoin}");
+    }
+
+    private bool RestoreLocalSnapshot()
+    {
+        if (!PlayerPrefs.HasKey(SNAPSHOT_ID_KEY)) return false;
+        string id = PlayerPrefs.GetString(SNAPSHOT_ID_KEY, "");
+        string name = PlayerPrefs.GetString(SNAPSHOT_NAME_KEY, "");
+        int coin = PlayerPrefs.GetInt(SNAPSHOT_COIN_KEY, UserData.coin);
+
+        StopListeningFriendRequest();
+
+        CurrentUserId = id;
+        CurrentUserName = string.IsNullOrEmpty(name) ? "Player" + id : name;
+        UserData.coin = coin;
+
+        PlayerPrefs.SetString("PlayerID", id);
+        PlayerPrefs.SetString("PlayerName", CurrentUserName);
+        PlayerPrefs.DeleteKey(SNAPSHOT_ID_KEY);
+        PlayerPrefs.DeleteKey(SNAPSHOT_NAME_KEY);
+        PlayerPrefs.DeleteKey(SNAPSHOT_COIN_KEY);
+        PlayerPrefs.Save();
+
+        SaveDataManager.Save();
+        StartListeningFriendRequest(CurrentUserId);
+        Debug.Log($"[UnityLogin] Restored local snapshot: id={id}, coin={coin}");
+        return true;
+    }
+
     public void SignOutUnityPlayer()
     {
-#if UNITY_PLAYER_ID
-        if (AuthenticationService.Instance.IsSignedIn) AuthenticationService.Instance.SignOut();
-        PlayerAccountService.Instance.SignOut();
-        Debug.Log("[UnityLogin] Signed out.");
-#endif
+        try
+        {
+            if (AuthenticationService.Instance != null && AuthenticationService.Instance.IsSignedIn)
+                AuthenticationService.Instance.SignOut();
+            if (PlayerAccountService.Instance != null && PlayerAccountService.Instance.IsSignedIn)
+                PlayerAccountService.Instance.SignOut();
+            Debug.Log("[UnityLogin] Signed out.");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"[UnityLogin] SignOut failed: {ex.Message}");
+        }
+
+        // Revert về PlayerID/Coin local trước khi link Google (nếu có snapshot).
+        bool restored = RestoreLocalSnapshot();
+        if (restored)
+        {
+            // Fire ChangeCoin để HUD lobby refresh số coin về giá trị local cũ.
+            CustomeEventSystem.Instance?.ChangeCoin(UserData.coin);
+        }
+        CustomeEventSystem.Instance?.AccountChanged();
     }
 
     /// <summary>
@@ -1330,6 +1400,10 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
     {
         try
         {
+            // Snapshot trước mọi thay đổi do login: PlayerID có thể bị swap sang cloud doc,
+            // UserData.coin có thể bị ghi đè bởi giá trị từ cloud. Capture để revert được khi logout.
+            CaptureLocalSnapshotIfMissing(CurrentUserId, CurrentUserName, UserData.coin);
+
             string accessToken = PlayerAccountService.Instance.AccessToken;
 
             if (string.IsNullOrEmpty(accessToken))
@@ -1425,6 +1499,7 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
 
                 Debug.Log($"[Google Link] Data synced from Firebase! UserId: {cloudUserId}, Coin: {UserData.coin}, Level: {UserData.level}");
                 UIManager.Instance.NotifyContent(Loc.Get("google_login_synced"));
+                CustomeEventSystem.Instance?.AccountChanged();
                 onComplete?.Invoke(true);
             }
             else

@@ -1,9 +1,13 @@
+using TMPro;
+using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PopupSettingsUIMain : PopupUI
 {
     [SerializeField] private Button buttonSignInWithGoogle;
+    [SerializeField] private TMP_Text buttonSignInWithGoogleLabel;
+    [SerializeField] private GameObject googleIcon;
 
     [Header("Sound")]
     [SerializeField] private Button buttonSound;
@@ -20,10 +24,19 @@ public class PopupSettingsUIMain : PopupUI
     [Header("Language")]
     [SerializeField] private Button buttonEn;
     [SerializeField] private Button buttonVi;
+    // iconEn / iconVi đã được thay thế bằng background Image của chính nút (tự resolve qua GetComponent<Image>()).
     [SerializeField] private Image iconEn;
     [SerializeField] private Image iconVi;
 
     private static readonly Color OFF_TINT = new Color(0.45f, 0.45f, 0.45f, 1f);
+
+    public override void Show(System.Action onClose = null)
+    {
+        base.Show(onClose);
+        // Popup được cache, Awake chỉ chạy 1 lần. Mỗi lần show phải resync trạng thái login & ngôn ngữ.
+        RefreshLanguageButtons();
+        RefreshLoginButton();
+    }
 
     private void Awake()
     {
@@ -37,9 +50,6 @@ public class PopupSettingsUIMain : PopupUI
             }
         }
 
-        if (buttonSignInWithGoogle != null)
-            buttonSignInWithGoogle.onClick.AddListener(OnSignInWithGoogleClicked);
-
         AutoDiscoverToggles();
         if (buttonSound != null) buttonSound.onClick.AddListener(OnToggleSound);
         if (buttonVibration != null) buttonVibration.onClick.AddListener(OnToggleVibration);
@@ -47,7 +57,8 @@ public class PopupSettingsUIMain : PopupUI
         if (buttonVi != null) buttonVi.onClick.AddListener(OnPickVi);
 
         RefreshIcons();
-        RefreshLanguageIcons();
+        RefreshLanguageButtons();
+        RefreshLoginButton();
     }
 
     private void AutoDiscoverToggles()
@@ -94,7 +105,8 @@ public class PopupSettingsUIMain : PopupUI
                     buttonEn = t.GetComponent<Button>();
                     if (buttonEn == null) buttonEn = t.gameObject.AddComponent<Button>();
                 }
-                if (iconEn == null) iconEn = t.GetComponentInChildren<Image>(true);
+                // iconEn = chính background Image của ButtonEn (không còn icon riêng).
+                if (iconEn == null) iconEn = buttonEn != null ? buttonEn.GetComponent<Image>() : t.GetComponentInChildren<Image>(true);
             }
         }
         if (buttonVi == null || iconVi == null)
@@ -107,7 +119,8 @@ public class PopupSettingsUIMain : PopupUI
                     buttonVi = t.GetComponent<Button>();
                     if (buttonVi == null) buttonVi = t.gameObject.AddComponent<Button>();
                 }
-                if (iconVi == null) iconVi = t.GetComponentInChildren<Image>(true);
+                // iconVi = chính background Image của ButtonVi (không còn icon riêng).
+                if (iconVi == null) iconVi = buttonVi != null ? buttonVi.GetComponent<Image>() : t.GetComponentInChildren<Image>(true);
             }
         }
     }
@@ -158,13 +171,60 @@ public class PopupSettingsUIMain : PopupUI
         UserData.language = lang == Language.VI ? "vi" : "en";
         SaveDataManager.Save();
         AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
-        RefreshLanguageIcons();
+        RefreshLanguageButtons();
+        // Đồng bộ lại label nút login/logout theo ngôn ngữ mới.
+        RefreshLoginButton();
     }
 
-    private void RefreshLanguageIcons()
+    private void RefreshLanguageButtons()
     {
-        if (iconEn != null) iconEn.color = Loc.Current == Language.EN ? Color.white : OFF_TINT;
-        if (iconVi != null) iconVi.color = Loc.Current == Language.VI ? Color.white : OFF_TINT;
+        // Tô màu background của chính nút EN/VI: trắng = đang chọn, OFF_TINT = không chọn.
+        Image bgEn = iconEn != null ? iconEn : (buttonEn != null ? buttonEn.GetComponent<Image>() : null);
+        Image bgVi = iconVi != null ? iconVi : (buttonVi != null ? buttonVi.GetComponent<Image>() : null);
+        if (bgEn != null) bgEn.color = Loc.Current == Language.EN ? Color.white : OFF_TINT;
+        if (bgVi != null) bgVi.color = Loc.Current == Language.VI ? Color.white : OFF_TINT;
+    }
+
+    private bool IsLoggedIn
+    {
+        get
+        {
+            try
+            {
+                return AuthenticationService.Instance != null && AuthenticationService.Instance.IsSignedIn;
+            }
+            catch
+            {
+                // Unity Services chưa init xong -> chưa thể đăng nhập.
+                return false;
+            }
+        }
+    }
+
+    private void RefreshLoginButton()
+    {
+        if (buttonSignInWithGoogle == null) return;
+
+        buttonSignInWithGoogle.onClick.RemoveAllListeners();
+
+        bool loggedIn = IsLoggedIn;
+        if (buttonSignInWithGoogleLabel != null)
+        {
+            buttonSignInWithGoogleLabel.text = loggedIn
+                ? Loc.Get("settings_logout")
+                : Loc.Get("ui_sign_in_with_google");
+        }
+        if (googleIcon != null) googleIcon.SetActive(!loggedIn);
+
+        if (loggedIn) buttonSignInWithGoogle.onClick.AddListener(OnLogoutClicked);
+        else buttonSignInWithGoogle.onClick.AddListener(OnSignInWithGoogleClicked);
+    }
+
+    private void OnLogoutClicked()
+    {
+        if (UserDataFirebaseManager.Instance != null) UserDataFirebaseManager.Instance.SignOutUnityPlayer();
+        if (UIManager.Instance != null) UIManager.Instance.NotifyContent(Loc.Get("settings_logged_out"));
+        RefreshLoginButton();
     }
 
     private async void OnSignInWithGoogleClicked()
@@ -172,7 +232,11 @@ public class PopupSettingsUIMain : PopupUI
         await UserDataFirebaseManager.Instance
             .LinkGoogleAccount((res) =>
             {
-                if (res) UIManager.Instance.NotifyContent(Loc.Get("login_success"));
+                if (res)
+                {
+                    UIManager.Instance.NotifyContent(Loc.Get("login_success"));
+                    RefreshLoginButton();
+                }
                 else UIManager.Instance.NotifyContent(Loc.Get("login_failed"));
             });
     }

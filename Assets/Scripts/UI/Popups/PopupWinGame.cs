@@ -99,6 +99,9 @@ public class PopupWinGame : PopupUI
             {
                 UserData.coin = targetCoin;
                 SaveDataManager.Save();
+                // Phát event để HUD lobby cập nhật và đẩy snapshot lên Firestore.
+                CustomeEventSystem.Instance?.ChangeCoin(UserData.coin);
+                UserDataFirebaseManager.Instance?.PushCoinSnapshot();
             }
         );
 

@@ -58,8 +58,10 @@ public class PopupAddHeart : PopupUI
             }
         }
 
+        // Để giống flow mua booster trong gameplay: nút luôn bấm được khi tim chưa đầy,
+        // thiếu xu sẽ show toast "not_enough_coins" trong OnBuyWithCoinsClicked.
         if (buttonBuyWithCoins != null)
-            buttonBuyWithCoins.interactable = !hm.IsFull && UserData.coin >= COIN_COST_PER_HEART;
+            buttonBuyWithCoins.interactable = !hm.IsFull;
         if (buttonWatchAd != null) buttonWatchAd.interactable = !hm.IsFull;
         if (buttonRequestFromFriend != null) buttonRequestFromFriend.interactable = !hm.IsFull;
     }
@@ -81,13 +83,24 @@ public class PopupAddHeart : PopupUI
         UserData.coin -= COIN_COST_PER_HEART;
         hm.Add(1);
         SaveDataManager.Save();
+        // Phát event để HUD coin lobby refresh + đẩy snapshot lên Firestore.
+        CustomeEventSystem.Instance?.ChangeCoin(UserData.coin);
+        UserDataFirebaseManager.Instance?.PushCoinSnapshot();
     }
 
     private void OnRequestFromFriendClicked()
     {
         AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
         Hide();
-        UIManager.Instance.ShowScreen<ScreenLeague>();
+        var tabPopup = UIManager.Instance.GetPopupActive<PopupTab>();
+        if (tabPopup != null)
+        {
+            tabPopup.SelectTab(StatusChoice.League);
+        }
+        else
+        {
+            UIManager.Instance.ShowScreen<ScreenLeague>();
+        }
     }
 
     private void OnWatchAdClicked()

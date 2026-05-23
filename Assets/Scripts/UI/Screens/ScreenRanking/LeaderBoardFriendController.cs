@@ -45,6 +45,25 @@ public class LeaderBoardFriendController : MonoBehaviour
         buttonSearchFriend.onClick.AddListener(OnClickSearchFriend);
         buttonClearSearch.onClick.AddListener(OnClickClearSearch);
         buttonCopy.onClick.AddListener(OnClickCopy);
+        RefreshMyId();
+    }
+
+    private void OnEnable()
+    {
+        if (CustomeEventSystem.Instance != null) CustomeEventSystem.Instance.AccountChangedAction += RefreshMyId;
+        RefreshMyId();
+    }
+
+    private void OnDisable()
+    {
+        if (CustomeEventSystem.Instance != null) CustomeEventSystem.Instance.AccountChangedAction -= RefreshMyId;
+    }
+
+    private void RefreshMyId()
+    {
+        if (txtMyId == null) return;
+        string id = PlayerPrefs.GetString("PlayerID", null);
+        txtMyId.text = string.IsNullOrEmpty(id) ? "" : id;
     }
 
     private void OnClickCopy()

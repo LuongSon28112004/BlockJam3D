@@ -74,4 +74,21 @@ public class CustomeEventSystem : SingletonDDOL<CustomeEventSystem>
         ChangeTextTutorialAction?.Invoke(tutorialType);
     }
 
+    // Fire khi player THỰC SỰ tiêu thụ 1 booster (khác với ActiveBoosterAction là sự kiện
+    // active/inactive UI dựa trên thay đổi inventory list — dùng cái đó sẽ bị double-count).
+    // boosterId: 0=Undo, 1=Add, 2=Shuffle, 3=Magnet.
+    public Action<int> UseBoosterAction;
+    public void UseBooster(int boosterId)
+    {
+        UseBoosterAction?.Invoke(boosterId);
+    }
+
+    // Fire khi PlayerID/PlayerName đổi (login Google thành công, đồng bộ cloud, hoặc logout).
+    // UI hiển thị user info nên subscribe để refresh.
+    public Action AccountChangedAction;
+    public void AccountChanged()
+    {
+        AccountChangedAction?.Invoke();
+    }
+
 }

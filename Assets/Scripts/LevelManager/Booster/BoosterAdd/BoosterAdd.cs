@@ -14,6 +14,8 @@ public class BoosterAdd : MonoBehaviour
         // Play sound
         if (LevelManager.Instance.cellPlayCtrl.BoardCells.Count == 0) yield break;
         BoosterCtrl.Instance.IsBusy = true;
+        // Báo cho DailyMission biết đã tiêu thụ 1 booster (id=1 Add).
+        CustomeEventSystem.Instance?.UseBooster(1);
         int pos = 0;
         for (int i = 0; i < boosterAddPos.Containers.Count; i++)
         {

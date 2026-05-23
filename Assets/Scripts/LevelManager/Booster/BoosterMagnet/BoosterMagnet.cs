@@ -18,6 +18,8 @@ public class BoosterMagnet : MonoBehaviour
     public IEnumerator Magnet()
     {
         BoosterCtrl.Instance.IsBusy = true;
+        // Báo cho DailyMission biết đã tiêu thụ 1 booster (id=3 Magnet).
+        CustomeEventSystem.Instance?.UseBooster(3);
         CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, -1, 1 });
         // yield return new WaitForSeconds(0.15f);
         TypeItem type = FindTypeFirstAppearMany();

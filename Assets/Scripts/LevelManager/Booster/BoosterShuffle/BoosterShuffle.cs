@@ -13,6 +13,8 @@ public class BoosterShuffle : MonoBehaviour
             yield break;
 
         BoosterCtrl.Instance.IsBusy = true;
+        // Báo cho DailyMission biết đã tiêu thụ 1 booster (id=2 Shuffle).
+        CustomeEventSystem.Instance?.UseBooster(2);
         CustomeEventSystem.Instance.ActiveBooster(new List<int> { -1, -1, 1, -1 });
 
         int n = leaderBoards.Count;

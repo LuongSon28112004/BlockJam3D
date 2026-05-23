@@ -15,7 +15,12 @@ public class ScreenMainMenu : ScreenUI
     [SerializeField] private TextMeshProUGUI textHeartTimer;
     [SerializeField] private Button buttonHeart;
 
+    [Header("Daily Mission")]
+    [SerializeField] private Button buttonDailyMission;
+    [SerializeField] private GameObject dailyMissionBadge;
+
     private HeartManager heartManagerRef;
+    private DailyMissionManager dailyMissionRef;
 
     private void Awake()
     {
@@ -23,6 +28,7 @@ public class ScreenMainMenu : ScreenUI
         setting.onClick.AddListener(OnSettingClicked);
         AutoDiscoverHeartUI();
         if (buttonHeart != null) buttonHeart.onClick.AddListener(OnHeartClicked);
+        if (buttonDailyMission != null) buttonDailyMission.onClick.AddListener(OnDailyMissionClicked);
     }
 
     private void AutoDiscoverHeartUI()
@@ -76,6 +82,14 @@ public class ScreenMainMenu : ScreenUI
         if (heartManagerRef != null) heartManagerRef.OnHeartsChanged += RefreshHeartUI;
         Loc.OnLanguageChanged += RefreshLocalizedDynamicText;
         RefreshHeartUI();
+
+        dailyMissionRef = DailyMissionManager.Instance;
+        if (dailyMissionRef != null) dailyMissionRef.OnMissionProgressChanged += RefreshDailyMissionBadge;
+        RefreshDailyMissionBadge();
+
+        // Cập nhật text coin khi UserData.coin thay đổi (claim mission, mua heart, win level...).
+        if (CustomeEventSystem.Instance != null) CustomeEventSystem.Instance.ChangeCoinAction += RefreshCoinText;
+        RefreshCoinText(UserData.coin);
     }
 
     private void OnDisable()
@@ -83,6 +97,29 @@ public class ScreenMainMenu : ScreenUI
         if (heartManagerRef != null) heartManagerRef.OnHeartsChanged -= RefreshHeartUI;
         heartManagerRef = null;
         Loc.OnLanguageChanged -= RefreshLocalizedDynamicText;
+
+        if (dailyMissionRef != null) dailyMissionRef.OnMissionProgressChanged -= RefreshDailyMissionBadge;
+        dailyMissionRef = null;
+
+        if (CustomeEventSystem.Instance != null) CustomeEventSystem.Instance.ChangeCoinAction -= RefreshCoinText;
+    }
+
+    private void RefreshCoinText(int coin)
+    {
+        if (textCoin != null) textCoin.text = coin.ToString();
+    }
+
+    private void OnDailyMissionClicked()
+    {
+        AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
+        UIManager.Instance.ShowPopup<PopupDailyMission>(null);
+    }
+
+    private void RefreshDailyMissionBadge()
+    {
+        if (dailyMissionBadge == null) return;
+        bool show = DailyMissionManager.Instance != null && DailyMissionManager.Instance.HasClaimableMission;
+        dailyMissionBadge.SetActive(show);
     }
 
     private void RefreshLocalizedDynamicText()

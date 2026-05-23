@@ -11,6 +11,7 @@ public class PlayerData
     public int hearts = UserData.MAX_HEARTS;
     public long nextHeartUnixTicks = 0;
     public string language = "en";
+    public DailyMissionProgress dailyMissionProgress;
 }
 
 public static class SaveDataManager
@@ -27,7 +28,8 @@ public static class SaveDataManager
             listBoosterCounters = UserData.listBoosterCounters,
             hearts = UserData.hearts,
             nextHeartUnixTicks = UserData.nextHeartUnixTicks,
-            language = UserData.language
+            language = UserData.language,
+            dailyMissionProgress = UserData.dailyMissionProgress
         };
 
         string json = JsonUtility.ToJson(data, true);
@@ -70,6 +72,23 @@ public static class SaveDataManager
             UserData.listBoosterCounters = data.listBoosterCounters;
         else
             UserData.listBoosterCounters = new List<BoosterCounter>();
+
+        // Daily Mission progress: nếu file save cũ chưa có thì khởi tạo rỗng,
+        // DailyMissionManager.Start() sẽ seed sau.
+        if (data.dailyMissionProgress != null)
+        {
+            UserData.dailyMissionProgress = data.dailyMissionProgress;
+            if (UserData.dailyMissionProgress.tasks == null)
+                UserData.dailyMissionProgress.tasks = new List<MissionTaskProgress>();
+        }
+        else
+        {
+            UserData.dailyMissionProgress = new DailyMissionProgress
+            {
+                lastResetUtcTicks = 0,
+                tasks = new List<MissionTaskProgress>()
+            };
+        }
 
         Debug.Log("[SaveDataManager] Dữ liệu đã được tải thành công!");
 

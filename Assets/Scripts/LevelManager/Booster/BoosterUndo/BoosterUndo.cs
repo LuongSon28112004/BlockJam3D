@@ -43,6 +43,9 @@ public class BoosterUndo : MonoBehaviour
     public IEnumerator Undo()
     {
         if (isMatch3s.Count == 0) yield break;
+        // Báo cho DailyMission biết đã tiêu thụ 1 booster (id=0 Undo) — fire sau guard
+        // để không tính khi không có gì để undo.
+        CustomeEventSystem.Instance?.UseBooster(0);
         bool isMatch3 = isMatch3s.Pop();
         if (!isMatch3)
         {
