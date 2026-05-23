@@ -45,10 +45,10 @@ public class DailyMissionData : ScriptableObject
     {
         switch (mockStatus)
         {
-            case MissionMockStatus.Claimed:    return true;          // luôn claimed
-            case MissionMockStatus.NotStarted: return false;         // luôn chưa claim
-            // Completed: ép progress=target nhưng tôn trọng cờ claim thật để Claim button flip sau khi bấm.
-            // None: dùng cờ thật.
+            case MissionMockStatus.Claimed:    return true;   // luôn claimed (Claimed overlay)
+            case MissionMockStatus.NotStarted: return false;  // luôn chưa làm
+            case MissionMockStatus.Completed:  return false;  // ép "đã đủ progress, chưa nhận thưởng" — Claim button enable
+            // None: dùng cờ claim thật từ save.
             default: return rawClaimed;
         }
     }

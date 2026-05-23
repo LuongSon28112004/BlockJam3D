@@ -1341,13 +1341,15 @@ public class UserDataFirebaseManager : SingletonDDOL<UserDataFirebaseManager>
                         UIManager.Instance.NotifyContent(Loc.Get("gift_daily_limit_fmt", MAX_SEND_PER_DAY));
                         break;
                 }
+                // Lỗi nghiệp vụ bình thường (limit/not-enough/...) — log ở mức Log, không phải Error.
+                Debug.Log($"[Send] Rejected: {sendEx.ErrorCode}");
             }
             else
             {
                 UIManager.Instance.NotifyContent(Loc.Get("firebase_error"));
+                // Lỗi không mong đợi (network/Firestore) — vẫn log Error để dev biết.
+                Debug.LogError($"[Send] Failed: {task.Exception}");
             }
-
-            Debug.LogError($"[Send] Failed: {task.Exception}");
 
             onComplete?.Invoke(false);
         });

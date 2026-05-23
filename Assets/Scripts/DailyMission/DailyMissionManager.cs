@@ -283,6 +283,17 @@ public class DailyMissionManager : SingletonDDOL<DailyMissionManager>
         SaveDataManager.Save();
         // Đẩy coin mới lên Firestore qua helper dùng chung.
         UserDataFirebaseManager.Instance?.PushCoinSnapshot();
+
+#if UNITY_EDITOR
+        // Khi test với mockStatus = Completed, sau khi claim flip sang Claimed
+        // để UI hiện overlay "Claimed" và Claim button bị disable, tránh claim lặp lại.
+        if (data.mockStatus == MissionMockStatus.Completed)
+        {
+            data.mockStatus = MissionMockStatus.Claimed;
+            UnityEditor.EditorUtility.SetDirty(data);
+        }
+#endif
+
         OnMissionProgressChanged?.Invoke();
         return true;
     }

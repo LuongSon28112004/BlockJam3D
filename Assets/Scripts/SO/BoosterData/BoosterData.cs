@@ -1,5 +1,4 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BoosterData", menuName = "Game/BoosterData")]

@@ -214,7 +214,7 @@ public class PopupSettingsUIMain : PopupUI
                 ? Loc.Get("settings_logout")
                 : Loc.Get("ui_sign_in_with_google");
         }
-        if (googleIcon != null) googleIcon.SetActive(!loggedIn);
+        //if (googleIcon != null) googleIcon.SetActive(!loggedIn);
 
         if (loggedIn) buttonSignInWithGoogle.onClick.AddListener(OnLogoutClicked);
         else buttonSignInWithGoogle.onClick.AddListener(OnSignInWithGoogleClicked);
