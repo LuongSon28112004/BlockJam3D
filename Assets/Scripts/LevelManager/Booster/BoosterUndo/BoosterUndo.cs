@@ -30,15 +30,21 @@ public class BoosterUndo : MonoBehaviour
     public void AddStack(BoardCell boardCell, Container container, List<Vector3> path)
     {
         LevelManager.Instance.boosterCtrl.BoosterUndo.LastMove.Push((boardCell, container, path));
-        Queue<KeyValuePair<BoardCell, Container>> temp = new Queue<KeyValuePair<BoardCell, Container>>();
-        for (int i = 0; i < LevelManager.Instance.cellPlayCtrl.BoardCells.Count; i++)
+        // Chỉ push undo-queue khi đuôi tray vừa hình thành 3 cell cùng loại liên tiếp
+        // (đồng bộ với HasMatch3 sau khi chuyển sang adjacency).
+        var cells = LevelManager.Instance.cellPlayCtrl.BoardCells;
+        var slots = LevelManager.Instance.cellPlayCtrl.CellPlays;
+        int tail = cells.Count - 1;
+        if (tail >= 2
+            && cells[tail] == boardCell
+            && cells[tail - 1] != null && cells[tail - 1].TypeItem == boardCell.TypeItem
+            && cells[tail - 2] != null && cells[tail - 2].TypeItem == boardCell.TypeItem)
         {
-            if (LevelManager.Instance.cellPlayCtrl.BoardCells[i].TypeItem == boardCell.TypeItem && LevelManager.Instance.cellPlayCtrl.BoardCells[i] != boardCell)
-            {
-                temp.Enqueue(new KeyValuePair<BoardCell, Container>(LevelManager.Instance.cellPlayCtrl.BoardCells[i], LevelManager.Instance.cellPlayCtrl.CellPlays[i]));
-            }
+            var temp = new Queue<KeyValuePair<BoardCell, Container>>();
+            temp.Enqueue(new KeyValuePair<BoardCell, Container>(cells[tail - 2], slots[tail - 2]));
+            temp.Enqueue(new KeyValuePair<BoardCell, Container>(cells[tail - 1], slots[tail - 1]));
+            LevelManager.Instance.boosterCtrl.BoosterUndo.UndoQueue.Push(temp);
         }
-        if (temp.Count != 0 && temp.Count == 2) LevelManager.Instance.boosterCtrl.BoosterUndo.UndoQueue.Push(temp);
     }
     public IEnumerator Undo()
     {

@@ -1,0 +1,43 @@
+%% Navigation Map giữa các Screen trong BlockJam3D
+%% Tham chiếu mã nguồn:
+%%   - GameManager.cs (ChangeState: Loading / Menu / GamePlay / Win / Lose)
+%%   - UIManager.cs (ShowScreen<T> / ShowPopup<T>)
+%%   - PopupTab.cs (5 tab: Shop, Mission, MainMenu, League, Collection)
+%%   - ScreenMainMenu.cs (OnPlayClicked → GameManager.StartGame)
+%%   - PopupWinGame.cs / PopupLoseGame.cs (BackToMenu / StartGame)
+%%   - PopupAddHeart.cs (ShowScreen<ScreenLeague>())
+
+flowchart TD
+    Start([App Start<br/>GameManager.Start])
+    Start --> Loading{{ChangeState Loading<br/>PopupLoading}}
+    Loading --> UIMain
+
+    subgraph UIMain[Scene: UIMain.unity]
+        direction TB
+        Tab[[PopupTab — tab switcher]]
+        Shop[ScreenShop]
+        Mission[ScreenMission]
+        MainMenu[ScreenMainMenu<br/>Hub mặc định]
+        League[ScreenLeague]
+        Collection[ScreenCollection]
+
+        Tab <--> Shop
+        Tab <--> Mission
+        Tab <--> MainMenu
+        Tab <--> League
+        Tab <--> Collection
+
+        MainMenu -. PopupAddHeart .-> League
+    end
+
+    subgraph GP[Scene: GamePlay.unity]
+        direction TB
+        GamePlay[ScreenGamePlay<br/>LevelManager / BoardCtrl / CellPlayCtrl]
+    end
+
+    MainMenu -- "OnPlayClicked<br/>StartGame()" --> GamePlay
+    GamePlay -- "PopupWinGame / PopupLoseGame<br/>BackToMenu()" --> MainMenu
+    GamePlay -- "PopupLoseGame.Retry<br/>StartGame()" --> GamePlay
+
+    classDef default fill:#ffffff,stroke:#000000,color:#000000;
+    linkStyle default stroke:#000000;

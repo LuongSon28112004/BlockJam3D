@@ -173,15 +173,20 @@ public class ItemClickCtrl : MonoBehaviour
         boardCell.IsInCellPlay = true;
         boardCell.transform.localRotation = Quaternion.Euler(0, 0, 0);
         LevelManager.Instance.boosterCtrl.BoosterUndo.LastMove.Push((boardCell, boardCell.Container, new List<Vector3> { PosBoardCel }));
-        Queue<KeyValuePair<BoardCell, Container>> temp = new Queue<KeyValuePair<BoardCell, Container>>();
-        for (int i = 0; i < LevelManager.Instance.cellPlayCtrl.BoardCells.Count; i++)
+        // Chỉ push undo-queue khi đuôi tray vừa hình thành 3 cell cùng loại liên tiếp
+        var cells = LevelManager.Instance.cellPlayCtrl.BoardCells;
+        var slots = LevelManager.Instance.cellPlayCtrl.CellPlays;
+        int tail = cells.Count - 1;
+        if (tail >= 2
+            && cells[tail] == boardCell
+            && cells[tail - 1] != null && cells[tail - 1].TypeItem == boardCell.TypeItem
+            && cells[tail - 2] != null && cells[tail - 2].TypeItem == boardCell.TypeItem)
         {
-            if (LevelManager.Instance.cellPlayCtrl.BoardCells[i].TypeItem == boardCell.TypeItem && LevelManager.Instance.cellPlayCtrl.BoardCells[i] != boardCell)
-            {
-                temp.Enqueue(new KeyValuePair<BoardCell, Container>(LevelManager.Instance.cellPlayCtrl.BoardCells[i], LevelManager.Instance.cellPlayCtrl.CellPlays[i]));
-            }
+            var temp = new Queue<KeyValuePair<BoardCell, Container>>();
+            temp.Enqueue(new KeyValuePair<BoardCell, Container>(cells[tail - 2], slots[tail - 2]));
+            temp.Enqueue(new KeyValuePair<BoardCell, Container>(cells[tail - 1], slots[tail - 1]));
+            LevelManager.Instance.boosterCtrl.BoosterUndo.UndoQueue.Push(temp);
         }
-        if (temp.Count != 0 && temp.Count == 2) LevelManager.Instance.boosterCtrl.BoosterUndo.UndoQueue.Push(temp);
         Checkmatch_3(boardCell);
     }
 

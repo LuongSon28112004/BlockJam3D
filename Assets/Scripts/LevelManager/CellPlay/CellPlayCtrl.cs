@@ -155,17 +155,7 @@ public class CellPlayCtrl : MonoBehaviour
 
     private int FindInsertIndex(BoardCell newCell)
     {
-        int lastSameTypeIndex = -1;
-
-        for (int i = 0; i < boardCells.Count; i++)
-        {
-            if (boardCells[i] != null && boardCells[i].TypeItem == newCell.TypeItem)
-            {
-                lastSameTypeIndex = i;
-            }
-        }
-
-        return lastSameTypeIndex != -1 ? lastSameTypeIndex + 1 : boardCells.Count;
+        return boardCells.Count;
     }
 
     public IEnumerator ShiftCellsRight(int startIndex)
@@ -204,20 +194,33 @@ public class CellPlayCtrl : MonoBehaviour
 
     public IEnumerator checkLose()
     {
-        if (boardCells.Count == MAX_ROW)
+        bool trayFull = boardCells.Count == MAX_ROW;
+
+        // "Không còn block nào trên board" = mọi cell đã spawn đều đã vào tray.
+        // BoardCtrl.BoardCells chỉ giảm khi Match-3 xóa, tap chỉ set IsInCellPlay=true.
+        var boardList = LevelManager.Instance.BoardCtrl.BoardCells;
+        int stillOnBoard = 0;
+        for (int i = 0; i < boardList.Count; i++)
         {
-            //yield return new WaitForSeconds(0.2f);
-            for (int i = 0; i < boardCells.Count; i++)
-            {
-                if (!boardCells[i].IsInCellPlay)
-                {
-                    yield break;
-                }
-            }
-            BlockItemSpawner.Instance.AddBlockInPool();
-            GameManager.Instance.LoseGame();
-            BoosterCtrl.Instance.IsBusy = true;
+            var c = boardList[i];
+            if (c == null) continue;
+            if (!c.IsInCellPlay) stillOnBoard++;
         }
+        bool boardEmptyTrayStuck = stillOnBoard == 0 && boardCells.Count > 0;
+
+        if (!trayFull && !boardEmptyTrayStuck) yield break;
+
+        // Đợi tất cả cell trong tray đã settle (tránh tuyên bố thua khi vẫn còn animation)
+        for (int i = 0; i < boardCells.Count; i++)
+        {
+            if (!boardCells[i].IsInCellPlay)
+            {
+                yield break;
+            }
+        }
+        BlockItemSpawner.Instance.AddBlockInPool();
+        GameManager.Instance.LoseGame();
+        BoosterCtrl.Instance.IsBusy = true;
     }
 
 
@@ -243,45 +246,27 @@ public class CellPlayCtrl : MonoBehaviour
 
     private IEnumerator Match3Process(TypeItem typeItem)
     {
-        foreach (var kvp in countCellType)
-        {
-            TypeItem type = kvp.Key;
-            if (type != typeItem) continue;
-            List<BoardCell> list = kvp.Value;
+        // Tìm 3 cell cùng loại nằm liên tiếp trong tray
+        int start = FindAdjacentMatch3Start(typeItem);
+        if (start == -1) yield break;
 
-            if (list.Count < 3)
-                continue;
+        BoardCell c1 = boardCells[start];
+        BoardCell c2 = boardCells[start + 1];
+        BoardCell c3 = boardCells[start + 2];
 
-            // Lặp để xử lý nhóm 3 đầu tiên
-            for (int i = 0; i <= list.Count - 3; i++)
-            {
-                BoardCell c1 = list[0];
-                BoardCell c2 = list[1];
-                BoardCell c3 = list[2];
+        // Đợi cả 3 cell đã về đúng vị trí
+        yield return new WaitUntil(() =>
+            Vector3.Distance(c1.transform.position, c1.Pos) <= 0.01f &&
+            Vector3.Distance(c2.transform.position, c2.Pos) <= 0.01f &&
+            Vector3.Distance(c3.transform.position, c3.Pos) <= 0.01f
+        );
+        RemoveCellData(new List<BoardCell> { c1, c2, c3 }, typeItem);
 
-                if (c1 == null || c2 == null || c3 == null)
-                {
-                    continue;
-                }
+        // Animation merge & pop
+        StartCoroutine(SetAnimMerge(new List<BoardCell> { c1, c2, c3 }));
 
-                // Xóa logic trước khi anim
-                yield return new WaitUntil(() =>
-                Vector3.Distance(c1.transform.position, c1.Pos) <= 0.01f &&
-                Vector3.Distance(c2.transform.position, c2.Pos) <= 0.01f &&
-                Vector3.Distance(c3.transform.position, c3.Pos) <= 0.01f
-                );
-                RemoveCellData(new List<BoardCell> { c1, c2, c3 }, type);
-
-                // Animation merge & pop
-                StartCoroutine(SetAnimMerge(new List<BoardCell> { c1, c2, c3 }));
-
-                // Sau khi xóa, sắp xếp lại cell tạm thời đang để chờ 0.2s rồi mới sort lại
-                yield return new WaitForSeconds(0.15f);
-                StartCoroutine(RearrangeCellsAfterRemove());
-            }
-        }
-
-        yield break;
+        yield return new WaitForSeconds(0.15f);
+        StartCoroutine(RearrangeCellsAfterRemove());
     }
 
     public IEnumerator ResetPosCellPlay(float delay)
@@ -484,28 +469,21 @@ public class CellPlayCtrl : MonoBehaviour
 
     public bool HasMatch3(TypeItem typeItem)
     {
-        foreach (var kvp in countCellType)
+        // Chỉ match khi 3 cell cùng loại nằm liên tiếp trong tray (không xét theo count tổng)
+        return FindAdjacentMatch3Start(typeItem) != -1;
+    }
+
+    private int FindAdjacentMatch3Start(TypeItem typeItem)
+    {
+        for (int i = 0; i <= boardCells.Count - 3; i++)
         {
-            if (kvp.Key != typeItem) continue;
-            var list = kvp.Value;
-
-            // Bỏ qua nếu chưa đủ 3 cell
-            if (list.Count < 3)
-                continue;
-
-            // Đếm số lượng cell đã xuống chỗ
-            int countInPlay = 0;
-            foreach (var cell in list)
-            {
-                if (cell != null && cell.IsInCellPlay)
-                    countInPlay++;
-            }
-
-            // Nếu có ít nhất 3 cell cùng loại đã xuống, thì match3
-            if (countInPlay >= 3)
-                return true;
+            var a = boardCells[i];
+            var b = boardCells[i + 1];
+            var c = boardCells[i + 2];
+            if (a == null || b == null || c == null) continue;
+            if (a.TypeItem != typeItem || b.TypeItem != typeItem || c.TypeItem != typeItem) continue;
+            return i;
         }
-
-        return false;
+        return -1;
     }
 }

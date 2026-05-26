@@ -1,0 +1,60 @@
+%% Lưu đồ vòng lặp chính của một Round trong BlockJam3D
+%% Tham chiếu mã nguồn:
+%%   - LevelManager.cs (LoadLevel / NextRoundLevel / AddTutorial)
+%%   - BoardCtrl.cs (LoadLevel / SpawnLeaderBoard / CheckSpawnBlock)
+%%   - ItemClickCtrl.cs (OnClickItem / LeaderBoardClick / Checkmatch_3)
+%%   - CellPlayCtrl.cs (CheckAndSaveBoardCell / Match3Process / checkWin / checkLose)
+%%   - CustomeEventSystem.cs (ChangeRound / CheckMatch_3 / ActiveBooster)
+
+flowchart TD
+    Start([Bắt đầu Round<br/>LevelManager.Init / NextRoundLevel]) --> Lock[Khóa Booster<br/>BoosterCtrl.IsBusy = true]
+    Lock --> Load[BoardCtrl.LoadLevel<br/>Spawn Wall / Container / Block / GSP<br/>InitTypeCounts]
+    Load --> Tut{Level 1 hoặc 2<br/>và đúng Round tutorial?}
+    Tut -- Có --> ShowTut[TutorialCtrl.ShowText<br/>UIManager.ShowPopup PopupTutorial]
+    Tut -- Không --> Unlock
+    ShowTut --> Unlock[Mở Booster<br/>BoosterCtrl.IsBusy = false]
+
+    Unlock --> Wait{{Chờ Input người chơi<br/>ItemClickCtrl.Update}}
+    Wait -- Click màn hình --> Ray[Camera Raycast<br/>OnClickItem]
+    Ray --> Valid{Trúng BoardCell?<br/>HasClick = true?<br/>IsBusy = false?}
+    Valid -- Không --> Wait
+    Valid -- Có --> Kind{Block IsBoosterAdd?}
+
+    Kind -- Có --> BAdd[BoosterAddClick<br/>Di chuyển thẳng vào tray]
+    Kind -- Không --> BFS[FindingPath.BFSFind<br/>Tìm đường ra biên]
+
+    BFS --> Path{Có path?}
+    Path -- Không --> Wait
+    Path -- Có --> Full{cellPlayCtrl.BoardCells = 7?}
+    Full -- Có --> Wait
+    Full -- Không --> Save[CellPlayCtrl.CheckAndSaveBoardCell<br/>Insert theo TypeItem, ShiftCellsRight]
+
+    Save --> SpawnGSP[BoardCtrl.SpawnBlockToGSPAction<br/>GSP spawn block kế tiếp nếu còn]
+    SpawnGSP --> Undo[BoosterUndo.AddStack<br/>Lưu boardCell + container + path]
+    Undo --> Move[BoardCellMovement.MovementPath<br/>Block chạy theo path]
+
+    BAdd --> Move
+
+    Move --> CM3{CellPlayCtrl.HasMatch3<br/>≥ 3 cell cùng TypeItem trong tray?}
+
+    CM3 -- Không --> Lose{checkLose<br/>Tray đủ 7 và tất cả đã settled?}
+    Lose -- Có --> LoseGame([GameManager.LoseGame<br/>PopupLoseGame])
+    Lose -- Không --> Wait
+
+    CM3 -- Có --> Fire[CustomeEventSystem.CheckMatch_3<br/>Action TypeItem]
+    Fire --> M3[CellPlayCtrl.Match3Process<br/>WaitUntil 3 cell đến đích]
+    M3 --> Remove[RemoveCellData<br/>Xóa 3 cell khỏi board + tray]
+    Remove --> Anim[SetAnimMerge<br/>MergeToCenter + Pop + SFX]
+    Anim --> Rearr[RearrangeCellsAfterRemove<br/>Dồn lại các ô trong tray]
+
+    Rearr --> Empty{BoardCtrl.BoardCells.Count == 0?<br/>Đã dọn sạch board chính?}
+    Empty -- Không --> Wait
+
+    Empty -- Có --> Win{checkWin<br/>Round ≥ 2 last round?}
+    Win -- Có --> WinGame([UserData.level += 1<br/>SaveDataManager.Save<br/>GameManager.WinGame])
+    Win -- Không --> NR[NextRoundLevel<br/>WaitForSeconds 1.5s<br/>AddPool: trả object về pool<br/>Round += 1]
+    NR --> Evt[CustomeEventSystem.ChangeRound Round<br/>ActiveBooster reset<br/>BoosterUndo.ResetStackUndo]
+    Evt --> Lock
+
+    classDef default fill:#ffffff,stroke:#000000,color:#000000;
+    linkStyle default stroke:#000000;
