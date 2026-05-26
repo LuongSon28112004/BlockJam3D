@@ -172,6 +172,12 @@ public class ScreenMainMenu : ScreenUI
 
     private void OnPlayClicked()
     {
+        if (HeartManager.Instance != null && HeartManager.Instance.Hearts <= 0)
+        {
+            AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);
+            UIManager.Instance.NotifyContent(Loc.Get("no_hearts_wait_regen"));
+            return;
+        }
         if (UserData.level >= 11) GameManager.Instance.Level = 10;
         else GameManager.Instance.Level = UserData.level;
         AudioManager.Instance.PlayOneShot("BLJ_UI_Button_Default_01", 1f);

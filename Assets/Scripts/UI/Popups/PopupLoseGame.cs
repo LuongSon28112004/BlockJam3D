@@ -14,7 +14,6 @@ public class PopupLoseGame : PopupUI
     [SerializeField] private Ease beatEase = Ease.InOutSine;
 
     private Tween heartbeatTween;
-    private bool consumed;
 
     private void Awake()
     {
@@ -23,14 +22,11 @@ public class PopupLoseGame : PopupUI
 
     }
 
-    private void Start()
+    public override void Show(Action onClose)
     {
+        base.Show(onClose);
         StartHeartBeat();
-        if (!consumed)
-        {
-            HeartManager.Instance.TryConsume(1);
-            consumed = true;
-        }
+        HeartManager.Instance.TryConsume(1);
     }
 
     private void StartHeartBeat()
