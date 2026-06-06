@@ -1,0 +1,221 @@
+{
+  "_comment": "BlockJam3D - Du lieu test dang NoSQL (dung cau truc Firebase thuc te). Gom: Firestore (firestore) + Realtime Database (realtimeDatabase) + Local Storage (localStorage). Project: blockjam3d-2072f.",
+
+  "firestore": {
+    "UserData": {
+      "10000000": {
+        "Id": "10000000",
+        "Name": "Admin BlockJam",
+        "Coin": 999999,
+        "Level": 50,
+        "Heart": 5,
+        "Frame": 3,
+        "Boosters": [
+          { "name": "Undo", "count": 99 },
+          { "name": "Add", "count": 99 },
+          { "name": "Shuffle", "count": 99 },
+          { "name": "Magnet", "count": 99 }
+        ],
+        "CreatedAt": "2026-01-01T09:00:00Z",
+        "UnityPlayerId": "upid_admin_0001",
+        "LoginType": "Google",
+        "GoogleLinkedAt": "2026-01-01T09:05:00Z",
+        "Provider": "unity",
+        "LastLoginAt": "2026-06-05T08:00:00Z",
+        "LastSendBoosterDate": "20260605",
+        "SendBoosterCount": 0,
+        "Friends": {},
+        "_note": "Tai khoan quan tri / test cap cao (coin & booster cao de test moi tinh nang)."
+      },
+      "10000001": {
+        "Id": "10000001",
+        "Name": "Nguyen Van A",
+        "Coin": 12500,
+        "Level": 12,
+        "Heart": 5,
+        "Frame": 1,
+        "Boosters": [
+          { "name": "Undo", "count": 2 },
+          { "name": "Add", "count": 2 },
+          { "name": "Shuffle", "count": 1 },
+          { "name": "Magnet", "count": 0 }
+        ],
+        "CreatedAt": "2026-02-10T14:23:11Z",
+        "Provider": "unity",
+        "LastLoginAt": "2026-06-04T21:10:00Z",
+        "LastSendBoosterDate": "20260604",
+        "SendBoosterCount": 1,
+        "Friends": {
+          "10000002": { "Id": "10000002", "CreatedAt": "2026-03-10T10:00:00Z" },
+          "10000003": { "Id": "10000003", "CreatedAt": "2026-03-12T18:30:00Z" }
+        }
+      },
+      "10000002": {
+        "Id": "10000002",
+        "Name": "Tran Thi B",
+        "Coin": 3400,
+        "Level": 7,
+        "Heart": 3,
+        "Frame": 0,
+        "Boosters": [
+          { "name": "Undo", "count": 0 },
+          { "name": "Add", "count": 1 },
+          { "name": "Shuffle", "count": 2 },
+          { "name": "Magnet", "count": 2 }
+        ],
+        "CreatedAt": "2026-02-15T10:02:45Z",
+        "Provider": "unity",
+        "LastLoginAt": "2026-06-03T19:45:00Z",
+        "SendBoosterCount": 0,
+        "Friends": {
+          "10000001": { "Id": "10000001", "CreatedAt": "2026-03-10T10:00:00Z" }
+        }
+      },
+      "10000003": {
+        "Id": "10000003",
+        "Name": "Le Van C",
+        "Coin": 58000,
+        "Level": 25,
+        "Heart": 5,
+        "Frame": 2,
+        "Boosters": [
+          { "name": "Undo", "count": 5 },
+          { "name": "Add", "count": 5 },
+          { "name": "Shuffle", "count": 5 },
+          { "name": "Magnet", "count": 5 }
+        ],
+        "CreatedAt": "2026-03-01T08:30:00Z",
+        "UnityPlayerId": "upid_cxxx_0003",
+        "LoginType": "Google",
+        "GoogleLinkedAt": "2026-03-02T12:00:00Z",
+        "Provider": "unity",
+        "LastLoginAt": "2026-06-05T07:30:00Z",
+        "LastSendBoosterDate": "20260605",
+        "SendBoosterCount": 2,
+        "Friends": {
+          "10000001": { "Id": "10000001", "CreatedAt": "2026-03-12T18:30:00Z" },
+          "10000005": { "Id": "10000005", "CreatedAt": "2026-05-20T09:15:00Z" }
+        }
+      },
+      "10000004": {
+        "Id": "10000004",
+        "Name": "Pham Thi D",
+        "Coin": 150,
+        "Level": 3,
+        "Heart": 1,
+        "Frame": 0,
+        "Boosters": [
+          { "name": "Undo", "count": 2 },
+          { "name": "Add", "count": 2 },
+          { "name": "Shuffle", "count": 2 },
+          { "name": "Magnet", "count": 2 }
+        ],
+        "CreatedAt": "2026-04-20T16:12:00Z",
+        "Provider": "unity",
+        "LastLoginAt": "2026-06-01T11:00:00Z",
+        "SendBoosterCount": 0,
+        "Friends": {}
+      },
+      "10000005": {
+        "Id": "10000005",
+        "Name": "Hoang Van E",
+        "Coin": 27800,
+        "Level": 18,
+        "Heart": 4,
+        "Frame": 1,
+        "Boosters": [
+          { "name": "Undo", "count": 3 },
+          { "name": "Add", "count": 0 },
+          { "name": "Shuffle", "count": 4 },
+          { "name": "Magnet", "count": 1 }
+        ],
+        "CreatedAt": "2026-05-05T13:00:00Z",
+        "Provider": "unity",
+        "LastLoginAt": "2026-06-05T06:15:00Z",
+        "LastSendBoosterDate": "20260605",
+        "SendBoosterCount": 3,
+        "Friends": {
+          "10000003": { "Id": "10000003", "CreatedAt": "2026-05-20T09:15:00Z" }
+        }
+      }
+    },
+
+    "FriendRequests": {
+      "req_auto_0001": {
+        "FromUserId": "10000004",
+        "ToUserId": "10000001",
+        "FromUserName": "Pham Thi D",
+        "Status": "Pending",
+        "CreatedAt": "2026-06-04T20:00:00Z"
+      },
+      "req_auto_0002": {
+        "FromUserId": "10000002",
+        "ToUserId": "10000005",
+        "FromUserName": "Tran Thi B",
+        "Status": "Pending",
+        "CreatedAt": "2026-06-05T07:45:00Z"
+      }
+    },
+
+    "ServerConfigs": {
+      "UserCounter": {
+        "LastUserID": 10000005
+      }
+    }
+  },
+
+  "realtimeDatabase": {
+    "_comment": "Cac node thong bao one-shot: client xoa ngay sau khi nhan. Day la trang thai vi du.",
+    "friend_requests": {
+      "10000001": { "10000004": true },
+      "10000005": { "10000002": true }
+    },
+    "friend_accept": {
+      "10000001": { "10000003": true }
+    },
+    "friend_decline": {
+      "10000004": { "10000002": true }
+    },
+    "send_booster": {
+      "10000001": {
+        "-Npush_key_aaa1": { "fromUserId": "10000003", "boosterName": "Undo", "amount": 1 },
+        "-Npush_key_aaa2": { "fromUserId": "10000003", "boosterName": "Heart", "amount": 1 }
+      },
+      "10000005": {
+        "-Npush_key_bbb1": { "fromUserId": "10000001", "boosterName": "Shuffle", "amount": 2 }
+      }
+    }
+  },
+
+  "localStorage": {
+    "_comment": "Du lieu cuc bo tren thiet bi: file UserData.json + PlayerPrefs.",
+    "UserData_json": {
+      "coin": 99999,
+      "level": 12,
+      "listBoosterCounters": [
+        { "name": "Undo", "count": 2 },
+        { "name": "Add", "count": 2 },
+        { "name": "Shuffle", "count": 2 },
+        { "name": "Magnet", "count": 2 }
+      ],
+      "hearts": 5,
+      "nextHeartUnixTicks": 0,
+      "language": "vi",
+      "dailyMissionProgress": {
+        "lastResetUtcTicks": 638845632000000000,
+        "tasks": [
+          { "missionId": "mission_play_3_levels", "currentCount": 2, "claimed": false },
+          { "missionId": "mission_use_2_boosters", "currentCount": 2, "claimed": true },
+          { "missionId": "mission_match_50_blocks", "currentCount": 31, "claimed": false }
+        ]
+      }
+    },
+    "PlayerPrefs": {
+      "PlayerID": "10000001",
+      "PlayerName": "Nguyen Van A",
+      "Hearts": 5,
+      "Timer": 0,
+      "LastQuitTime": "638845000000000000"
+    }
+  }
+}

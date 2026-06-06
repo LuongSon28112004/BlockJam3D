@@ -8,6 +8,19 @@ public class ScreenShop : ScreenUI
     private void OnEnable()
     {
         UpdateCoinText();
+        if (CustomeEventSystem.Instance != null)
+            CustomeEventSystem.Instance.ChangeCoinAction += OnCoinChanged;
+    }
+
+    private void OnDisable()
+    {
+        if (CustomeEventSystem.Instance != null)
+            CustomeEventSystem.Instance.ChangeCoinAction -= OnCoinChanged;
+    }
+
+    private void OnCoinChanged(int coin)
+    {
+        _textCoin.text = coin.ToString();
     }
 
     public void UpdateCoinText()
